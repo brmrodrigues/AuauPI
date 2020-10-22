@@ -1,8 +1,5 @@
 # AuauPI
 API restful de adoção de cachorros
-
-Push Test Gabriel Reis
-
-Vitor: Abóbora
+Vamos botar pra quebrar!
 Teste
-
+Vitor: Abóbora
