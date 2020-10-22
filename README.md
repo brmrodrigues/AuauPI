@@ -5,6 +5,6 @@ API restful de adoção de cachorros</br>
 Vamos botar pra quebrar!
 Teste
 Vitor: Abóbora
-Gabriel (O Reis)
-
+<<<<<<< HEAD
+Lázaro: Coloquei uma linha nova
 Agora é na Branch de Teste
