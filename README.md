@@ -1,6 +1,8 @@
 # AuauPI
 <h1>🐶API restful de adoção de cachorros.</h1> 
 
+<img src="https://images.dog.ceo/breeds/shiba/shiba-16.jpg" style="widht:50%">
+
 <h3>Utilização da API pública https://dog.ceo/ para fornecimento das raças e imagens.</h3>
 
 <p>1. Consultar todos os cachorros disponíveis para adoção com informações resumidas: **id, nome, raça e url da imagem**</p>
