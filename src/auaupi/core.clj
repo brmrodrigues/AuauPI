@@ -57,3 +57,43 @@
 (defn get-dogs-handler [_req]
   (-> return-all
       http/json-response))
+
+(defn respond-hello [request]
+  {:status 200 :body "Servidor funcionando"})
+
+(def routes
+  (route/expand-routes
+    #{["/" :get respond-hello :route-name :greet]}))
+
+(def pedestal-config
+    (-> {::http/routes routes
+       ::http/type :jetty
+       ::http/join? false
+       ::http/port 3000}
+      http/default-interceptors
+      (update ::http/interceptors conj (body-params/body-params))))
+
+(defn start []
+  (http/start (http/create-server pedestal-config)))
+
+(defonce server (atom nil))
+
+(defn start-dev []
+  (reset! server
+          (http/start (http/create-server
+                        (assoc pedestal-config
+                          ::http/join? false)))))
+
+
+(defn stop-dev []
+  (http/stop @server))
+
+
+(defn restart []
+  (stop-dev)
+  (start-dev))
+
+
+#_(restart)
+#_(start-dev)
+#_(stop-dev)
