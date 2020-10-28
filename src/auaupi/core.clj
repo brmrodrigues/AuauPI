@@ -7,4 +7,14 @@
    [io.pedestal.http.body-params :as body-params])
   (:gen-class))
 
+(defn return-all [request]
+  (map #(into {}
+              {:id (:id %)
+               :breed (:breed %)
+               :name (:name %)
+               :img (:img %)}
+              ) @dogs))
 
+(defn get-dogs-handler [request]
+  (-> return-all
+      http/json-response))
