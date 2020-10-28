@@ -1,0 +1,11 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.1"}}
+ :aliases {:test {:extra-paths ["test"]
+                  :extra-deps {nubank/matcher-combinators {:mvn/version "1.5.2"}
+                               lambdaisland/kaocha {:mvn/version "1.0.632"}
+                               lambdaisland/kaocha-cloverage {:mvn/version "1.0-45"}}}
+           :build {:extra-deps {uberdeps {:mvn/version "0.1.10"}}
+                   :main-opts ["-m" "uberdeps.uberjar"
+                               "--multi-release" "true"
+                               "--target" "target/auaupi.jar"
+                               "--main-class" "auaupi.core"]}}}
