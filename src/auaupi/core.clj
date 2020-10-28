@@ -25,7 +25,7 @@
           :gender "F"
           :castrated? true
           :port "P"
-          :adopted? false}
+          :adopted? true}
 
          {:id "2"
           :name "Xenon"
@@ -47,6 +47,10 @@
           :port "G"
           :adopted? false}]))
 
+(defn filter-dogs [params dogs]
+  (filter (fn [dog] (= params (select-keys dog (keys params))))
+          dogs))
+
 (defn return-all [coll]
   (map #(into {}
               {:id (:id %)
@@ -55,11 +59,12 @@
                :img  (:img  %)}) coll))
 
 (defn get-dogs-handler [_req]
-  (-> @dogs
+  (-> {:adopted? false}
+      (filter-dogs @dogs)
       return-all
       http/json-response))
 
-(defn respond-hello [request]
+(defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
 
 (def routes
@@ -97,5 +102,5 @@
 
 
 #_(restart)
-#_(start-dev)
+#_(start-dev) 
 #_(stop-dev)
