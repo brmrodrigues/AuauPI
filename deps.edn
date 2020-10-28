@@ -1,7 +1,5 @@
 {:paths ["src"]
- :deps {org.clojure/clojure {:mvn/version "1.10.1"}
-        medley/medley {:git/url "git@github.com:weavejester/medley.git"
-                       :sha "aedc20f2de93318225479b2f1e2d98be59fc4610"}}
+ :deps {org.clojure/clojure {:mvn/version "1.10.1"}}
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {nubank/matcher-combinators {:mvn/version "1.5.2"}
                                lambdaisland/kaocha {:mvn/version "1.0.632"}
