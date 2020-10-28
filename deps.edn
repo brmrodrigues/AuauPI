@@ -1,5 +1,11 @@
 {:paths ["src"]
- :deps {org.clojure/clojure {:mvn/version "1.10.1"}}
+ :deps {org.clojure/clojure {:mvn/version "1.10.1"}
+        io.pedestal/pedestal.service {:mvn/version "0.5.7"}
+        io.pedestal/pedestal.route   {:mvn/version "0.5.7"}
+        io.pedestal/pedestal.jetty   {:mvn/version "0.5.7"}
+        org.slf4j/slf4j-simple       {:mvn/version "1.7.28"}
+        org.clojure/data.json {:mvn/version "1.0.0"}
+        nubank/matcher-combinators {:mvn/version "3.1.4"}}
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {nubank/matcher-combinators {:mvn/version "1.5.2"}
                                lambdaisland/kaocha {:mvn/version "1.0.632"}
