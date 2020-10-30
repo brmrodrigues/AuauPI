@@ -87,7 +87,3 @@
 
 (defn create-server []
   (http/create-server pedestal-config))
-
-#_(restart)
-#_(start-dev)
-#_(stop-dev)
