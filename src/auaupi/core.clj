@@ -85,22 +85,6 @@
 
 (defonce server (atom nil))
 
-(defn start-dev []
-  (reset! server
-          (http/start (http/create-server
-                       (assoc pedestal-config
-                              ::http/join? false)))))
+(defn create-server []
+  (http/create-server pedestal-config))
 
-
-(defn stop-dev []
-  (http/stop @server))
-
-
-(defn restart []
-  (stop-dev)
-  (start-dev))
-
-
-#_(restart)
-#_(start-dev) 
-#_(stop-dev)
