@@ -15,7 +15,7 @@
           :age 15 :gender "M"
           :castrated? true
           :port "M"
-          :adopted? false}
+          :adopted? true}
 
          {:id "1"
           :name "Leka"
