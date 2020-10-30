@@ -9,7 +9,8 @@
 (defn make-request! [verb path & args]
   (let [service-fn (::http/service-fn (core/create-server))
         response (apply http-test/response-for service-fn verb path args)]
-    (update response :body json/decode true)))
+    (update response :body json/read-str
+            :key-fn keyword)))
 
 (deftest dogs-listing-not-adopteds
   (testing "listing dogs"
