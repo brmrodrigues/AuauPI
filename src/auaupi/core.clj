@@ -4,7 +4,8 @@
    [io.pedestal.http.route :as route]
    [clj-http.client :as client]
    [clojure.data.json :as json]
-   [io.pedestal.http.body-params :as body-params])
+   [io.pedestal.http.body-params :as body-params]
+   [clojure.spec.alpha :as s])
   (:gen-class))
 
 (def dogs
@@ -12,7 +13,8 @@
           :name "Bardock"
           :breed "Mix"
           :img "https://images.dog.ceo/breeds/mix/piper.jpg"
-          :age 15 :gender "M"
+          :age 15 
+          :gender "M"
           :castrated? true
           :port "M"
           :adopted? true}
@@ -46,6 +48,34 @@
           :castrated? true
           :port "G"
           :adopted? false}]))
+
+(s/def ::name string?)
+(s/def ::breed string?)
+(s/def ::img string?)
+(s/def ::age int?)
+(s/def ::gender string?)
+(s/def ::castrated? boolean?)
+(s/def ::port string?)
+
+(s/def ::dog (s/keys :req [::name ::breed ::img ::age ::gender ::castrated? ::port]))
+
+(defn req->dog [{:keys [json-params]}]
+  (let [{:keys [name
+                breed
+                img
+                age
+                gender
+                castrated?
+                port]}json-params]
+    
+    {::name name
+     ::breed breed
+     ::img img
+     ::age age
+     ::gender gender
+     ::castrated? castrated?
+     ::port port}))
+         
 
 (defn filter-dogs [params dogs]
   (filter (fn [dog] (= params (select-keys dog (keys params))))
