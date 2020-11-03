@@ -71,9 +71,6 @@
         (json/read-str :key-fn keyword)
         :message))
 
-(get-breed-image "african")
-#_(get-breed-image "pincher")
-
 
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
