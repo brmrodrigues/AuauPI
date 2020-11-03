@@ -19,7 +19,7 @@
 
          {:id "1"
           :name "Leka"
-          :breed "Pincher"
+          :breed "Maltese"
           :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"
           :age 8
           :gender "F"
@@ -63,6 +63,14 @@
       (filter-dogs @dogs)
       return-all
       http/json-response))
+
+(defn get-breed-image [raca]
+    (-> (str "https://dog.ceo/api/breed/" raca "/images/random")
+        client/get
+        :body
+        (json/read-str :key-fn keyword)
+        :message))
+
 
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
