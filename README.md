@@ -26,7 +26,7 @@
 # Inicialização
 
 ```shell 
-    clj -A:build
+clj -A:build
 ```
 ```shell
 java -jar target/auaupi.jar
