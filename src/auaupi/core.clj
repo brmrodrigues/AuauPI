@@ -19,7 +19,7 @@
 
          {:id "1"
           :name "Leka"
-          :breed "Pincher"
+          :breed "Maltese"
           :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"
           :age 8
           :gender "F"
@@ -64,8 +64,13 @@
       return-all
       http/json-response))
 
-(defn post-dogs-handler
-  [])
+(defn get-breed-image [raca]
+    (-> (str "https://dog.ceo/api/breed/" raca "/images/random")
+        client/get
+        :body
+        (json/read-str :key-fn keyword)
+        :message))
+
 
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
@@ -73,8 +78,7 @@
 (def routes
   (route/expand-routes
    #{["/" :get respond-hello :route-name :greet]
-     ["/dogs" :get get-dogs-handler :route-name :get-dogs]
-     ["/dogs" :post post-dogs-handler :route-name :post-dogs]}))
+     ["/dogs" :get get-dogs-handler :route-name :get-dogs]}))
 
 (def pedestal-config
   (-> {::http/routes routes
