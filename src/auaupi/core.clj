@@ -90,20 +90,20 @@
 
 
 (defn filter-dogs [params dogs]
-  (filter (fn [dog] (and (= params (select-keys dog (keys params)))
+  (filter (fn [dog] (and (= (first (vals params)) (String/valueOf (first (vals (select-keys dog (keys params))))))
                          (= {:adopted? false} (select-keys dog (keys {:adopted? false})))))
           dogs))
 
-(defn return-all [args]
+(defn return-all [args coll]
   (map #(into {}
               {:id (:id %)
                :breed (:breed %)
                :name (:name %)
-               :img  (:img  %)}) (filter-dogs args @dogs)))
+               :img  (:img  %)}) (filter-dogs args coll)))
 
 (defn get-dogs-handler [_req]
   (-> (:params _req)
-      return-all
+      (return-all @dogs)
       http/json-response))  
 
 (defn get-breed-image [raca]
