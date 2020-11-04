@@ -5,14 +5,13 @@
         io.pedestal/pedestal.jetty   {:mvn/version "0.5.7"}
         org.slf4j/slf4j-simple       {:mvn/version "1.7.28"}
         org.clojure/data.json {:mvn/version "1.0.0"}
-        nubank/matcher-combinators {:mvn/version "3.1.4"}
-        clj-http {:mvn/version "3.10.3"}}
+        clj-http {:mvn/version "3.10.3"}
+        uberdeps/uberdeps {:mvn/version "1.0.2"}}
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {nubank/matcher-combinators {:mvn/version "1.5.2"}
                                lambdaisland/kaocha {:mvn/version "1.0.632"}
                                lambdaisland/kaocha-cloverage {:mvn/version "1.0-45"}}}
-           :build {:extra-deps {uberdeps {:mvn/version "0.1.10"}}
-                   :main-opts ["-m" "uberdeps.uberjar"
+           :build {:main-opts ["-m" "uberdeps.uberjar"
                                "--multi-release" "true"
                                "--target" "target/auaupi.jar"
                                "--main-class" "auaupi.core"]}}}

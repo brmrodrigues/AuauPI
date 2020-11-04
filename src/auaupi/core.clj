@@ -75,7 +75,7 @@
      ::gender gender
      ::castrated? castrated?
      ::port port}))
-         
+
 
 (defn filter-dogs [params dogs]
   (filter (fn [dog] (= params (select-keys dog (keys params))))
@@ -117,3 +117,8 @@
 
 (defn create-server []
   (http/create-server pedestal-config))
+
+(defn -main
+  "I don't do a whole lot ... yet."
+  [& args]
+  (println))
