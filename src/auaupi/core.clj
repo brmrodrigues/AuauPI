@@ -9,21 +9,21 @@
   (:gen-class))
 
 (def dogs
-  (atom [{:id "0"
-          :name "Bardock"
-          :breed "Mix"
-          :img "https://images.dog.ceo/breeds/mix/piper.jpg"
-          :age "15"
-          :gender "M"
-          :castrated? true
-          :port "M"
-          :adopted? true}
+  (atom [:id "0"
+         :name "Bardock"
+         :breed "Mix"
+         :img "https://images.dog.ceo/breeds/mix/piper.jpg"
+         :age 15
+         :gender "M"
+         :castrated? true
+         :port "M"
+         :adopted? true
 
          {:id "1"
           :name "Leka"
           :breed "Pincher"
           :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"
-          :age "8"
+          :age 8
           :gender "F"
           :castrated? true
           :port "P"
@@ -33,7 +33,7 @@
           :name "Xenon"
           :breed "Weimaraner"
           :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"
-          :age "2"
+          :age 2
           :gender "M"
           :castrated? false
           :port "G"
@@ -43,7 +43,7 @@
           :name "Thor"
           :breed "Pitbull"
           :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
-          :age "7"
+          :age 7
           :gender "M"
           :castrated? true
           :port "G"
@@ -53,7 +53,7 @@
           :name "Thora"
           :breed "Pitbull"
           :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
-          :age "7"
+          :age 7
           :gender "F"
           :castrated? true
           :port "G"
