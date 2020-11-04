@@ -9,7 +9,7 @@
   (:gen-class))
 
 (def dogs
-  (atom [:id "0"
+  (atom [{:id "0"
          :name "Bardock"
          :breed "Mix"
          :img "https://images.dog.ceo/breeds/mix/piper.jpg"
@@ -17,7 +17,7 @@
          :gender "M"
          :castrated? true
          :port "M"
-         :adopted? true
+         :adopted? true}
 
          {:id "1"
           :name "Leka"
