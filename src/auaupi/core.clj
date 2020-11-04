@@ -90,8 +90,10 @@
 
 
 (defn filter-dogs [params dogs]
-  (filter (fn [dog] (and (= (first (vals params)) (String/valueOf (first (vals (select-keys dog (keys params))))))
-                         (= {:adopted? false} (select-keys dog (keys {:adopted? false})))))
+  (filter (fn [dog] (if params
+                          (and (= (first (vals params)) (String/valueOf (first (vals (select-keys dog (keys params))))))
+                               (= {:adopted? false} (select-keys dog (keys {:adopted? false}))))
+                          (= {:adopted? false} (select-keys dog (keys {:adopted? false})))))
           dogs))
 
 (defn return-all [args coll]
