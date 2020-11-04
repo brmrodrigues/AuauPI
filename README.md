@@ -22,3 +22,8 @@
 <a href="https://github.com/pedestal/pedestal">Pedestal</a>
 <br>
 <a href="https://docs.datomic.com/cloud/dev-local.html">Datomic</a>
+
+# Inicialização
+
+<p>clj -A:build</p>
+<p>java -jar target/auaupi.jar</p>
