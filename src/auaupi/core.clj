@@ -1,12 +1,13 @@
 (ns auaupi.core
+  (:gen-class)
   (:require
    [io.pedestal.http :as http]
    [io.pedestal.http.route :as route]
    [clj-http.client :as client]
    [clojure.data.json :as json]
    [io.pedestal.http.body-params :as body-params]
-   [clojure.spec.alpha :as s])
-  (:gen-class))
+   [clojure.spec.alpha :as s]))
+  
 
 (defn -main
   "I don't do a whole lot ... yet."
