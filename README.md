@@ -22,3 +22,12 @@
 <a href="https://github.com/pedestal/pedestal">Pedestal</a>
 <br>
 <a href="https://docs.datomic.com/cloud/dev-local.html">Datomic</a>
+
+# Inicialização
+
+```shell 
+clj -A:build
+```
+```shell
+java -jar target/auaupi.jar
+```

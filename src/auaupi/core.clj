@@ -1,12 +1,13 @@
 (ns auaupi.core
+  (:gen-class)
   (:require
    [io.pedestal.http :as http]
    [io.pedestal.http.route :as route]
    [clj-http.client :as client]
    [clojure.data.json :as json]
    [io.pedestal.http.body-params :as body-params]
-   [clojure.spec.alpha :as s])
-  (:gen-class))
+   [clojure.spec.alpha :as s]))
+  
 
 (def dogs
   (atom [{:id "0"
@@ -86,7 +87,7 @@
      ::gender gender
      ::castrated? castrated?
      ::port port}))
-         
+
 
 (defn filter-dogs [params dogs]
   (filter (fn [dog] (and (= params (select-keys dog (keys params)))
@@ -104,6 +105,14 @@
   (-> (:params _req)
       return-all
       http/json-response))  
+
+(defn get-breed-image [raca]
+    (-> (str "https://dog.ceo/api/breed/" raca "/images/random")
+        client/get
+        :body
+        (json/read-str :key-fn keyword)
+        :message))
+
 
 (defn get-breed-image [raca]
     (-> (str "https://dog.ceo/api/breed/" raca "/images/random")
@@ -136,3 +145,6 @@
 
 (defn create-server []
   (http/create-server pedestal-config))
+
+(defn -main [& args]
+  (start))  
