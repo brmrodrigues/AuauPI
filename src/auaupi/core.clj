@@ -11,14 +11,14 @@
 
 (def dogs
   (atom [{:id "0"
-          :name "Bardock"
-          :breed "Mix"
-          :img "https://images.dog.ceo/breeds/mix/piper.jpg"
-          :age 15 
-          :gender "M"
-          :castrated? true
-          :port "M"
-          :adopted? true}
+         :name "Bardock"
+         :breed "Mix"
+         :img "https://images.dog.ceo/breeds/mix/piper.jpg"
+         :age 15
+         :gender "M"
+         :castrated? true
+         :port "M"
+         :adopted? true}
 
          {:id "1"
           :name "Leka"
@@ -48,6 +48,16 @@
           :gender "M"
           :castrated? true
           :port "G"
+          :adopted? false}
+         
+         {:id "4"
+          :name "Thora"
+          :breed "Pitbull"
+          :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
+          :age 7
+          :gender "F"
+          :castrated? true
+          :port "G"
           :adopted? false}]))
 
 (s/def ::name string?)
@@ -58,7 +68,8 @@
 (s/def ::castrated? boolean?)
 (s/def ::port string?)
 
-(s/def ::dog (s/keys :req [::name ::breed ::img ::age ::gender ::castrated? ::port]))
+(s/def ::dog (s/keys :req [ ::breed ::img ::gender ::port]
+                     :opt [::name ::age ::castrated?]))
 
 (defn req->dog [{:keys [json-params]}]
   (let [{:keys [name
@@ -79,21 +90,29 @@
 
 
 (defn filter-dogs [params dogs]
-  (filter (fn [dog] (= params (select-keys dog (keys params))))
+  (filter (fn [dog] (and (= params (select-keys dog (keys params)))
+                         (= {:adopted? false} (select-keys dog (keys {:adopted? false})))))
           dogs))
 
-(defn return-all [coll]
+(defn return-all [args]
   (map #(into {}
               {:id (:id %)
                :breed (:breed %)
                :name (:name %)
-               :img  (:img  %)}) coll))
+               :img  (:img  %)}) (filter-dogs args @dogs)))
 
 (defn get-dogs-handler [_req]
-  (-> {:adopted? false}
-      (filter-dogs @dogs)
+  (-> (:params _req)
       return-all
-      http/json-response))
+      http/json-response))  
+
+(defn get-breed-image [raca]
+    (-> (str "https://dog.ceo/api/breed/" raca "/images/random")
+        client/get
+        :body
+        (json/read-str :key-fn keyword)
+        :message))
+
 
 (defn get-breed-image [raca]
     (-> (str "https://dog.ceo/api/breed/" raca "/images/random")
@@ -128,4 +147,4 @@
   (http/create-server pedestal-config))
 
 (defn -main [& args]
-  (start))
+  (start))  
