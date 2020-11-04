@@ -9,11 +9,6 @@
    [clojure.spec.alpha :as s]))
   
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Vamooo"))
-
 (def dogs
   (atom [{:id "0"
           :name "Bardock"
@@ -132,3 +127,5 @@
 (defn create-server []
   (http/create-server pedestal-config))
 
+(defn -main [& args]
+  (start))
