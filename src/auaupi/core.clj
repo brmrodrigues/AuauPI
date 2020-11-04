@@ -57,7 +57,8 @@
 (s/def ::castrated? boolean?)
 (s/def ::port string?)
 
-(s/def ::dog (s/keys :req [::name ::breed ::img ::age ::gender ::castrated? ::port]))
+(s/def ::dog (s/keys :req [ ::breed ::img ::gender ::port]
+                     :opt [::name ::age ::castrated?]))
 
 (defn req->dog [{:keys [json-params]}]
   (let [{:keys [name
