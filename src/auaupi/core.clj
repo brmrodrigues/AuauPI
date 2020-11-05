@@ -3,126 +3,14 @@
   (:require
    [io.pedestal.http :as http]
    [io.pedestal.http.route :as route]
-   [clj-http.client :as client]
-   [clojure.data.json :as json]
    [io.pedestal.http.body-params :as body-params]
-   [clojure.spec.alpha :as s]))
-  
-
-(def dogs
-  (atom [{:id "0"
-         :name "Bardock"
-         :breed "Mix"
-         :img "https://images.dog.ceo/breeds/mix/piper.jpg"
-         :age 15
-         :gender "M"
-         :castrated? true
-         :port "M"
-         :adopted? true}
-
-         {:id "1"
-          :name "Leka"
-          :breed "Maltese"
-          :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"
-          :age 8
-          :gender "F"
-          :castrated? true
-          :port "P"
-          :adopted? true}
-
-         {:id "2"
-          :name "Xenon"
-          :breed "Weimaraner"
-          :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"
-          :age 2
-          :gender "M"
-          :castrated? false
-          :port "G"
-          :adopted? false}
-
-         {:id "3"
-          :name "Thor"
-          :breed "Pitbull"
-          :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
-          :age 7
-          :gender "M"
-          :castrated? true
-          :port "G"
-          :adopted? false}
-         
-         {:id "4"
-          :name "Thora"
-          :breed "Pitbull"
-          :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
-          :age 7
-          :gender "F"
-          :castrated? true
-          :port "G"
-          :adopted? false}]))
-
-(s/def ::name string?)
-(s/def ::breed string?)
-(s/def ::img string?)
-(s/def ::age int?)
-(s/def ::gender string?)
-(s/def ::castrated? boolean?)
-(s/def ::port string?)
-
-(s/def ::dog (s/keys :req [ ::breed ::img ::gender ::port]
-                     :opt [::name ::age ::castrated?]))
-
-(defn req->dog [{:keys [json-params]}]
-  (let [{:keys [name
-                breed
-                img
-                age
-                gender
-                castrated?
-                port]}json-params]
-    
-    {::name name
-     ::breed breed
-     ::img img
-     ::age age
-     ::gender gender
-     ::castrated? castrated?
-     ::port port}))
-
-
-(defn filter-dogs [params dogs]
-  (filter (fn [dog] (if params
-                          (and (= (first (vals params)) (String/valueOf (first (vals (select-keys dog (keys params))))))
-                               (= {:adopted? false} (select-keys dog (keys {:adopted? false}))))
-                          (= {:adopted? false} (select-keys dog (keys {:adopted? false})))))
-          dogs))
-
-(defn return-all [args coll]
-  (map #(into {}
-              {:id (:id %)
-               :breed (:breed %)
-               :name (:name %)
-               :img  (:img  %)}) (filter-dogs args coll)))
+   [auaupi.db :as db]
+   [auaupi.logic :as logic]))
 
 (defn get-dogs-handler [_req]
   (-> (:params _req)
-      (return-all @dogs)
-      http/json-response))  
-
-(defn get-breed-image [raca]
-    (-> (str "https://dog.ceo/api/breed/" raca "/images/random")
-        client/get
-        :body
-        (json/read-str :key-fn keyword)
-        :message))
-
-
-(defn get-breed-image [raca]
-    (-> (str "https://dog.ceo/api/breed/" raca "/images/random")
-        client/get
-        :body
-        (json/read-str :key-fn keyword)
-        :message))
-
+      (logic/return-all @db/dogs)
+      http/json-response))
 
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
@@ -149,4 +37,4 @@
   (http/create-server pedestal-config))
 
 (defn -main [& args]
-  (start))  
+  (start))
