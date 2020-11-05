@@ -4,7 +4,8 @@
             [matcher-combinators.test :refer [match?]]
             [io.pedestal.http :as http]
             [io.pedestal.test :as http-test]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json]
+            [db :as db]))
 
 (defn make-request! [verb path & args]
   (let [service-fn (::http/service-fn (core/create-server))
@@ -14,7 +15,7 @@
 
 (deftest dogs-listing-not-adopteds
   (testing "listing dogs"
-    (reset! core/dogs [{:id "1"
+    (reset! db/dogs [{:id "1"
                         :name "Leka"
                         :breed "Pincher"
                         :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"
