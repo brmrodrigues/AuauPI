@@ -33,10 +33,62 @@
                         :gender "M"
                         :castrated? false
                         :port "G"
+                        :adopted? false}
+                       {:id "4"
+                        :name "Thora"
+                        :breed "Pitbull"
+                        :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
+                        :age 7
+                        :gender "F"
+                        :castrated? true
+                        :port "G"
                         :adopted? false}])
     (is (match? {:body [{:id "2"
                          :name "Xenon"
                          :breed "Weimaraner"
-                         :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"}]
-                 :status 200} 
-                (make-request! :get "/dogs")))))
+                         :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"}
+                        {:id "4"
+                         :breed "Pitbull"
+                         :name "Thora"
+                         :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}]
+                 :status 200}
+                (make-request! :get "/dogs"))))
+  
+  (testing "testing age filter"
+    (is (match? {:body [{:id "2"
+                         :breed "Weimaraner"
+                         :name "Xenon"
+                         :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"}] :status 200}
+                (make-request! :get "/dogs?age=2"))))
+  
+  (testing "testing gender filter"
+    (is (match? {:body [{:id "4"
+                         :breed "Pitbull"
+                         :name "Thora"
+                         :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
+                (make-request! :get "/dogs?gender=F"))))
+  
+  (testing "testing castrated filter"
+    (is (match? {:body [{:id "4"
+                         :breed "Pitbull"
+                         :name "Thora"
+                         :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
+                (make-request! :get "/dogs?castrated?=true"))))
+  
+  (testing "testing breed filter"
+    (is (match? {:body [{:id "2"
+                         :name "Xenon"
+                         :breed "Weimaraner"
+                         :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"}] :status 200}
+                (make-request! :get "/dogs?breed=Weimaraner"))))
+  
+  (testing "testing port filter"
+    (is (match? {:body [{:id "2"
+                         :name "Xenon"
+                         :breed "Weimaraner"
+                         :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"}
+                        {:id "4"
+                         :breed "Pitbull"
+                         :name "Thora"
+                         :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
+                (make-request! :get "/dogs?port=G")))))
