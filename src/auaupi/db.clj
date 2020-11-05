@@ -1,4 +1,4 @@
-(ns db)
+(ns auaupi.db)
 
 (def dogs
   (atom [{:id "0"

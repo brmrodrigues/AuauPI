@@ -5,7 +5,7 @@
             [io.pedestal.http :as http]
             [io.pedestal.test :as http-test]
             [clojure.data.json :as json]
-            [db :as db]))
+            [auaupi.db :as db]))
 
 (defn make-request! [verb path & args]
   (let [service-fn (::http/service-fn (core/create-server))

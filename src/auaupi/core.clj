@@ -4,7 +4,7 @@
    [io.pedestal.http :as http]
    [io.pedestal.http.route :as route]
    [io.pedestal.http.body-params :as body-params]
-   [db :as db]
+   [auaupi.db :as db]
    [auaupi.logic :as logic]))
 
 (defn get-dogs-handler [_req]
