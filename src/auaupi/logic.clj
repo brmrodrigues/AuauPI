@@ -15,18 +15,21 @@
                :img  (:img  %)}) coll))
 
 (defn trata-req [params]
-  (let [param (-> params
+  (let [tempMap {}
+        param (-> params
                   vals
                   first)
         intParam (-> param
+                     read-string
                      int?)
         booleanParam (-> param
+                         read-string 
                          boolean?)]
-    (cond intParam (Integer/valueOf param)
-          booleanParam (Boolean/valueOf param)
-    :else param)))
+    (cond intParam (assoc tempMap (first (keys params)) (Long/valueOf param))
+          booleanParam (assoc tempMap (first (keys params)) (Boolean/valueOf param))
+          :else params)))
 
-(trata-req {:age 7})
+(trata-req {:castrated? "true"})
 
 (defn get-breed-image [raca]
   (-> (str "https://dog.ceo/api/breed/" raca "/images/random")

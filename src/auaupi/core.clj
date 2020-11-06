@@ -10,7 +10,7 @@
 (defn get-dogs-handler [req]
   (-> req
       (:params {})
-      logic/trata-req
+      #_logic/trata-req
       (logic/filter-dogs @db/dogs)
       logic/response-all
       http/json-response))
