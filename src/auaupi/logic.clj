@@ -15,9 +15,18 @@
                :img  (:img  %)}) coll))
 
 (defn trata-req [params]
-  (-> params
-      vals
-      first))
+  (let [param (-> params
+                  vals
+                  first)
+        intParam (-> param
+                     int?)
+        booleanParam (-> param
+                         boolean?)]
+    (cond intParam (Integer/valueOf param)
+          booleanParam (Boolean/valueOf param)
+    :else param)))
+
+(trata-req {:age 7})
 
 (defn get-breed-image [raca]
   (-> (str "https://dog.ceo/api/breed/" raca "/images/random")
