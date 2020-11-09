@@ -14,13 +14,10 @@
       http/json-response))
 
 (defn post-dogs-handler [req]
-  (let [resp (-> req
-                 specs/req->dog
-                 logic/create-dog!)]
-       (if resp
-         resp
-         (http/json-response {:message "Invalid Format"})))
-  #_(http/json-response {:message "OK"}))
+  (prn (specs/req->dog req))
+  (-> req
+      specs/req->dog
+      logic/valid-dog?))
 
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
