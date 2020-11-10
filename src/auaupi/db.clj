@@ -37,7 +37,7 @@
           :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
           :age 7
           :gender "M"
-          :castrated? true
+          :castrated? false
           :port "G"
           :adopted? false}
 
