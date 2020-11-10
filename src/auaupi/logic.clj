@@ -41,12 +41,15 @@
    :img (:img map)
    :adopted? false))
 
+
+(def img (atom ""))
 (defn create-dog!
   [{:keys [breed] :as dog}]
   (let [image (get-breed-image! (::specs/breed dog))
         image-added (->> image
-                     (assoc dog :img)
-                     add-fields)]
+                         (assoc dog :img)
+                         add-fields)]
+    (reset! img image)
     (swap! db/dogs conj image-added)
     (http/json-response image-added)))
 

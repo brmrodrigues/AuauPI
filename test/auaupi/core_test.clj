@@ -93,21 +93,40 @@
                          :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
                 (make-request! :get "/dogs?port=G"))))
 
-  (testing "testing post route"
-    (let [dog-test {:id "7"
-                    :name "Robert"
-                    :breed "French Bulldog"
-                    :img "https://images.dog.ceo/breeds/bulldog-french/n02108915_57.jpg"
-                    :age 15
-                    :gender "M"
-                    :castrated? true
-                    :port "M"
-                    :adopted? true}]
-      (is (match? {:body [dog-test] :status 201}
+
+  (reset! db/dogs [])
+  (let [dog-test {:name "Caramelo"
+                  :breed "stbernard"
+                  :age 2
+                  :gender "M"
+                  :castrated? false
+                  :port "p"}]
+    (testing "testing post route"
+      (is (match? {:body {:breed "stbernard"
+                          :castrated? false
+                          :age 2
+                          :name "Caramelo"
+                          :port "p"
+                          :id "4"
+                          :gender "m"
+                          :adopted? false
+                          :img (fn [dog] (:img dog) (first @db/dogs))}}
                   (make-request! :post "/dogs"
                                  :headers {"Content-Type" "application/json"}
-                                 :body (json/encode dog-test))))
-  
-      (testing "listing dog after post"
-        (is (match? {:body [dog-test] :status 200}
-                    (make-request! :get "/dogs")))))))
+                                 :body (json/write-str dog-test)))))
+    (testing "listing dog after post"
+      (is (match? {:body [{:id "4"
+                           :breed "stbernard"
+                           :name "Caramelo"
+                           :img (fn [dog] (:img dog) (first @db/dogs))}] :status 200}
+                  (make-request! :get "/dogs")))))
+  (testing "inserting invalid format"
+    (is (match? {:body {:message "Invalid Format"}}
+                (make-request! :post "/dogs"
+                               :headers {"Content-Type" "application/json"}
+                               :body (json/write-str {:name true
+                                                  :breed 3.5
+                                                  :age "2"
+                                                  :gender 2
+                                                  :castrated? "false"
+                                                  :port "j"}))))))
