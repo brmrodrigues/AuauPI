@@ -8,9 +8,12 @@
    [auaupi.logic :as logic]
    [auaupi.specs :as specs]))
 
-(defn get-dogs-handler [_req]
-  (-> (:params _req)
-      (logic/return-all @db/dogs)
+(defn get-dogs-handler [req]
+  (-> req
+      (:params {})
+      logic/req->treated
+      (logic/filter-dogs @db/dogs)
+      logic/response-all
       http/json-response))
 
 (defn post-dogs-handler [req]

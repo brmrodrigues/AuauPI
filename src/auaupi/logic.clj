@@ -5,21 +5,32 @@
    [io.pedestal.http :as http]
    [auaupi.db :as db]
    [clojure.spec.alpha :as s]
-   [auaupi.specs :as specs]))
+   [auaupi.specs :as specs]
+   [clojure.edn :as edn]))
 
-(defn filter-dogs [params dogs]
-  (filter (fn [dog] (if params
-                      (and (= (first (vals params)) (String/valueOf (first (vals (select-keys dog (keys params))))))
-                           (= {:adopted? false} (select-keys dog (keys {:adopted? false}))))
-                      (= {:adopted? false} (select-keys dog (keys {:adopted? false})))))
-          dogs))
+(defn filter-dogs [params coll]
+  (filter (fn [dog] (and (= params (select-keys dog (keys params)))
+                         (= {:adopted? false} (select-keys dog (keys {:adopted? false}))))) coll))
 
-(defn return-all [args coll]
+(defn response-all [coll]
   (map #(into {}
               {:id (:id %)
                :breed (:breed %)
                :name (:name %)
-               :img  (:img  %)}) (filter-dogs args coll)))
+               :img  (:img  %)}) coll))
+
+(defn req->treated [req]
+ (into {}
+      (map (fn [[k s]]
+             [k (try (let [v (edn/read-string s)]
+                       (if (or (number? v)
+                               (boolean? v))
+                         v
+                         s))
+                     (catch Throwable ex
+                       (println ex)
+                       s))]))
+      req))
 
 (defn get-breed-image! [raca]
   (-> (str "https://dog.ceo/api/breed/" (clojure.string/lower-case raca) "/images/random")
@@ -41,15 +52,12 @@
    :img (:img map)
    :adopted? false))
 
-
-(def img (atom ""))
 (defn create-dog!
   [{:keys [breed] :as dog}]
   (let [image (get-breed-image! (::specs/breed dog))
         image-added (->> image
                          (assoc dog :img)
                          add-fields)]
-    (reset! img image)
     (swap! db/dogs conj image-added)
     (http/json-response image-added)))
 
@@ -58,7 +66,4 @@
   (if (s/valid? ::specs/dog dog)
     (create-dog! dog)
     {:status 400 :body (json/write-str {:message "Invalid Format"})}))
-
-#_(s/fdef create-dog!
-  :args (s/cat :dog ::dog))
 
