@@ -43,7 +43,7 @@
 
 (defn create-dog!
   [{:keys [breed] :as dog}]
-  (let [image (get-breed-image! "pitbull" #_(:auaupi.specs/breed dog))
+  (let [image (get-breed-image! (::specs/breed dog))
         image-added (->> image
                      (assoc dog :img)
                      add-fields)]
@@ -52,10 +52,9 @@
 
 (defn valid-dog? 
   [dog]
-  (prn dog)
   (if (s/valid? ::specs/dog dog)
     (create-dog! dog)
-    (http/json-response {:message "Invalid Format"})))
+    {:status 400 :body (json/write-str {:message "Invalid Format"})}))
 
 #_(s/fdef create-dog!
   :args (s/cat :dog ::dog))
