@@ -5,7 +5,8 @@
    [io.pedestal.http.route :as route]
    [io.pedestal.http.body-params :as body-params]
    [auaupi.db :as db]
-   [auaupi.logic :as logic]))
+   [auaupi.logic :as logic]
+   [auaupi.specs :as specs]))
 
 (defn get-dogs-handler [req]
   (-> req
@@ -15,13 +16,20 @@
       logic/response-all
       http/json-response))
 
+(defn post-dogs-handler [req]
+  (prn (specs/req->dog req))
+  (-> req
+      specs/req->dog
+      logic/valid-dog?))
+
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
 
 (def routes
   (route/expand-routes
    #{["/" :get respond-hello :route-name :greet]
-     ["/dogs" :get get-dogs-handler :route-name :get-dogs]}))
+     ["/dogs" :get get-dogs-handler :route-name :get-dogs]
+     ["/dogs" :post post-dogs-handler :route-name :post-dogs]}))
 
 (def pedestal-config
   (-> {::http/routes routes
