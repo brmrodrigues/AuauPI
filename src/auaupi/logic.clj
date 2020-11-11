@@ -67,3 +67,10 @@
     (create-dog! dog)
     {:status 400 :body (json/write-str {:message "Invalid Format"})}))
 
+(defn get-by-id [id]
+  (if (filter #(= id (:id %)) @db/dogs) 
+    (into [] (filter #(= id (:id %)) @db/dogs))
+    {})
+  )
+
+(get-by-id "6")
