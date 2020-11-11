@@ -42,6 +42,15 @@
                       :gender "F"
                       :castrated? true
                       :port "G"
+                      :adopted? false}
+                     {:id "5"
+                      :name nil
+                      :breed "Pitbull"
+                      :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
+                      :age 7
+                      :gender "M"
+                      :castrated? false
+                      :port "M"
                       :adopted? false}])
     (is (match? {:body [{:id "2"
                          :name "Xenon"
@@ -50,6 +59,10 @@
                         {:id "4"
                          :breed "Pitbull"
                          :name "Thora"
+                         :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
+                        {:id "5"
+                         :breed "Pitbull"
+                         :name nil
                          :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}]
                  :status 200}
                 (make-request! :get "/dogs"))))
@@ -82,7 +95,22 @@
                          :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"}] :status 200}
                 (make-request! :get "/dogs?breed=Weimaraner"))))
 
-  (testing "testing port filter"
+  (testing "adopting a dog without name"
+    (is (match? {:body "Parabéns! Adoção realizada com sucesso"}
+                (make-request! :post "/dogs/5"
+                               :headers {"Content-Type" "application/json"}))))
+  
+  (testing "adopting a female dog"
+    (is (match? {:body "Parabéns, você acabou de dar um novo lar para a Thora!"}
+                (make-request! :post "/dogs/4"
+                               :headers {"Content-Type" "application/json"}))))
+  
+  (testing "adopting a male dog"
+    (is (match? {:body "Parabéns, você acabou de dar um novo lar para o Xenon!"}
+                (make-request! :post "/dogs/2"
+                               :headers {"Content-Type" "application/json"}))))
+  
+(testing "testing port filter"
     (is (match? {:body [{:id "2"
                          :name "Xenon"
                          :breed "Weimaraner"
@@ -125,8 +153,8 @@
                 (make-request! :post "/dogs"
                                :headers {"Content-Type" "application/json"}
                                :body (json/write-str {:name true
-                                                  :breed 3.5
-                                                  :age "2"
-                                                  :gender 2
-                                                  :castrated? "false"
-                                                  :port "j"}))))))
+                                                      :breed 3.5
+                                                      :age "2"
+                                                      :gender 2
+                                                      :castrated? "false"
+                                                      :port "j"}))))))

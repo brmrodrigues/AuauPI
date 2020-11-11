@@ -20,17 +20,17 @@
                :img  (:img  %)}) coll))
 
 (defn req->treated [req]
- (into {}
-      (map (fn [[k s]]
-             [k (try (let [v (edn/read-string s)]
-                       (if (or (number? v)
-                               (boolean? v))
-                         v
-                         s))
-                     (catch Throwable ex
-                       (println ex)
-                       s))]))
-      req))
+  (into {}
+        (map (fn [[k s]]
+               [k (try (let [v (edn/read-string s)]
+                         (if (or (number? v)
+                                 (boolean? v))
+                           v
+                           s))
+                       (catch Throwable ex
+                         (println ex)
+                         s))]))
+        req))
 
 (defn get-breed-image! [raca]
   (-> (str "https://dog.ceo/api/breed/" (clojure.string/lower-case raca) "/images/random")
@@ -61,9 +61,29 @@
     (swap! db/dogs conj image-added)
     (http/json-response image-added)))
 
-(defn valid-dog? 
+(defn valid-dog?
   [dog]
   (if (s/valid? ::specs/dog dog)
     (create-dog! dog)
     {:status 400 :body (json/write-str {:message "Invalid Format"})}))
+
+(defn get-date []
+  (.format (java.text.SimpleDateFormat. "dd/MM/yyyy") (new java.util.Date)))
+
+(defn dog->adopt [coll]
+  (->> coll
+       (into {})
+       (map (fn [[k v]] [k v]))
+       (into {})
+       (#(assoc % :adopted? true :adoptionDate (get-date)))))
+
+(defn response-adopted [coll]
+  (let [dog (->> coll
+                 (into {})
+                 (map (fn [[k v]] [k v]))
+                 (into {}))]
+    (if (not (nil? (:name dog)))
+      (cond (= (:gender dog) "M") (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!")
+            (= (:gender dog) "F") (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!"))
+      "Parabéns! Adoção realizada com sucesso")))
 
