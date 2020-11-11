@@ -5,6 +5,7 @@
    [io.pedestal.http.route :as route]
    [io.pedestal.http.body-params :as body-params]
    [auaupi.db :as db]
+   [clojure.data.json :as json]
    [auaupi.logic :as logic]
    [auaupi.specs :as specs]))
 
@@ -22,11 +23,16 @@
       specs/req->dog
       logic/valid-dog?))
 
+(defn data->response
+  [data]
+  (cond
+    (empty? data) {:status 404 :body (json/write-str "Not Found")}
+    :else {:status 200 :body (json/write-str data)}))
+
 (defn get-dog-by-id-handler [req]
-  (let [id (:id (:path-params req))]
-    (-> id
+    (-> req
         logic/get-by-id
-        http/json-response)))
+        data->response))
 
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})

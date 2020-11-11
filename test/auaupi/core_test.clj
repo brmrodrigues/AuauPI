@@ -66,6 +66,10 @@
                         :port "G"
                         :adopted? false}] :status 200}
                 (make-request! :get "/dogs/2"))))
+  
+  (testing "listing dog not found"
+    (is (match? {:body "Not Found" :status 404}
+                (make-request! :get "/dogs/40"))))
 
   (testing "testing age filter"
     (is (match? {:body [{:id "2"
