@@ -34,6 +34,7 @@
                       :castrated? false
                       :port "G"
                       :adopted? false}
+                     
                      {:id "4"
                       :name "Thora"
                       :breed "Pitbull"
@@ -53,6 +54,22 @@
                          :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}]
                  :status 200}
                 (make-request! :get "/dogs"))))
+  
+  (testing "listing dog by id" 
+    (is (match? {:body [{:id "2"
+                        :name "Xenon"
+                        :breed "Weimaraner"
+                        :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"
+                        :age 2
+                        :gender "M"
+                        :castrated? false
+                        :port "G"
+                        :adopted? false}] :status 200}
+                (make-request! :get "/dogs/2"))))
+  
+  (testing "listing dog not found"
+    (is (match? {:body "Not Found" :status 404}
+                (make-request! :get "/dogs/40"))))
 
   (testing "testing age filter"
     (is (match? {:body [{:id "2"
@@ -125,8 +142,8 @@
                 (make-request! :post "/dogs"
                                :headers {"Content-Type" "application/json"}
                                :body (json/write-str {:name true
-                                                  :breed 3.5
-                                                  :age "2"
-                                                  :gender 2
-                                                  :castrated? "false"
-                                                  :port "j"}))))))
+                                                      :breed 3.5
+                                                      :age "2"
+                                                      :gender 2
+                                                      :castrated? "false"
+                                                      :port "j"}))))))
