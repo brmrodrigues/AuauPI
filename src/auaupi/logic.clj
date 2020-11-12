@@ -67,3 +67,12 @@
     (create-dog! dog)
     {:status 400 :body (json/write-str {:message "Invalid Format"})}))
 
+(defn get-by-id [req]
+  (let [id (:id (:path-params req))]
+    (filter #(= id (:id %)) @db/dogs)))
+
+(defn data->response
+  [data]
+  (cond
+    (empty? data) {:status 404 :body (json/write-str "Not Found")}
+    :else {:status 200 :body (json/write-str data)}))
