@@ -71,4 +71,8 @@
   (let [id (:id (:path-params req))]
     (filter #(= id (:id %)) @db/dogs)))
 
-#_(get-by-id "2")
+(defn data->response
+  [data]
+  (cond
+    (empty? data) {:status 404 :body (json/write-str "Not Found")}
+    :else {:status 200 :body (json/write-str data)}))

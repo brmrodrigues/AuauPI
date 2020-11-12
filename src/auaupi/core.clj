@@ -23,16 +23,10 @@
       specs/req->dog
       logic/valid-dog?))
 
-(defn data->response
-  [data]
-  (cond
-    (empty? data) {:status 404 :body (json/write-str "Not Found")}
-    :else {:status 200 :body (json/write-str data)}))
-
 (defn get-dog-by-id-handler [req]
     (-> req
         logic/get-by-id
-        data->response))
+        logic/data->response))
 
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
