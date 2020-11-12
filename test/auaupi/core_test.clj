@@ -146,4 +146,21 @@
                                                       :age "2"
                                                       :gender 2
                                                       :castrated? "false"
-                                                      :port "j"}))))))
+                                                      :port "j"})))))
+  (reset! db/dogs [])
+  (testing "inserting without the optional parameters"
+    (is (match? {:body {:breed "stbernard"
+                        :castrated? false
+                        :age 0
+                        :name ""
+                        :port "p"
+                        :id "4"
+                        :gender "m"
+                        :adopted? false
+                        :img (fn [dog] (:img dog) (first @db/dogs))}
+                 :status 200}
+                (make-request! :post "/dogs"
+                               :headers {"Content-Type" "application/json"}
+                               :body (json/write-str {:breed "stbernard"
+                                                      :gender "M"
+                                                      :port "p"}))))))
