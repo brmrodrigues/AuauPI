@@ -63,7 +63,10 @@
 
 (defn valid-dog? 
   [dog]
-  (if (s/valid? ::specs/dog dog)
-    (create-dog! dog)
-    {:status 400 :body (json/write-str {:message "Invalid Format"})}))
+  (def d dog)
+  (cond 
+    (s/valid? ::specs/dog dog) (create-dog! dog)
+    :else {:status 400 :body (json/write-str {:message "Invalid Format"})}))
+
+(s/valid? ::specs/dog d)
 
