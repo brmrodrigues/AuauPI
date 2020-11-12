@@ -21,25 +21,10 @@
                 castrated?
                 port]} json-params]
 
-    {::name name
+    {::name (if name name "")
      ::breed (clojure.string/lower-case breed)
-     ::age age
+     ::age (if age age 0)
      ::gender (clojure.string/lower-case gender)
-     ::castrated? castrated?
+     ::castrated? (if castrated? castrated? false)
      ::port (clojure.string/lower-case port)}))
-
-(comment
-
-  (def d {:auaupi.specs/name "Caramelo", 
-          :auaupi.specs/breed "stbernard", 
-          :auaupi.specs/age 2, 
-          :auaupi.specs/gender "M", 
-          :auaupi.specs/castrated? false, 
-          :auaupi.specs/port "p"})
-
-  (defn teste
-    [dog]
-    (s/valid? ::dog dog))
-
-  (teste d))
 

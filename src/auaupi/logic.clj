@@ -63,9 +63,9 @@
 
 (defn valid-dog? 
   [dog]
-  (if (s/valid? ::specs/dog dog)
-    (create-dog! dog)
-    {:status 400 :body (json/write-str {:message "Invalid Format"})}))
+  (cond 
+    (s/valid? ::specs/dog dog) (create-dog! dog)
+    :else {:status 400 :body (json/write-str {:message "Invalid Format"})}))
 
 (defn get-by-id [req]
   (let [id (:id (:path-params req))]
