@@ -68,14 +68,17 @@
     {:status 400 :body (json/write-str {:message "Invalid Format"})}))
 
 (defn get-date []
-  (.format (java.text.SimpleDateFormat. "dd/MM/yyyy") (new java.util.Date)))
+  (quot (System/currentTimeMillis) 1000))
 
 (defn dog->adopt [coll]
-  (->> coll
-       (into {})
-       (map (fn [[k v]] [k v]))
-       (into {})
-       (#(assoc % :adopted? true :adoptionDate (get-date)))))
+  (let [dog
+        (->> coll
+             (into {})
+             (map (fn [[k v]] [k v]))
+             (into {}))
+        pos (.indexOf @db/dogs dog)]
+    (swap! db/dogs assoc-in [pos :adopted?] true)
+    (swap! db/dogs assoc-in [pos :adoptionDate] (get-date))))
 
 (defn response-adopted [coll]
   (let [dog (->> coll
