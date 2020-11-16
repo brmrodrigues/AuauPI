@@ -10,7 +10,7 @@
 
 (defn filter-dogs [params coll]
   (filter (fn [dog] (and (= params (select-keys dog (keys params)))
-                         (= {:adopted? false} (select-keys dog (keys {:adopted? false}))))) coll))
+                         #_(= {:adopted? false} (select-keys dog (keys {:adopted? false}))))) coll))
 
 (defn response-all [coll]
   (map #(into {}
@@ -86,8 +86,12 @@
                  (map (fn [[k v]] [k v]))
                  (into {}))]
     (if (not (nil? (:name dog)))
-      (cond (= (:gender dog) "M") (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!")
-            (= (:gender dog) "F") (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!"))
+      (cond (= (:gender dog) "M")
+            {:status 200
+             :body (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!")}
+            (= (:gender dog) "F")
+            {:status 200
+             :body (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!")})
       "Parabéns! Adoção realizada com sucesso")))
 
 (defn get-by-id [req]

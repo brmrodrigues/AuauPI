@@ -26,15 +26,18 @@
 (defn post-adoption-handler [req]
   (-> req
       (:path-params {})
-      (logic/filter-dogs @db/dogs)
-      logic/dog->adopt
-      logic/response-adopted
-      http/json-response))
+      (assoc :adopted? false)
+      (logic/filter-dogs  @db/dogs)
+      logic/dog->adopt)
+  (-> req
+      (:path-params {})
+      (logic/filter-dogs  @db/dogs)
+      logic/response-adopted))
 
 (defn get-dog-by-id-handler [req]
-    (-> req
-        logic/get-by-id
-        logic/data->response))
+  (-> req
+      logic/get-by-id
+      logic/data->response))
 
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
