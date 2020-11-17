@@ -64,4 +64,5 @@
   (http/create-server pedestal-config))
 
 (defn -main [& args]
+  (logic/get-breeds db/breeds)
   (start))

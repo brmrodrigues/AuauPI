@@ -108,3 +108,13 @@
   (if (empty? coll)
     {:status 400 :body "Cachorro não está disponível para adoção"}
     (dog->adopt coll)))
+
+(defn get-breeds [atom]
+  (let [breeds (-> "https://dog.ceo/api/breeds/list/all"
+                   client/get
+                   :body
+                   (json/read-str :key-fn keyword)
+                   :message
+                   keys)]
+    (swap! atom #(into % breeds))))
+

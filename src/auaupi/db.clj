@@ -50,3 +50,6 @@
           :castrated? true
           :port "G"
           :adopted? false}]))
+
+(def breeds (atom []))
+@breeds
