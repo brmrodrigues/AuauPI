@@ -63,7 +63,7 @@
 
 (defn valid-dog?
   [dog]
-  (cond 
+  (cond
     (s/valid? ::specs/dog dog) (create-dog! dog)
     :else {:status 400 :body (json/write-str {:message "Invalid Format"})}))
 
@@ -103,3 +103,12 @@
   (cond
     (empty? data) {:status 404 :body (json/write-str "Not Found")}
     :else {:status 200 :body (json/write-str data)}))
+
+(defn get-breeds [atom]
+  (let [breeds (-> "https://dog.ceo/api/breeds/list/all"
+                   client/get
+                   :body
+                   (json/read-str :key-fn keyword)
+                   :message
+                   keys)]
+    (swap! atom #(into % breeds))))
