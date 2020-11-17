@@ -23,10 +23,21 @@
       specs/req->dog
       logic/valid-dog?))
 
+(defn post-adoption-handler [req]
+  (-> req
+      (:path-params {})
+      (assoc :adopted? false)
+      (logic/filter-dogs  @db/dogs)
+      logic/dog->adopt)
+  (-> req
+      (:path-params {})
+      (logic/filter-dogs  @db/dogs)
+      logic/response-adopted))
+
 (defn get-dog-by-id-handler [req]
-    (-> req
-        logic/get-by-id
-        logic/data->response))
+  (-> req
+      logic/get-by-id
+      logic/data->response))
 
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
@@ -36,6 +47,7 @@
    #{["/" :get respond-hello :route-name :greet]
      ["/dogs" :get get-dogs-handler :route-name :get-dogs]
      ["/dogs" :post post-dogs-handler :route-name :post-dogs]
+     ["/dogs/:id" :post post-adoption-handler :route-name :adopt-dogs]
      ["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]}))
 
 (def pedestal-config
