@@ -10,7 +10,7 @@
 
 (defn filter-dogs [params coll]
   (filter (fn [dog] (and (= params (select-keys dog (keys params)))
-                         #_(= {:adopted? false} (select-keys dog (keys {:adopted? false}))))) coll))
+                         (= {:adopted? false} (select-keys dog (keys {:adopted? false}))))) coll))
 
 (defn response-all [coll]
   (map #(into {}
@@ -20,17 +20,18 @@
                :img  (:img  %)}) coll))
 
 (defn req->treated [req]
-  (into {}
-        (map (fn [[k s]]
-               [k (try (let [v (edn/read-string s)]
-                         (if (or (number? v)
-                                 (boolean? v))
-                           v
-                           s))
-                       (catch Throwable ex
-                         (println ex)
-                         s))]))
-        req))
+ (into {}
+       (map (fn [[k s]]
+              [k (try (let [v (edn/read-string s)]
+                        (if (or (number? v)
+                                (boolean? v))
+                          v
+                          s))
+                      (catch Throwable ex
+                        (println ex)
+                        s))]))
+       req))
+
 
 (defn get-breed-image! [raca]
   (-> (str "https://dog.ceo/api/breed/" (clojure.string/lower-case raca) "/images/random")
@@ -61,7 +62,7 @@
     (swap! db/dogs conj image-added)
     (http/json-response image-added)))
 
-(defn valid-dog?
+(defn valid-dog? 
   [dog]
   (cond
     (s/valid? ::specs/dog dog) (create-dog! dog)
