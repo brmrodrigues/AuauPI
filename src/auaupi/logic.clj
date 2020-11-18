@@ -9,8 +9,12 @@
    [clojure.edn :as edn]))
 
 (defn filter-dogs [params coll]
+<<<<<<< HEAD
   (filter (fn [dog] (and (= params (select-keys dog (keys params)))
                          (= {:adopted? false} (select-keys dog (keys {:adopted? false}))))) coll))
+=======
+  (filter (fn [dog] (= params (select-keys dog (keys params)))) coll))
+>>>>>>> main
 
 (defn response-all [coll]
   (map #(into {}
@@ -71,16 +75,6 @@
 (defn get-date []
   (quot (System/currentTimeMillis) 1000))
 
-(defn dog->adopt [coll]
-  (let [dog
-        (->> coll
-             (into {})
-             (map (fn [[k v]] [k v]))
-             (into {}))
-        pos (.indexOf @db/dogs dog)]
-    (swap! db/dogs assoc-in [pos :adopted?] true)
-    (swap! db/dogs assoc-in [pos :adoptionDate] (get-date))))
-
 (defn response-adopted [coll]
   (let [dog (->> coll
                  (into {})
@@ -95,6 +89,18 @@
              :body (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!")})
       "Parabéns! Adoção realizada com sucesso")))
 
+(defn dog->adopt [coll]
+  (let [dog
+        (->> coll
+             (into {})
+             (map (fn [[k v]] [k v]))
+             (into {}))
+        pos (.indexOf @db/dogs dog)]
+    (swap! db/dogs assoc-in [pos :adopted?] true)
+    (swap! db/dogs assoc-in [pos :adoptionDate] (get-date))
+    (response-adopted coll)))
+
+
 (defn get-by-id [req]
   (let [id (:id (:path-params req))]
     (filter #(= id (:id %)) @db/dogs)))
@@ -105,7 +111,16 @@
     (empty? data) {:status 404 :body (json/write-str "Not Found")}
     :else {:status 200 :body (json/write-str data)}))
 
+<<<<<<< HEAD
 (defn get-breeds! [atom]
+=======
+(defn check-adopted [coll]
+  (if (empty? coll)
+    {:status 400 :body "Cachorro não está disponível para adoção"}
+    (dog->adopt coll)))
+
+(defn get-breeds [atom]
+>>>>>>> main
   (let [breeds (-> "https://dog.ceo/api/breeds/list/all"
                    client/get
                    :body
@@ -113,3 +128,7 @@
                    :message
                    keys)]
     (swap! atom #(into % breeds))))
+<<<<<<< HEAD
+=======
+
+>>>>>>> main

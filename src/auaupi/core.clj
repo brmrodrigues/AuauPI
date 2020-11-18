@@ -12,6 +12,7 @@
 (defn get-dogs-handler [req]
   (-> req
       (:params {})
+      (assoc :adopted? false)
       logic/req->treated
       (logic/filter-dogs @db/dogs)
       logic/response-all
@@ -27,11 +28,7 @@
       (:path-params {})
       (assoc :adopted? false)
       (logic/filter-dogs  @db/dogs)
-      logic/dog->adopt)
-  (-> req
-      (:path-params {})
-      (logic/filter-dogs  @db/dogs)
-      logic/response-adopted))
+      logic/check-adopted))
 
 (defn get-dog-by-id-handler [req]
   (-> req
