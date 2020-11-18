@@ -45,7 +45,7 @@
                       :port "G"
                       :adopted? false}
                      {:id "5"
-                      :name nil
+                      :name ""
                       :breed "Pitbull"
                       :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
                       :age 7
@@ -53,6 +53,7 @@
                       :castrated? false
                       :port "M"
                       :adopted? false}])
+    
     (is (match? {:body [{:id "2"
                          :name "Xenon"
                          :breed "Weimaraner"
@@ -63,7 +64,7 @@
                          :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
                         {:id "5"
                          :breed "Pitbull"
-                         :name nil
+                         :name ""
                          :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}]
                  :status 200}
                 (make-request! :get "/dogs"))))

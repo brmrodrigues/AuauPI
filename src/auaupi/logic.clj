@@ -19,17 +19,18 @@
                :img  (:img  %)}) coll))
 
 (defn req->treated [req]
-  (into {}
-        (map (fn [[k s]]
-               [k (try (let [v (edn/read-string s)]
-                         (if (or (number? v)
-                                 (boolean? v))
-                           v
-                           s))
-                       (catch Throwable ex
-                         (println ex)
-                         s))]))
-        req))
+ (into {}
+       (map (fn [[k s]]
+              [k (try (let [v (edn/read-string s)]
+                        (if (or (number? v)
+                                (boolean? v))
+                          v
+                          s))
+                      (catch Throwable ex
+                        (println ex)
+                        s))]))
+       req))
+
 
 (defn get-breed-image! [raca]
   (-> (str "https://dog.ceo/api/breed/" (clojure.string/lower-case raca) "/images/random")
@@ -60,7 +61,7 @@
     (swap! db/dogs conj image-added)
     (http/json-response image-added)))
 
-(defn valid-dog?
+(defn valid-dog!
   [dog]
   (cond
     (s/valid? ::specs/dog dog) (create-dog! dog)
@@ -110,12 +111,10 @@
     {:status 400 :body "Cachorro não está disponível para adoção"}
     (dog->adopt coll)))
 
-(defn get-breeds [atom]
+(defn get-breeds! [atom]
   (let [breeds (-> "https://dog.ceo/api/breeds/list/all"
                    client/get
                    :body
                    (json/read-str :key-fn keyword)
                    :message
-                   keys)]
-    (swap! atom #(into % breeds))))
-
+                   keys)]))
