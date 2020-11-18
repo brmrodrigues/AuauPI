@@ -62,7 +62,7 @@
     (swap! db/dogs conj image-added)
     (http/json-response image-added)))
 
-(defn valid-dog? 
+(defn valid-dog!
   [dog]
   (cond
     (s/valid? ::specs/dog dog) (create-dog! dog)
@@ -105,7 +105,7 @@
     (empty? data) {:status 404 :body (json/write-str "Not Found")}
     :else {:status 200 :body (json/write-str data)}))
 
-(defn get-breeds [atom]
+(defn get-breeds! [atom]
   (let [breeds (-> "https://dog.ceo/api/breeds/list/all"
                    client/get
                    :body

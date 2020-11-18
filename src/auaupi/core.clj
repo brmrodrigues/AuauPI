@@ -18,7 +18,6 @@
       http/json-response))
 
 (defn post-dogs-handler [req]
-  (prn (specs/req->dog req))
   (-> req
       specs/req->dog
       logic/valid-dog?))
