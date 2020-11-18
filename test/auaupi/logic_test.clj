@@ -14,7 +14,7 @@
                     :gender "M"
                     :castrated? true
                     :port "M"
-                    :adopted? true}              
+                    :adopted? true}
                    {:id "1"
                     :name "Leka"
                     :breed "Maltese"
@@ -34,20 +34,20 @@
                     :castrated? false
                     :port "G"
                     :adopted? false}])
-  
+
   (testing "filter dogs"
     (is (match? '({:breed "Maltese"
-                  :castrated? true
-                  :age 8
-                  :name "Leka"
-                  :port "P"
-                  :id "1"
-                  :gender "F"
-                  :adopted? false
-                  :img
-                  "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"})
+                   :castrated? true
+                   :age 8
+                   :name "Leka"
+                   :port "P"
+                   :id "1"
+                   :gender "F"
+                   :adopted? false
+                   :img
+                   "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"})
                 (logic/filter-dogs {:id "1"} @db/dogs))))
-  
+
   (testing "summary information dogs"
     (is (match? [{:id "0"
                   :breed "Mix"
@@ -67,9 +67,37 @@
   (testing "format request"
     (is (match? {:castrated? true}
                 (logic/req->treated {:castrated? "true"}))))
-  
+
   (testing "adoption dog"
-    (is (match? {:id "2"}
+    (is (match? [{:breed "Mix"
+                  :castrated? true
+                  :age 15
+                  :name "Bardock"
+                  :port "M"
+                  :id "0"
+                  :gender "M"
+                  :adopted? true
+                  :img "https://images.dog.ceo/breeds/mix/piper.jpg"}
+                 {:breed "Maltese"
+                  :castrated? true
+                  :age 8
+                  :name "Leka"
+                  :port "P"
+                  :id "1"
+                  :gender "F"
+                  :adopted? false
+                  :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"}
+                 {:adoptionDate (logic/get-date)
+                  :breed "Weimaraner"
+                  :castrated? false
+                  :age 2
+                  :name "Xenon"
+                  :port "G"
+                  :id "2"
+                  :gender "M"
+                  :adopted? true
+                  :img
+                  "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"}]
                 (logic/dog->adopt {:id "2"
                                    :name "Xenon"
                                    :breed "Weimaraner"
@@ -78,4 +106,28 @@
                                    :gender "M"
                                    :castrated? false
                                    :port "G"
-                                   :adopted? false})))))
+                                   :adopted? false}))))
+  (testing "response dog male"
+    (is (match? {:body
+                 "Parabéns, você acabou de dar um novo lar para o Xenon!"}
+                (logic/response-adopted {:id "2"
+                                         :name "Xenon"
+                                         :breed "Weimaraner"
+                                         :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"
+                                         :age 2
+                                         :gender "M"
+                                         :castrated? false
+                                         :port "G"
+                                         :adopted? false}))))
+  (testing "response dog female"
+    (is (match? {:body
+                 "Parabéns, você acabou de dar um novo lar para a Leka!"}
+         (logic/response-adopted {:id "1"
+                                  :name "Leka"
+                                  :breed "Maltese"
+                                  :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"
+                                  :age 8
+                                  :gender "F"
+                                  :castrated? true
+                                  :port "P"
+                                  :adopted? false})))))

@@ -20,7 +20,7 @@
 (defn post-dogs-handler [req]
   (-> req
       specs/req->dog
-      logic/valid-dog?))
+      logic/valid-dog!))
 
 (defn post-adoption-handler [req]
   (-> req
@@ -66,5 +66,5 @@
   (http/create-server pedestal-config))
 
 (defn -main [& args]
-  (logic/get-breeds db/breeds)
+  (logic/get-breeds! db/breeds)
   (start))
