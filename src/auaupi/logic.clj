@@ -69,17 +69,6 @@
 (defn get-date []
   (quot (System/currentTimeMillis) 1000))
 
-(defn dog->adopt [coll]
-  (let [dog
-        (->> coll
-             (into {})
-             (map (fn [[k v]] [k v]))
-             (into {}))
-        pos (.indexOf @db/dogs dog)]
-    (swap! db/dogs assoc-in [pos :adopted?] true)
-    (swap! db/dogs assoc-in [pos :adoptionDate] (get-date))
-    {:status 200 :body dog}))
-
 (defn response-adopted [coll]
   (let [dog (->> coll
                  (into {})
@@ -93,6 +82,18 @@
             {:status 200
              :body (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!")})
       "Parabéns! Adoção realizada com sucesso")))
+
+(defn dog->adopt [coll]
+  (let [dog
+        (->> coll
+             (into {})
+             (map (fn [[k v]] [k v]))
+             (into {}))
+        pos (.indexOf @db/dogs dog)]
+    (swap! db/dogs assoc-in [pos :adopted?] true)
+    (swap! db/dogs assoc-in [pos :adoptionDate] (get-date))
+    (response-adopted coll)))
+
 
 (defn get-by-id [req]
   (let [id (:id (:path-params req))]
