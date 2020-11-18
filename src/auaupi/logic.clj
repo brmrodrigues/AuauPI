@@ -9,12 +9,7 @@
    [clojure.edn :as edn]))
 
 (defn filter-dogs [params coll]
-<<<<<<< HEAD
-  (filter (fn [dog] (and (= params (select-keys dog (keys params)))
-                         (= {:adopted? false} (select-keys dog (keys {:adopted? false}))))) coll))
-=======
   (filter (fn [dog] (= params (select-keys dog (keys params)))) coll))
->>>>>>> main
 
 (defn response-all [coll]
   (map #(into {}
@@ -111,24 +106,15 @@
     (empty? data) {:status 404 :body (json/write-str "Not Found")}
     :else {:status 200 :body (json/write-str data)}))
 
-<<<<<<< HEAD
-(defn get-breeds! [atom]
-=======
 (defn check-adopted [coll]
   (if (empty? coll)
     {:status 400 :body "Cachorro não está disponível para adoção"}
     (dog->adopt coll)))
 
-(defn get-breeds [atom]
->>>>>>> main
+(defn get-breeds! [atom]
   (let [breeds (-> "https://dog.ceo/api/breeds/list/all"
                    client/get
                    :body
                    (json/read-str :key-fn keyword)
                    :message
-                   keys)]
-    (swap! atom #(into % breeds))))
-<<<<<<< HEAD
-=======
-
->>>>>>> main
+                   keys)]))

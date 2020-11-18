@@ -67,46 +67,7 @@
   (testing "format request"
     (is (match? {:castrated? true}
                 (logic/req->treated {:castrated? "true"}))))
-
-  (testing "adoption dog"
-    (is (match? [{:breed "Mix"
-                  :castrated? true
-                  :age 15
-                  :name "Bardock"
-                  :port "M"
-                  :id "0"
-                  :gender "M"
-                  :adopted? true
-                  :img "https://images.dog.ceo/breeds/mix/piper.jpg"}
-                 {:breed "Maltese"
-                  :castrated? true
-                  :age 8
-                  :name "Leka"
-                  :port "P"
-                  :id "1"
-                  :gender "F"
-                  :adopted? false
-                  :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"}
-                 {:adoptionDate (logic/get-date)
-                  :breed "Weimaraner"
-                  :castrated? false
-                  :age 2
-                  :name "Xenon"
-                  :port "G"
-                  :id "2"
-                  :gender "M"
-                  :adopted? true
-                  :img
-                  "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"}]
-                (logic/dog->adopt {:id "2"
-                                   :name "Xenon"
-                                   :breed "Weimaraner"
-                                   :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"
-                                   :age 2
-                                   :gender "M"
-                                   :castrated? false
-                                   :port "G"
-                                   :adopted? false}))))
+  
   (testing "response dog male"
     (is (match? {:body
                  "Parabéns, você acabou de dar um novo lar para o Xenon!"}
