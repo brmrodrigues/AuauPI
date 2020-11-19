@@ -58,7 +58,7 @@
         image-added (->> image
                          (assoc dog :img)
                          add-fields)]
-     (swap! db/dogs conj image-added)
+     (db/conj-atom! image-added)
      (http/json-response image-added)))
 
 (defn valid-dog!
