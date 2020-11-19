@@ -58,7 +58,7 @@
         image-added (->> image
                          (assoc dog :img)
                          add-fields)]
-    (swap! db/dogs conj image-added)
+    (db/conj-atom! image-added)
     (http/json-response image-added)))
 
 (defn valid-dog!
@@ -91,8 +91,8 @@
              (map (fn [[k v]] [k v]))
              (into {}))
         pos (.indexOf @db/dogs dog)]
-    (swap! db/dogs assoc-in [pos :adopted?] true)
-    (swap! db/dogs assoc-in [pos :adoptionDate] (get-date))
+    (db/assoc-atom! [pos :adopted?] true)
+    (db/assoc-atom! [pos :adoptionDate] (get-date))
     (response-adopted coll)))
 
 
@@ -117,4 +117,5 @@
                    :body
                    (json/read-str :key-fn keyword)
                    :message
-                   keys)]))
+                   keys)]
+    (swap! db/breeds #(into % breeds))))
