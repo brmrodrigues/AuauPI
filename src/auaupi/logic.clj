@@ -58,8 +58,8 @@
         image-added (->> image
                          (assoc dog :img)
                          add-fields)]
-    (db/conj-atom! image-added)
-    (http/json-response image-added)))
+     (swap! db/dogs conj image-added)
+     (http/json-response image-added)))
 
 (defn valid-dog!
   [dog]
@@ -118,4 +118,6 @@
                    (json/read-str :key-fn keyword)
                    :message
                    keys)]
-    (swap! db/breeds #(into % breeds))))
+    (swap! atom #(into % breeds))))
+
+(get-breeds! db/breeds)

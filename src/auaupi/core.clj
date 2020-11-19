@@ -5,7 +5,6 @@
    [io.pedestal.http.route :as route]
    [io.pedestal.http.body-params :as body-params]
    [auaupi.db :as db]
-   [clojure.data.json :as json]
    [auaupi.logic :as logic]
    [auaupi.specs :as specs]))
 
