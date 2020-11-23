@@ -20,7 +20,7 @@
 
 (defn post-dogs-handler [req]
   (-> req
-      specs/req->dog
+      logic/check-breed!
       logic/valid-dog!))
 
 (defn post-adoption-handler [req]
