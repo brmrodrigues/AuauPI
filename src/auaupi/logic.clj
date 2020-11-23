@@ -1,11 +1,7 @@
 (ns auaupi.logic
   (:require
-   [clj-http.client :as client]
    [clojure.data.json :as json]
-   [io.pedestal.http :as http]
    [auaupi.db :as db]
-   [clojure.spec.alpha :as s]
-   [auaupi.specs :as specs]
    [clojure.edn :as edn]))
 
 (defn filter-dogs [params coll]
@@ -31,14 +27,6 @@
                         s))]))
        req))
 
-
-(defn get-breed-image! [raca]
-  (-> (str "https://dog.ceo/api/breed/" (clojure.string/lower-case raca) "/images/random")
-      client/get
-      :body
-      (json/read-str :key-fn keyword)
-      :message))
-
 (defn add-fields
   [map]
   (hash-map
@@ -51,21 +39,6 @@
    :castrated? (:auaupi.specs/castrated? map)
    :img (:img map)
    :adopted? false))
-
-(defn create-dog!
-  [{:keys [breed] :as dog}]
-  (let [image (get-breed-image! (::specs/breed dog))
-        image-added (->> image
-                         (assoc dog :img)
-                         add-fields)]
-     (db/conj-atom! image-added)
-     (http/json-response image-added)))
-
-(defn valid-dog!
-  [dog]
-  (cond
-    (s/valid? ::specs/dog dog) (create-dog! dog)
-    :else {:status 400 :body (json/write-str {:message "Invalid Format"})}))
 
 (defn get-date []
   (quot (System/currentTimeMillis) 1000))
@@ -90,10 +63,9 @@
              (map (fn [[k v]] [k v]))
              (into {}))
         pos (.indexOf @db/dogs dog)]
-    (db/assoc-atom! [pos :adopted?] true)
-    (db/assoc-atom! [pos :adoptionDate] (get-date))
+    (db/assoc-in-dogs! [pos :adopted?] true)
+    (db/assoc-in-dogs! [pos :adoptionDate] (get-date))
     (response-adopted coll)))
-
 
 (defn get-by-id [req]
   (let [id (:id (:path-params req))]
@@ -109,12 +81,3 @@
   (if (empty? coll)
     {:status 400 :body "Cachorro não está disponível para adoção"}
     (dog->adopt coll)))
-
-(defn get-breeds! []
-  (let [breeds (-> "https://dog.ceo/api/breeds/list/all"
-                   client/get
-                   :body
-                   (json/read-str :key-fn keyword)
-                   :message
-                   keys)]
-    (db/assoc-breed! #(into % breeds))))
