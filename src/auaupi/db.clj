@@ -52,8 +52,8 @@
           :adopted? false}]))
 
 (def breeds (atom []))
-@breeds
 
+<<<<<<< HEAD
 (defn assoc-in-dog! [path v]
   (swap! dogs assoc-in path v))
 
@@ -61,4 +61,13 @@
   (swap! dogs conj v))
 
 (defn assoc-breed! [f]
+=======
+(defn assoc-in-dogs! [path v]
+  (swap! dogs assoc-in path v))
+
+(defn conj-dogs! [v]
+  (swap! dogs conj v))
+
+(defn assoc-breeds! [f]
+>>>>>>> 0667d38447efbd6c45f5f7ac0cab9c862984eb3d
   (swap! breeds assoc f))
