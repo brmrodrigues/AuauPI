@@ -54,8 +54,11 @@
 (def breeds (atom []))
 @breeds
 
-(defn assoc-atom! [path v]
+(defn assoc-in-dog! [path v]
   (swap! dogs assoc-in path v))
 
-(defn conj-atom! [v]
+(defn conj-dog! [v]
   (swap! dogs conj v))
+
+(defn assoc-breed! [f]
+  (swap! breeds assoc f))
