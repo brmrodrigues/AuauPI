@@ -37,7 +37,7 @@
                    (json/read-str :key-fn keyword)
                    :message
                    keys)]
-    (db/assoc-in-dogs! #(into % breeds))))
+    (db/conj-breeds! breeds)))
 
 (defn check-breed! [req]
   (get-breeds!)
