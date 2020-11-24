@@ -5,8 +5,8 @@
    [io.pedestal.http.route :as route]
    [io.pedestal.http.body-params :as body-params]
    [auaupi.db :as db]
-   [clojure.data.json :as json]
    [auaupi.logic :as logic]
+   [auaupi.not-logic :as not-logic]
    [auaupi.specs :as specs]))
 
 (defn get-dogs-handler [req]
@@ -20,8 +20,8 @@
 
 (defn post-dogs-handler [req]
   (-> req
-      logic/check-breed!
-      logic/valid-dog!))
+      not-logic/check-breed!
+      not-logic/valid-dog!))
 
 (defn post-adoption-handler [req]
   (-> req
@@ -63,5 +63,5 @@
   (http/create-server pedestal-config))
 
 (defn -main [& args]
-  (logic/get-breeds! db/breeds)
+  (not-logic/get-breeds! db/breeds)
   (start))
