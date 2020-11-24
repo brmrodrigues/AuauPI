@@ -52,4 +52,12 @@
           :adopted? false}]))
 
 (def breeds (atom []))
-@breeds
+
+(defn assoc-in-dogs! [path v]
+  (swap! dogs assoc-in path v))
+
+(defn conj-dogs! [v]
+  (swap! dogs conj v))
+
+(defn assoc-breeds! [f]
+  (swap! breeds assoc f))
