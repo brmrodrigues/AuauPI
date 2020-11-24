@@ -37,4 +37,13 @@
                    (json/read-str :key-fn keyword)
                    :message
                    keys)]
-    (db/assoc-in-dogs! #(into % breeds))))
+    (db/conj-breeds! breeds)))
+
+(defn check-breed! [req]
+  (get-breeds!)
+  (let [breed (:breed (:json-params req))]
+    (prn (keyword breed))
+    (cond
+      (not (empty?
+            (filter #(= (keyword breed) %) @db/breeds))) (specs/req->dog req)
+      :else {:status 400 :body (json/write-str {:message "Invalid Format"})})))

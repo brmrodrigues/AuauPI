@@ -59,5 +59,5 @@
 (defn conj-dogs! [v]
   (swap! dogs conj v))
 
-(defn assoc-breeds! [f]
-  (swap! breeds assoc f))
+(defn conj-breeds! [v]
+  (swap! breeds #(into % v)))
