@@ -75,14 +75,14 @@
                  (into {})
                  (map (fn [[k v]] [k v]))
                  (into {}))]
-    (if (not (nil? (:name dog)))
+    (if (not (empty? (:name dog)))
       (cond (= (:gender dog) "M")
             {:status 200
-             :body (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!")}
+             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!"))}
             (= (:gender dog) "F")
             {:status 200
-             :body (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!")})
-      "Parabéns! Adoção realizada com sucesso")))
+             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!"))})
+      {:status 200 :body (json/write-str "Parabéns! Adoção realizada com sucesso")})))
 
 (defn dog->adopt [coll]
   (let [dog
@@ -108,7 +108,7 @@
 
 (defn check-adopted [coll]
   (if (empty? coll)
-    {:status 400 :body "Cachorro não está disponível para adoção"}
+    {:status 400 :body (json/write-str "Cachorro não está disponível para adoção")}
     (dog->adopt coll)))
 
 (defn get-breeds! [atom]
@@ -117,4 +117,5 @@
                    :body
                    (json/read-str :key-fn keyword)
                    :message
-                   keys)]))
+                   keys)]
+    (swap! atom #(into % breeds))))

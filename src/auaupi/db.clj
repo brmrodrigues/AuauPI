@@ -42,7 +42,7 @@
           :adopted? false}
 
          {:id "4"
-          :name "Thora"
+          :name ""
           :breed "Pitbull"
           :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
           :age 7
