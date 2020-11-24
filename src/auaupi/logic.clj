@@ -76,10 +76,10 @@
                  (map (fn [[k v]] [k v]))
                  (into {}))]
     (if (not (empty? (:name dog)))
-      (cond (= (:gender dog) "M")
+      (cond (= (:gender dog) "m")
             {:status 200
              :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!"))}
-            (= (:gender dog) "F")
+            (= (:gender dog) "f")
             {:status 200
              :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!"))})
       {:status 200 :body (json/write-str "Parabéns! Adoção realizada com sucesso")})))

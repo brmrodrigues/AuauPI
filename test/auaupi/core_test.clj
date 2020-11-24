@@ -95,8 +95,7 @@
                          :img (fn [dog] (:img dog) (first @db/dogs))}] :status 200}
                 (make-request! :get "/dogs/4"))))
 
-  #_(testing "adopting a male dog"
-    (is (match? {:status 200
-                 :body "Parabéns, você acabou de dar um novo lar para o caramelo!"}
+(testing "testing adopt a dog"
+    (is (match? {:body "Parabéns, você acabou de dar um novo lar para o caramelo!"}
                 (make-request! :post "/dogs/4"
-                               :headers {"Content-Type" "text/plain"})))))
+                               :headers {"Content-Type" "application/json"})))))
