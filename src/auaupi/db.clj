@@ -6,9 +6,9 @@
           :breed "Mix"
           :img "https://images.dog.ceo/breeds/mix/piper.jpg"
           :age 15
-          :gender "M"
+          :gender "m"
           :castrated? true
-          :port "M"
+          :port "m"
           :adopted? true}
 
          {:id "1"
@@ -16,9 +16,9 @@
           :breed "Maltese"
           :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"
           :age 8
-          :gender "F"
+          :gender "f"
           :castrated? true
-          :port "P"
+          :port "p"
           :adopted? true}
 
          {:id "2"
@@ -26,9 +26,9 @@
           :breed "Weimaraner"
           :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"
           :age 2
-          :gender "M"
+          :gender "m"
           :castrated? false
-          :port "G"
+          :port "g"
           :adopted? false}
 
          {:id "3"
@@ -36,19 +36,19 @@
           :breed "Pitbull"
           :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
           :age 7
-          :gender "M"
+          :gender "m"
           :castrated? false
-          :port "G"
+          :port "g"
           :adopted? false}
 
          {:id "4"
-          :name "Thora"
+          :name ""
           :breed "Pitbull"
           :img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"
           :age 7
-          :gender "F"
+          :gender "f"
           :castrated? true
-          :port "G"
+          :port "g"
           :adopted? false}]))
 
 (def breeds (atom []))

@@ -47,14 +47,14 @@
                  (into {})
                  (map (fn [[k v]] [k v]))
                  (into {}))]
-    (if (not (nil? (:name dog)))
-      (cond (= (:gender dog) "M")
+    (if (not (empty? (:name dog)))
+      (cond (= (:gender dog) "m")
             {:status 200
-             :body (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!")}
-            (= (:gender dog) "F")
+             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!"))}
+            (= (:gender dog) "f")
             {:status 200
-             :body (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!")})
-      "Parabéns! Adoção realizada com sucesso")))
+             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!"))})
+      {:status 200 :body (json/write-str "Parabéns! Adoção realizada com sucesso")})))
 
 (defn dog->adopt [coll]
   (let [dog
