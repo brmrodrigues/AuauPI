@@ -42,6 +42,7 @@
 
 (defn get-date []
   (quot (System/currentTimeMillis) 1000))
+
 (defn response-adopted [coll]
   (let [dog (->> coll
                  (into {})
