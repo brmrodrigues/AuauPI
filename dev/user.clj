@@ -1,7 +1,9 @@
 (ns user
   (:require [auaupi.core :as core]
             [io.pedestal.http :as http]
-            [io.pedestal.http.body-params :as body-params]))
+            [io.pedestal.http.body-params :as body-params]
+            [datomic.client.api :as d]
+            [auaupi.datomic :as datomic]))
 
 
 (defonce server (atom nil))
@@ -16,6 +18,7 @@
 
 
 (defn start-dev []
+  (datomic/prepare-datomic!)
  (when (nil? @server) 
    (reset! server (-> dev-pedestal-config
                       http/create-server
@@ -27,5 +30,13 @@
     (http/stop @server)
     (reset! server nil)))
 
+(defn delete-db []
+  (let [client (d/client {:server-type :dev-local
+                          :storage-dir (str (System/getenv "PWD") "/datomic-data")
+                          :db-name "dogs"
+                          :system "dev"})]
+   (d/delete-database client {:db-name "dogs"} )))
+
 #_(start-dev)
 #_(stop-dev)
+#_(delete-db)
