@@ -7,7 +7,9 @@
    [auaupi.db :as db]
    [auaupi.logic :as logic]
    [auaupi.not-logic :as not-logic]
-   [auaupi.specs :as specs]))
+   [auaupi.specs :as specs]
+   [datomic.client.api :as d]
+   [auaupi.datomic :as datomic]))
 
 (defn get-dogs-handler [req]
   (-> req
@@ -63,5 +65,6 @@
   (http/create-server pedestal-config))
 
 (defn -main [& args]
-  (not-logic/get-breeds! db/breeds)
+  (datomic/prepare-datomic!)
+  (not-logic/get-breeds!)
   (start))
