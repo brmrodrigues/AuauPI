@@ -31,3 +31,7 @@ clj -A:build
 ```shell
 java -jar target/auaupi.jar
 ```
+```shell
+Para criar o pom:
+clj -Spom
+```
