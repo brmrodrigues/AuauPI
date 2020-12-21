@@ -21,11 +21,12 @@
 
 (defn get-dogs-handler [req]
   (-> req
-      (:params {})
-      (assoc :adopted? false)
-      logic/req->treated
-      (logic/filter-dogs @db/dogs)
-      logic/response-all
+      #_(:params {})
+      #_(assoc :adopted? false)
+      #_logic/req->treated
+      #_(logic/filter-dogs @db/dogs)
+      #_logic/response-all
+      
       http/json-response))
 
 (defn post-dogs-handler [req]
