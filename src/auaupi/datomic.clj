@@ -72,13 +72,13 @@
 (defn get-dogs [conn]
   (let [f false]
     (d/q '[:find ?id ?nome ?breed ?img
-           :in ?f
+           :in $ ?f
            :where
            [?d :dog/id ?id]
            [?d :dog/name ?nome]
            [?d :dog/breed ?breed]
            [?d :dog/image ?img]
-           [?d :dog/adopted? ?f]] f (d/db conn))))
+           [?d :dog/adopted? ?f]] (d/db conn) f)))
 
 
 (comment
@@ -86,4 +86,15 @@
                          :storage-dir (str (System/getenv "PWD") "/datomic-data")
                          :db-name "dogs"
                          :system "dev"}))
-    (get-dogs (open-connection (d/connect client {:db-name "dogs"}))))
+  (def db (d/db (d/connect client {:db-name "dogs"})))
+    (get-dogs (d/connect client {:db-name "dogs"}))
+  
+  (d/transact (d/connect client {:db-name "dogs"}) {:tx-data [{:dog/id 1
+                                                               :dog/name "Bardock"
+                                                               :dog/breed "Mix"
+                                                               :dog/image "https://images.dog.ceo/breeds/mix/piper.jpg"
+                                                               :dog/gender "m"
+                                                               :dog/castrated? true
+                                                               :dog/port "m"
+                                                               :dog/adopted? true}]}))
+
