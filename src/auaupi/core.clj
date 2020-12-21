@@ -42,7 +42,10 @@
 
 (defn get-dog-by-id-handler [req]
   (-> req
-      logic/get-by-id
+      :path-params
+      :id
+      Long/valueOf
+      datomic/find-dog-by-id
       logic/data->response))
 
 (defn respond-hello [_req]
@@ -76,3 +79,8 @@
   (datomic/prepare-datomic! config-map)
   (not-logic/get-breeds! config-map)
   (start))
+
+
+(datomic/test-post (-> config-map
+                       :datomic
+                       :client-config))
