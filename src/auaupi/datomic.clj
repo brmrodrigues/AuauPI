@@ -1,5 +1,5 @@
 (ns auaupi.datomic
-  (:require 
+  (:require
    [datomic.client.api :as d]))
 
 (defn open-connection [{:keys [datomic]}]
@@ -56,13 +56,13 @@
                  :db/cardinality :db.cardinality/one
                  :db/doc "Dog's is adopted?"}]]
     (d/transact (d/connect client {:db-name "dogs"})
-     {:tx-data schema})))
+                {:tx-data schema})))
 
 
-(defn prepare-datomic! [#_{:keys [datomic]}]
-  (let [client (d/client {:server-type :dev-local
-                          :storage-dir (str (System/getenv "PWD") "/datomic-data")
-                          :db-name "dogs"
-                          :system "dev"})]
-    (d/create-database client {:db-name "dogs"})
+(defn prepare-datomic! [{:keys [datomic]}]
+  (let [client (d/client (-> datomic
+                             :client-config))]
+    (d/create-database client {:db-name (-> datomic
+                                            :client-config
+                                            :db-name)})
     (create-schema client)))

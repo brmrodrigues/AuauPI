@@ -18,7 +18,7 @@
 
 
 (defn start-dev []
-  (datomic/prepare-datomic!)
+  (datomic/prepare-datomic! core/config-map)
  (when (nil? @server) 
    (reset! server (-> dev-pedestal-config
                       http/create-server

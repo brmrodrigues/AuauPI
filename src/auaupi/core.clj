@@ -11,6 +11,14 @@
    [datomic.client.api :as d]
    [auaupi.datomic :as datomic]))
 
+(def config-map
+  {:dog-ceo {:img ["https://dog.ceo/api/breed/", "/images/random"]
+             :breeds "https://dog.ceo/api/breeds/list/all"}
+   :datomic {:client-config {:server-type :dev-local
+                             :storage-dir (str (System/getenv "PWD") "/datomic-data")
+                             :db-name "dogs"
+                             :system "dev"}}})
+
 (defn get-dogs-handler [req]
   (-> req
       (:params {})
@@ -22,8 +30,8 @@
 
 (defn post-dogs-handler [req]
   (-> req
-      not-logic/check-breed!
-      not-logic/valid-dog!))
+      (not-logic/check-breed! config-map)
+      (not-logic/valid-dog! config-map)))
 
 (defn post-adoption-handler [req]
   (-> req
@@ -65,6 +73,6 @@
   (http/create-server pedestal-config))
 
 (defn -main [& args]
-  (datomic/prepare-datomic!)
-  (not-logic/get-breeds!)
+  (datomic/prepare-datomic! config-map)
+  (not-logic/get-breeds! config-map)
   (start))
