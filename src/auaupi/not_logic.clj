@@ -8,16 +8,22 @@
    [clojure.spec.alpha :as s]
    [auaupi.specs :as specs]))
 
-(defn get-breed-image! [raca]
-  (-> (str "https://dog.ceo/api/breed/" (clojure.string/lower-case raca) "/images/random")
+(defn get-breed-image! [raca {:keys [dog-ceo]}]
+  (-> (str (-> dog-ceo
+               :img
+               first)
+           (clojure.string/lower-case raca)
+           (-> dog-ceo
+               :img
+               second))
       client/get
       :body
       (json/read-str :key-fn keyword)
       :message))
 
 (defn create-dog!
-  [{:keys [breed] :as dog}]
-  (let [image (get-breed-image! (::specs/breed dog))
+  [{:keys [breed] :as dog} config-map]
+  (let [image (get-breed-image! (::specs/breed dog) config-map)
         image-added (->> image
                          (assoc dog :img)
                          logic/add-fields)]
@@ -25,13 +31,14 @@
     (http/json-response image-added)))
 
 (defn valid-dog!
-  [dog]
+  [dog config-map]
   (cond
-    (s/valid? ::specs/dog dog) (create-dog! dog)
+    (s/valid? ::specs/dog dog) (create-dog! dog config-map)
     :else {:status 400 :body (json/write-str {:message "Invalid Format"})}))
 
-(defn get-breeds! []
-  (let [breeds (-> "https://dog.ceo/api/breeds/list/all"
+(defn get-breeds! [{:keys [dog-ceo]}]
+  (let [breeds (-> dog-ceo
+                   :breeds
                    client/get
                    :body
                    (json/read-str :key-fn keyword)
@@ -39,8 +46,8 @@
                    keys)]
     (db/conj-breeds! breeds)))
 
-(defn check-breed! [req]
-  (get-breeds!)
+(defn check-breed! [req config-map]
+  (get-breeds! config-map)
   (let [breed (:breed (:json-params req))]
     (prn (keyword breed))
     (cond
