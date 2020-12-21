@@ -89,12 +89,12 @@
   (def db (d/db (d/connect client {:db-name "dogs"})))
     (get-dogs (d/connect client {:db-name "dogs"}))
   
-  (d/transact (d/connect client {:db-name "dogs"}) {:tx-data [{:dog/id 1
-                                                               :dog/name "Bardock"
+  (d/transact (d/connect client {:db-name "dogs"}) {:tx-data [{:dog/id 2
+                                                               :dog/name "Xenom"
                                                                :dog/breed "Mix"
                                                                :dog/image "https://images.dog.ceo/breeds/mix/piper.jpg"
                                                                :dog/gender "m"
                                                                :dog/castrated? true
                                                                :dog/port "m"
-                                                               :dog/adopted? true}]}))
+                                                               :dog/adopted? false}]}))
 

@@ -19,14 +19,11 @@
                              :db-name "dogs"
                              :system "dev"}}})
 
-(defn get-dogs-handler [req]
-  (-> req
-      #_(:params {})
-      #_(assoc :adopted? false)
-      #_logic/req->treated
-      #_(logic/filter-dogs @db/dogs)
-      #_logic/response-all
-      
+(defn get-dogs-handler [_req]
+  (-> config-map
+      datomic/open-connection
+      datomic/get-dogs
+      logic/format-get-dogs
       http/json-response))
 
 (defn post-dogs-handler [req]
