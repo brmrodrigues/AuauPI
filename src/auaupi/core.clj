@@ -79,8 +79,3 @@
   (datomic/prepare-datomic! config-map)
   (not-logic/get-breeds! config-map)
   (start))
-
-
-#_(datomic/test-post (-> config-map
-                         :datomic
-                         :client-config))

@@ -69,18 +69,6 @@
                                             :db-name)})
     (create-schema client)))
 
-(defn test-post [client]
-  (d/transact (d/connect (d/client client) {:db-name "dogs"})
-              {:tx-data [{:dog/id 1
-                          :dog/name "Arimendo"
-                          :dog/breed "African"
-                          :dog/image "https://images.dog.ceo/breeds/african/n02116738_10469.jpg"
-                          :dog/port "M"
-                          :dog/gender "F"
-                          :dog/birth "2020-05-14"
-                          :dog/castrated? true
-                          :dog/adopted? false}]}))
-
 (defn find-dog-by-id [id conn]
   (->> (d/q '[:find ?id ?n ?b ?i ?p ?g ?birth ?c ?a
               :in $ ?id
