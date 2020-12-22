@@ -44,7 +44,7 @@
                  :db/doc "Dogs's gender"}
 
                 {:db/ident :dog/birth
-                 :db/valueType :db.type/instant
+                 :db/valueType :db.type/string
                  :db/cardinality :db.cardinality/one
                  :db/doc "Dog's birth"}
 
@@ -68,6 +68,21 @@
                                             :client-config
                                             :db-name)})
     (create-schema client)))
+
+(defn find-dog-by-id [id conn]
+  (->> (d/q '[:find ?id ?n ?b ?i ?p ?g ?birth ?c ?a
+              :in $ ?id
+              :where
+              [?e :dog/id ?id]
+              [?e :dog/name ?n]
+              [?e :dog/breed ?b]
+              [?e :dog/image ?i]
+              [?e :dog/port ?p]
+              [?e :dog/gender ?g]
+              [?e :dog/birth ?birth]
+              [?e :dog/castrated? ?c]
+              [?e :dog/adopted? ?a]]
+            (d/db conn) id)))
 
 (defn get-dogs [conn]
   (let [f false]

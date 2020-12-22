@@ -83,9 +83,21 @@
     {:status 400 :body "Cachorro não está disponível para adoção"}
     (dog->adopt coll)))
 
-(defn format-get-dogs [coll]
+(defn datom->dog [coll]
   (->> coll (mapv (fn [[id name breed img]]
                     {:dog/id id
                      :dog/name name
                      :dog/breed breed
                      :dog/img img}))))
+
+(defn datom->dog-full [coll]
+  (->> coll (mapv (fn [[id name breed img port gender birth castrated? adopted?]]
+                    {:dog/id id
+                     :dog/name name
+                     :dog/breed breed
+                     :dog/img img
+                     :dog/port port
+                     :dog/gender gender
+                     :dog/birth birth
+                     :dog/castrated? castrated?
+                     :dog/adopted? adopted?}))))
