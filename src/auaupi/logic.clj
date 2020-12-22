@@ -82,3 +82,10 @@
   (if (empty? coll)
     {:status 400 :body "Cachorro não está disponível para adoção"}
     (dog->adopt coll)))
+
+(defn format-get-dogs [coll]
+  (->> coll (mapv (fn [[id name breed img]]
+                    {:dog/id id
+                     :dog/name name
+                     :dog/breed breed
+                     :dog/img img}))))

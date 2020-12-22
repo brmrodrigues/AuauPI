@@ -5,10 +5,12 @@
 (defn open-connection [{:keys [datomic]}]
   (let [client (d/client (-> datomic
                              :client-config))]
-    (d/create-database client (-> datomic
-                                  :db-name))
-    (d/connect client (-> datomic
-                          :db-name))))
+    (d/create-database client {:db-name (-> datomic
+                                            :client-config
+                                            :db-name)})
+    (d/connect client {:db-name (-> datomic
+                                    :client-config
+                                    :db-name)})))
 
 (defn create-schema [client]
   (let [schema [{:db/ident :dog/id
@@ -66,3 +68,15 @@
                                             :client-config
                                             :db-name)})
     (create-schema client)))
+
+(defn get-dogs [conn]
+  (let [f false]
+    (d/q '[:find ?id ?nome ?breed ?img
+           :in $ ?f
+           :where
+           [?d :dog/id ?id]
+           [?d :dog/name ?nome]
+           [?d :dog/breed ?breed]
+           [?d :dog/image ?img]
+           [?d :dog/adopted? ?f]] (d/db conn) f)))
+
