@@ -81,7 +81,7 @@
                           :dog/castrated? true
                           :dog/adopted? false}]}))
 
-(defn find-dog-by-id [id]
+(defn find-dog-by-id [id conn]
   (->> (d/q '[:find ?id ?n ?b ?i ?p ?g ?birth ?c ?a
               :in $ ?id
               :where
@@ -94,23 +94,8 @@
               [?e :dog/birth ?birth]
               [?e :dog/castrated? ?c]
               [?e :dog/adopted? ?a]]
-            (d/db (d/connect (d/client {:server-type :dev-local
-                                        :storage-dir (str (System/getenv "PWD") "/datomic-data")
-                                        :db-name "dogs"
-                                        :system "dev"}) {:db-name "dogs"})) id)
+            (d/db conn) id)))
 
-       (mapv (fn [[id name breed img port gender birth castrated? adopted?]]
-               {:dog/id id
-                :dog/name name
-                :dog/breed breed
-                :dog/img img
-                :dog/port port
-                :dog/gender gender
-                :dog/birth birth
-                :dog/castrated? castrated?
-                :dog/adopted? adopted?}))))
-
-(find-dog-by-id 1)
 (defn get-dogs [conn]
   (let [f false]
     (d/q '[:find ?id ?nome ?breed ?img

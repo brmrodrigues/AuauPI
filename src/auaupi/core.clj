@@ -23,7 +23,7 @@
   (-> config-map
       datomic/open-connection
       datomic/get-dogs
-      logic/format-get-dogs
+      logic/datom->dog
       http/json-response))
 
 (defn post-dogs-handler [req]
@@ -43,7 +43,9 @@
       :path-params
       :id
       Long/valueOf
-      datomic/find-dog-by-id
+      (datomic/find-dog-by-id
+      (datomic/open-connection config-map))
+      logic/datom->dog-full
       logic/data->response))
 
 (defn respond-hello [_req]
@@ -79,6 +81,6 @@
   (start))
 
 
-(datomic/test-post (-> config-map
-                       :datomic
-                       :client-config))
+#_(datomic/test-post (-> config-map
+                         :datomic
+                         :client-config))
