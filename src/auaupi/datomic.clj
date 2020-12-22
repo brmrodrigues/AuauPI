@@ -95,8 +95,7 @@
             (d/db (d/connect (d/client {:server-type :dev-local
                                         :storage-dir (str (System/getenv "PWD") "/datomic-data")
                                         :db-name "dogs"
-                                        :system "dev"}) {:db-name "dogs"}))
-            id)
+                                        :system "dev"}) {:db-name "dogs"})) id)
 
        (mapv (fn [[id name breed img port gender birth castrated? adopted?]]
                {:dog/id id
