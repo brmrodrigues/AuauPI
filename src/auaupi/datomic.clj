@@ -80,21 +80,3 @@
            [?d :dog/image ?img]
            [?d :dog/adopted? ?f]] (d/db conn) f)))
 
-
-(comment
-  (def client (d/client {:server-type :dev-local
-                         :storage-dir (str (System/getenv "PWD") "/datomic-data")
-                         :db-name "dogs"
-                         :system "dev"}))
-  (def db (d/db (d/connect client {:db-name "dogs"})))
-    (get-dogs (d/connect client {:db-name "dogs"}))
-  
-  (d/transact (d/connect client {:db-name "dogs"}) {:tx-data [{:dog/id 2
-                                                               :dog/name "Xenom"
-                                                               :dog/breed "Mix"
-                                                               :dog/image "https://images.dog.ceo/breeds/mix/piper.jpg"
-                                                               :dog/gender "m"
-                                                               :dog/castrated? true
-                                                               :dog/port "m"
-                                                               :dog/adopted? false}]}))
-
