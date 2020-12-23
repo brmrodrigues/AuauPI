@@ -22,14 +22,16 @@
 (defn get-dogs-handler [_req]
   (-> config-map
       datomic/open-connection
-      datomic/get-dogs
+      datomic/find-dogs
       logic/datom->dog
       http/json-response))
 
 (defn post-dogs-handler [req]
   (-> req
       (not-logic/check-breed! config-map)
-      (not-logic/valid-dog! config-map)))
+      (not-logic/valid-dog! config-map)
+      (datomic/transact-dog! config-map))
+  (http/json-response {:status 200 :body "Registered Dog"}))
 
 (defn post-adoption-handler [req]
   (-> req

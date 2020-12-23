@@ -30,15 +30,15 @@
 (defn add-fields
   [map]
   (hash-map
-   :id "4"
-   :name (:auaupi.specs/name map)
-   :breed (:auaupi.specs/breed map)
-   :age (:auaupi.specs/age map)
-   :gender (:auaupi.specs/gender map)
-   :port (:auaupi.specs/port map)
-   :castrated? (:auaupi.specs/castrated? map)
-   :img (:img map)
-   :adopted? false))
+   :dog/id 4
+   :dog/name (:auaupi.specs/name map)
+   :dog/breed (:auaupi.specs/breed map)
+   :dog/birth (:auaupi.specs/birth map)
+   :dog/gender (:auaupi.specs/gender map)
+   :dog/port (:auaupi.specs/port map)
+   :dog/castrated? (:auaupi.specs/castrated? map)
+   :dog/image (:img map)
+   :dog/adopted? false))
 
 (defn get-date []
   (quot (System/currentTimeMillis) 1000))
