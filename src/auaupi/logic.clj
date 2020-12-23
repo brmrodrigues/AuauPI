@@ -2,7 +2,9 @@
   (:require
    [clojure.data.json :as json]
    [auaupi.db :as db]
-   [clojure.edn :as edn]))
+   [clojure.edn :as edn]
+   [auaupi.datomic :as datomic]
+   [auaupi.core :as core]))
 
 (defn filter-dogs [params coll]
   (filter (fn [dog] (= params (select-keys dog (keys params)))) coll))
@@ -30,7 +32,7 @@
 (defn add-fields
   [map]
   (hash-map
-   :dog/id 4
+   :dog/id (datomic/inc-last-id (datomic/open-connection core/config-map))
    :dog/name (:auaupi.specs/name map)
    :dog/breed (:auaupi.specs/breed map)
    :dog/birth (:auaupi.specs/birth map)
