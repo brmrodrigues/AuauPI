@@ -21,8 +21,8 @@
 
 (defn get-dogs-handler [_req]
   (-> config-map
-      datomic/open-connection!
-      datomic/get-dogs!
+      datomic/open-connection
+      datomic/get-dogs
       logic/datom->dog
       http/json-response))
 
@@ -44,7 +44,7 @@
       :id
       Long/valueOf
       (datomic/find-dog-by-id
-      (datomic/open-connection config-map))
+       (datomic/open-connection config-map))
       logic/datom->dog-full
       logic/data->response))
 

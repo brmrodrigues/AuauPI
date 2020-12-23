@@ -54,4 +54,6 @@
                      :dog/castrated? true
                      :dog/port "g"
                      :dog/adopted? false}]]
-    (d/transact (datomic/open-connection core/config-map) {:tx-data first-dogs})))
+    (d/transact
+     (datomic/open-connection core/config-map)
+     {:tx-data first-dogs})))
