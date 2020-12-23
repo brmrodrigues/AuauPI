@@ -13,6 +13,8 @@
     (update response :body json/read-str
             :key-fn keyword)))
 
+
+
 (deftest dogs-listing-not-adopteds
   (testing "listing dogs"
     (reset! db/dogs [])

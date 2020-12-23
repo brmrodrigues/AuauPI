@@ -21,8 +21,8 @@
 
 (defn get-dogs-handler [_req]
   (-> config-map
-      datomic/open-connection
-      datomic/get-dogs
+      datomic/open-connection!
+      datomic/get-dogs!
       logic/datom->dog
       http/json-response))
 

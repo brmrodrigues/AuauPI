@@ -2,7 +2,7 @@
   (:require
    [datomic.client.api :as d]))
 
-(defn open-connection [{:keys [datomic]}]
+(defn open-connection! [{:keys [datomic]}]
   (let [client (d/client (-> datomic
                              :client-config))]
     (d/create-database client {:db-name (-> datomic
@@ -84,7 +84,7 @@
               [?e :dog/adopted? ?a]]
             (d/db conn) id)))
 
-(defn get-dogs [conn]
+(defn get-dogs! [conn]
   (let [f false]
     (d/q '[:find ?id ?nome ?breed ?img
            :in $ ?f
