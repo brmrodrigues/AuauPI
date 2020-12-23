@@ -44,7 +44,7 @@
       :id
       Long/valueOf
       (datomic/find-dog-by-id
-      (datomic/open-connection config-map))
+       (datomic/open-connection config-map))
       logic/datom->dog-full
       logic/data->response))
 
