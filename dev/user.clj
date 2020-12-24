@@ -3,7 +3,8 @@
             [io.pedestal.http :as http]
             [io.pedestal.http.body-params :as body-params]
             [datomic.client.api :as d]
-            [auaupi.datomic :as datomic]))
+            [auaupi.datomic :as datomic]
+            [helpers :as h]))
 
 
 (defonce server (atom nil))
@@ -19,6 +20,7 @@
 
 (defn start-dev []
   (datomic/prepare-datomic! core/config-map)
+  (h/initial-dogs!)
  (when (nil? @server) 
    (reset! server (-> dev-pedestal-config
                       http/create-server
