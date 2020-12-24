@@ -25,8 +25,8 @@
   [{:keys [breed] :as dog} config-map]
   (let [image (get-breed-image! (::specs/breed dog) config-map)
         dog (->> image
-                         (assoc dog :img)
-                         logic/add-fields)]
+                 (assoc dog :img)
+                 (logic/add-fields config-map))]
     #_(db/conj-dogs! dog)
     dog))
 
