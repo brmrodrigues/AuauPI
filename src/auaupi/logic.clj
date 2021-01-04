@@ -43,21 +43,9 @@
 (defn get-date []
   (quot (System/currentTimeMillis) 1000))
 
-(defn response-adopted [coll]
-  (let [dog (->> coll
-                 (into {})
-                 (map (fn [[k v]] [k v]))
-                 (into {}))]
-    (if (not (empty? (:name dog)))
-      (cond (= (:gender dog) "m")
-            {:status 200
-             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!"))}
-            (= (:gender dog) "f")
-            {:status 200
-             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!"))})
-      {:status 200 :body (json/write-str "Parabéns! Adoção realizada com sucesso")})))
 
-(defn dog->adopt [coll]
+
+#_(defn dog->adopt [coll]
   (let [dog
         (->> coll
              (into {})
@@ -78,7 +66,7 @@
     (empty? data) {:status 404 :body (json/write-str "Not Found")}
     :else {:status 200 :body (json/write-str data)}))
 
-(defn check-adopted [coll]
+#_(defn check-adopted [coll]
   (if (empty? coll)
     {:status 400 :body "Cachorro não está disponível para adoção"}
     (dog->adopt coll)))

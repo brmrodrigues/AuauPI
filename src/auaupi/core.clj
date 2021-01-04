@@ -33,10 +33,11 @@
 
 (defn post-adoption-handler [req]
   (-> req
-      (:path-params {})
-      (assoc :adopted? false)
-      (logic/filter-dogs  @db/dogs)
-      logic/check-adopted))
+      :path-params
+      :id
+      Long/valueOf
+      (not-logic/check-adopted!
+       (datomic/open-connection config-map))))
 
 (defn get-dog-by-id-handler [req]
   (-> req
