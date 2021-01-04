@@ -30,7 +30,8 @@
   (-> req
       (not-logic/check-breed! config-map)
       (not-logic/valid-dog! config-map)
-      (datomic/transact-dog! config-map))
+      (datomic/transact-dog! config-map)
+      clojure.pprint/pprint)
   (http/json-response {:status 200 :body "Registered Dog"}))
 
 (defn post-adoption-handler [req]
