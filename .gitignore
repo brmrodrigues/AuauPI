@@ -16,3 +16,5 @@ pom.xml.asc
 .idea/
 .rebel_readline_history
 /datomic-data
+.clj-kondo/
+.lsp/
