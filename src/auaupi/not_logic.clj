@@ -25,11 +25,11 @@
 (defn create-dog!
   [{:keys [breed] :as dog} config-map]
   (let [image (get-breed-image! (::specs/breed dog) config-map)
-        image-added (->> image
-                         (assoc dog :img)
-                         logic/add-fields)]
-    (db/conj-dogs! image-added)
-    (http/json-response image-added)))
+        dog (->> image
+                 (assoc dog :img)
+                 (logic/add-fields config-map))]
+    #_(db/conj-dogs! dog)
+    dog))
 
 (defn valid-dog!
   [dog config-map]
@@ -50,7 +50,6 @@
 (defn check-breed! [req config-map]
   (get-breeds! config-map)
   (let [breed (:breed (:json-params req))]
-    (prn (keyword breed))
     (cond
       (not (empty?
             (filter #(= (keyword breed) %) @db/breeds))) (specs/req->dog req)

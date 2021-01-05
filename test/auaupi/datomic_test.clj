@@ -16,7 +16,7 @@
                   [1 "Bardock" "Mix" "https://images.dog.ceo/breeds/mix/piper.jpg"]
                   [5 "Melinda" "Pitbull" "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"]
                   [4 "Thor" "Pitbull" "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"]]
-                 (datomic/get-dogs  (datomic/open-connection core/config-map)))))
+                 (datomic/find-dogs  (datomic/open-connection core/config-map)))))
   
   (testing "One dog"
     (is (match?  [[2
@@ -41,6 +41,24 @@
                   "2017-02-13"
                   true
                   true]]
-                (datomic/find-dog-by-id 1 (datomic/open-connection core/config-map))))))
+                (datomic/find-dog-by-id 1 (datomic/open-connection core/config-map)))))
 
 
+  (testing "New dog"
+    (is (match?  [6
+                  "Elo"
+                  "African"
+                  "f"
+                  "p"
+                  "2016-07-21"]
+                 
+                 (let [coll
+                       (:tx-data
+                        (datomic/transact-dog!
+                         {:dog/id (datomic/inc-last-id (datomic/open-connection core/config-map))
+                          :dog/name "Elo"
+                          :dog/breed "African"
+                          :dog/gender "f"
+                          :dog/port "p"
+                          :dog/birth "2016-07-21"} core/config-map))]
+                   (into [] (rest (map (fn [coll] (nth coll 2 :not-found)) coll))))))))

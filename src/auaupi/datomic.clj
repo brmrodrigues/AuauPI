@@ -85,7 +85,7 @@
               [?e :dog/adopted? ?a]]
             (d/db conn) id)))
 
-(defn get-dogs [conn]
+(defn find-dogs [conn]
   (let [f false]
     (d/q '[:find ?id ?nome ?breed ?img
            :in $ ?f
@@ -99,14 +99,14 @@
 (defn get-adoption [id conn]
   (d/q '[:find ?adopted
          :in $ ?id
-         :where 
+         :where
          [?d :dog/id ?id]
          [?d :dog/adopted? ?adopted]] (d/db conn) id))
 
 (defn get-infos-adopted [id conn]
   (d/q '[:find ?name ?gender
          :in $ ?id
-         :where 
+         :where
          [?d :dog/id ?id]
          [?d :dog/name ?name]
          [?d :dog/gender ?gender]] (d/db conn) id))
@@ -115,39 +115,16 @@
   (d/transact conn {:tx-data [{:dog/id id
                                :dog/adopted? true}]}))
 
+(defn inc-last-id [conn]
+  (let [id (d/q '[:find ?id
+                  :where
+                  [_ :dog/id ?id]]
+                (d/db conn))]
+    (-> id
+        last
+        first
+        inc)))
 
-(comment
-  (def client (d/client {:server-type :dev-local
-                         :storage-dir (str (System/getenv "PWD") "/datomic-data")
-                         :db-name "dogs"
-                         :system "dev"}))
-
-  (def  conn (d/connect client {:db-name "dogs"}))
-
-  (d/q '[:find ?id ?nome ?breed ?adopted 
-         ;;:in $ ?f
-         :where
-         [?d :dog/id ?id]
-         [?d :dog/name ?nome]
-         [?d :dog/breed ?breed]
-         [?d :dog/adopted? ?adopted]
-         [?d :dog/adopted? ?f]] (d/db conn))
-  
-  (let [after (:db-after (adopt-dog 5 conn))]
-    (= after (:db-before (adopt-dog 5 conn)))
-    (prn "AFTER" after)
-    (prn "BEFORE" (:db-before (adopt-dog 5 conn))))
-  
-  (ffirst(get-adoption 3 conn))
-  
-  (last (first (get-infos-adopted 2 conn)))
-  
-  (find-dog-by-id 1 conn)
-
-  (d/q '[:find ?d
-         :in $ ?id
-         :where
-         [?d :dog/id ?id]] (d/db conn) 1)
-
-  (d/transact conn {:tx-data [{:dog/id 3
-                               :dog/adopted? true}]}))
+(defn transact-dog! [dog config-map]
+  (d/transact (d/connect (d/client (:client-config (:datomic config-map))) {:db-name "dogs"})
+              {:tx-data [dog]}))
