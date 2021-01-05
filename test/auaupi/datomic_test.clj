@@ -4,7 +4,6 @@
    [matcher-combinators.test :refer [match?]]
    [user]
    [auaupi.datomic :as datomic]
-   [datomic.client.api :as d]
    [auaupi.core :as core]
    [helpers]))
 
@@ -30,16 +29,22 @@
                    true
                    true]]
                  (datomic/find-dog-by-id 2 (datomic/open-connection core/config-map)))))
+  
   (testing "New dog"
-    (is
-     (match? [[13194139533321 50 #inst "2021-01-04T14:16:13.592-00:00" 13194139533321 true]
-              [87960930222168 74 "Jack" 13194139533321 true]
-              [87960930222168 75 "african" 13194139533321 true]
-              [87960930222168 78 "m" 13194139533321 true]
-              [87960930222168 77 "p" 13194139533321 true]]
-             (:tx-data
-              (datomic/transact-dog! {:dog/name "Jack"
-                                      :dog/breed "african"
-                                      :dog/gender "m"
-                                      :dog/port "p"}
-                                     (datomic/open-connection core/config-map)))))))
+    (is (match?  [6
+                  "Elo"
+                  "African"
+                  "f"
+                  "p"
+                  "2016-07-21"]
+                 
+                 (let [coll
+                       (:tx-data
+                        (datomic/transact-dog!
+                         {:dog/id (datomic/inc-last-id (datomic/open-connection core/config-map))
+                          :dog/name "Elo"
+                          :dog/breed "African"
+                          :dog/gender "f"
+                          :dog/port "p"
+                          :dog/birth "2016-07-21"} core/config-map))]
+                   (into [] (rest (map (fn [coll] (nth coll 2 :not-found)) coll))))))))

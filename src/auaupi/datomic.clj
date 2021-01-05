@@ -106,6 +106,6 @@
         first
         inc)))
 
-(defn transact-dog! [dog conn]
-  (d/transact conn
+(defn transact-dog! [dog config-map]
+  (d/transact (d/connect (d/client (:client-config (:datomic config-map))) {:db-name "dogs"})
               {:tx-data [dog]}))
