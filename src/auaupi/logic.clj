@@ -2,7 +2,8 @@
   (:require
    [clojure.data.json :as json]
    [auaupi.db :as db]
-   [clojure.edn :as edn]))
+   [clojure.edn :as edn]
+   [auaupi.datomic :as datomic]))
 
 (defn filter-dogs [params coll]
   (filter (fn [dog] (= params (select-keys dog (keys params)))) coll))
@@ -28,17 +29,17 @@
        req))
 
 (defn add-fields
-  [map]
+  [config-map map]
   (hash-map
-   :id "4"
-   :name (:auaupi.specs/name map)
-   :breed (:auaupi.specs/breed map)
-   :age (:auaupi.specs/age map)
-   :gender (:auaupi.specs/gender map)
-   :port (:auaupi.specs/port map)
-   :castrated? (:auaupi.specs/castrated? map)
-   :img (:img map)
-   :adopted? false))
+   :dog/id (datomic/inc-last-id (datomic/open-connection config-map))
+   :dog/name (:auaupi.specs/name map)
+   :dog/breed (:auaupi.specs/breed map)
+   :dog/birth (:auaupi.specs/birth map)
+   :dog/gender (:auaupi.specs/gender map)
+   :dog/port (:auaupi.specs/port map)
+   :dog/castrated? (:auaupi.specs/castrated? map)
+   :dog/image (:img map)
+   :dog/adopted? false))
 
 (defn get-date []
   (quot (System/currentTimeMillis) 1000))
