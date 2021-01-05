@@ -45,18 +45,6 @@
   (quot (System/currentTimeMillis) 1000))
 
 
-
-#_(defn dog->adopt [coll]
-  (let [dog
-        (->> coll
-             (into {})
-             (map (fn [[k v]] [k v]))
-             (into {}))
-        pos (.indexOf @db/dogs dog)]
-    (db/assoc-in-dogs! [pos :adopted?] true)
-    (db/assoc-in-dogs! [pos :adoptionDate] (get-date))
-    (response-adopted coll)))
-
 (defn get-by-id [req]
   (let [id (:id (:path-params req))]
     (filter #(= id (:id %)) @db/dogs)))
@@ -66,11 +54,6 @@
   (cond
     (empty? data) {:status 404 :body (json/write-str "Not Found")}
     :else {:status 200 :body (json/write-str data)}))
-
-#_(defn check-adopted [coll]
-  (if (empty? coll)
-    {:status 400 :body "Cachorro não está disponível para adoção"}
-    (dog->adopt coll)))
 
 (defn datom->dog [coll]
   (->> coll (mapv (fn [[id name breed img]]
