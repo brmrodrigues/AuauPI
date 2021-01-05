@@ -13,6 +13,8 @@ pom.xml.asc
 .nrepl-port
 .cpcache/
 .calva/
+.clj-kondo/
 .idea/
 .rebel_readline_history
 /datomic-data
+.swp
