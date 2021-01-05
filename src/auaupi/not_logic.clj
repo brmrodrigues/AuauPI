@@ -57,7 +57,6 @@
 
 (defn response-adopted! [id conn]
   (let [dog (datomic/get-infos-adopted id conn)]
-    (prn dog)
     (if (not (empty? (ffirst dog)))
       (cond (= (last (first dog)) "m")
             {:status 200
