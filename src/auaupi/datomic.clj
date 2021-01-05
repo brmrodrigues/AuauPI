@@ -140,7 +140,7 @@
   
   (ffirst(get-adoption 3 conn))
   
-  (get-infos-adopted 2 conn)
+  (last (first (get-infos-adopted 2 conn)))
   
   (find-dog-by-id 1 conn)
 
