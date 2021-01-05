@@ -84,7 +84,7 @@
               [?e :dog/adopted? ?a]]
             (d/db conn) id)))
 
-(defn get-dogs [conn]
+(defn find-dogs [conn]
   (let [f false]
     (d/q '[:find ?id ?nome ?breed ?img
            :in $ ?f
@@ -95,3 +95,17 @@
            [?d :dog/image ?img]
            [?d :dog/adopted? ?f]] (d/db conn) f)))
 
+
+(defn inc-last-id [conn]
+  (let [id (d/q '[:find ?id
+         :where
+         [_ :dog/id ?id]]
+       (d/db conn))]
+    (-> id
+        last
+        first
+        inc)))
+
+(defn transact-dog! [dog config-map]
+  (d/transact (d/connect (d/client (:client-config (:datomic config-map))) {:db-name "dogs"})
+              {:tx-data [dog]}))
