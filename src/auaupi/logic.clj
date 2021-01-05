@@ -44,30 +44,6 @@
 (defn get-date []
   (quot (System/currentTimeMillis) 1000))
 
-(defn response-adopted [coll]
-  (let [dog (->> coll
-                 (into {})
-                 (map (fn [[k v]] [k v]))
-                 (into {}))]
-    (if (not (empty? (:name dog)))
-      (cond (= (:gender dog) "m")
-            {:status 200
-             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para o " (:name dog) "!"))}
-            (= (:gender dog) "f")
-            {:status 200
-             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para a " (:name dog) "!"))})
-      {:status 200 :body (json/write-str "Parabéns! Adoção realizada com sucesso")})))
-
-(defn dog->adopt [coll]
-  (let [dog
-        (->> coll
-             (into {})
-             (map (fn [[k v]] [k v]))
-             (into {}))
-        pos (.indexOf @db/dogs dog)]
-    (db/assoc-in-dogs! [pos :adopted?] true)
-    (db/assoc-in-dogs! [pos :adoptionDate] (get-date))
-    (response-adopted coll)))
 
 (defn get-by-id [req]
   (let [id (:id (:path-params req))]
@@ -78,11 +54,6 @@
   (cond
     (empty? data) {:status 404 :body (json/write-str "Not Found")}
     :else {:status 200 :body (json/write-str data)}))
-
-(defn check-adopted [coll]
-  (if (empty? coll)
-    {:status 400 :body "Cachorro não está disponível para adoção"}
-    (dog->adopt coll)))
 
 (defn datom->dog [coll]
   (->> coll (mapv (fn [[id name breed img]]
