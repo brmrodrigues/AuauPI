@@ -5,7 +5,10 @@
             [io.pedestal.http :as http]
             [io.pedestal.test :as http-test]
             [clojure.data.json :as json]
-            [auaupi.db :as db]))
+            [auaupi.db :as db]
+            [auaupi.datomic :as datomic]
+            [helpers]
+            [user]))
 
 (defn make-request! [verb path & args]
   (let [service-fn (::http/service-fn (core/create-server))
@@ -14,6 +17,9 @@
             :key-fn keyword)))
 
 (deftest testing-routes
+  (user/delete-db)
+  (datomic/prepare-datomic! core/config-map)
+  (helpers/initial-dogs!)
   (testing "listing dogs"
     (is (match? {:body [{:dog/id 3
                          :dog/name "Xenon"
@@ -114,5 +120,4 @@
                            :breed "stbernard"
                            :name "caramelo"
                            :img (fn [dog] (:img dog) (first @db/dogs))}] :status 200}
-                  (make-request! :get "/dogs?gender=m"))))
-)
+                  (make-request! :get "/dogs?gender=m")))))
