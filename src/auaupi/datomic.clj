@@ -16,6 +16,7 @@
   (let [schema [{:db/ident :dog/id
                  :db/valueType :db.type/long
                  :db/cardinality :db.cardinality/one
+                 :db/unique :db.unique/identity
                  :db/doc "Dog's id"}
 
                 {:db/ident :dog/name
@@ -95,12 +96,30 @@
            [?d :dog/image ?img]
            [?d :dog/adopted? ?f]] (d/db conn) f)))
 
+(defn get-adoption [id conn]
+  (d/q '[:find ?adopted
+         :in $ ?id
+         :where
+         [?d :dog/id ?id]
+         [?d :dog/adopted? ?adopted]] (d/db conn) id))
+
+(defn get-infos-adopted [id conn]
+  (d/q '[:find ?name ?gender
+         :in $ ?id
+         :where
+         [?d :dog/id ?id]
+         [?d :dog/name ?name]
+         [?d :dog/gender ?gender]] (d/db conn) id))
+
+(defn adopt-dog [id conn]
+  (d/transact conn {:tx-data [{:dog/id id
+                               :dog/adopted? true}]}))
 
 (defn inc-last-id [conn]
   (let [id (d/q '[:find ?id
-         :where
-         [_ :dog/id ?id]]
-       (d/db conn))]
+                  :where
+                  [_ :dog/id ?id]]
+                (d/db conn))]
     (-> id
         last
         first

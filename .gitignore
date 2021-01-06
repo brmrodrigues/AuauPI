@@ -17,4 +17,5 @@ pom.xml.asc
 .idea/
 .rebel_readline_history
 /datomic-data
+.lsp
 .swp

@@ -30,6 +30,20 @@
                    true]]
                  (datomic/find-dog-by-id 2 (datomic/open-connection core/config-map)))))
   
+  (testing "Update dog"
+    (datomic/adopt-dog 1 (datomic/open-connection core/config-map))
+    (is (match? [[1
+                  "Bardock"
+                  "Mix"
+                  "https://images.dog.ceo/breeds/mix/piper.jpg"
+                  "m"
+                  "m"
+                  "2017-02-13"
+                  true
+                  true]]
+                (datomic/find-dog-by-id 1 (datomic/open-connection core/config-map)))))
+
+
   (testing "New dog"
     (is (match?  [6
                   "Elo"

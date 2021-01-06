@@ -6,7 +6,8 @@
    [auaupi.db :as db]
    [auaupi.logic :as logic]
    [clojure.spec.alpha :as s]
-   [auaupi.specs :as specs]))
+   [auaupi.specs :as specs]
+   [auaupi.datomic :as datomic]))
 
 (defn get-breed-image! [raca {:keys [dog-ceo]}]
   (-> (str (-> dog-ceo
@@ -52,4 +53,21 @@
     (cond
       (not (empty?
             (filter #(= (keyword breed) %) @db/breeds))) (specs/req->dog req)
-      :else {:status 400 :body (json/write-str {:message "Invalid Breed"})})))
+      :else {:status 400 :body (json/write-str {:message "Invalid Format"})})))
+
+(defn response-adopted! [id conn]
+  (let [dog (datomic/get-infos-adopted id conn)]
+    (if (not (empty? (ffirst dog)))
+      (cond (= (last (first dog)) "m")
+            {:status 200
+             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para o " (ffirst dog) "!"))}
+            (= (last (first dog)) "f")
+            {:status 200
+             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para a " (ffirst dog) "!"))})
+      {:status 200 :body (json/write-str "Parabéns! Adoção realizada com sucesso")})))
+
+(defn check-adopted! [id conn]
+  (if (ffirst (datomic/get-adoption id conn))
+    {:status 400 :body "Cachorro não está disponível para adoção"}
+    (do (datomic/adopt-dog id conn)
+        (response-adopted! id conn))))
