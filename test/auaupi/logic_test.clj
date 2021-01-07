@@ -66,29 +66,4 @@
 
       (testing "format request"
         (is (match? {:castrated? true}
-                    (logic/req->treated {:castrated? "true"}))))
-
-      (testing "response dog male"
-        (is (match? {:body
-                     "Parabéns, você acabou de dar um novo lar para o Xenon!"}
-                    (logic/response-adopted {:id "2"
-                                             :name "Xenon"
-                                             :breed "Weimaraner"
-                                             :img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"
-                                             :age 2
-                                             :gender "M"
-                                             :castrated? false
-                                             :port "G"
-                                             :adopted? false}))))
-      (testing "response dog female"
-        (is (match? {:body
-                     "Parabéns, você acabou de dar um novo lar para a Leka!"}
-                    (logic/response-adopted {:id "1"
-                                             :name "Leka"
-                                             :breed "Maltese"
-                                             :img "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"
-                                             :age 8
-                                             :gender "F"
-                                             :castrated? true
-                                             :port "P"
-                                             :adopted? false}))))))
+                    (logic/req->treated {:castrated? "true"}))))))
