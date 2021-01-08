@@ -4,11 +4,8 @@
    [io.pedestal.http :as http]
    [io.pedestal.http.route :as route]
    [io.pedestal.http.body-params :as body-params]
-   [auaupi.db :as db]
    [auaupi.logic :as logic]
    [auaupi.not-logic :as not-logic]
-   [auaupi.specs :as specs]
-   [datomic.client.api :as d]
    [auaupi.datomic :as datomic]))
 
 (def config-map
@@ -62,7 +59,7 @@
      ["/dogs/:id" :post post-adoption-handler :route-name :adopt-dogs]
      ["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]}))
 
-(def pedestal-config
+(def pedestal-config 
   (-> {::http/routes routes
        ::http/type :jetty
        ::http/join? false
