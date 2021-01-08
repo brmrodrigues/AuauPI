@@ -71,3 +71,11 @@
     {:status 400 :body "Cachorro não está disponível para adoção"}
     (do (datomic/adopt-dog id conn)
         (response-adopted! id conn))))
+
+(defn check-params! [params conn]
+  (if (empty? params)
+    (-> (datomic/find-dogs conn)
+        logic/datom->dog)
+    (-> params
+        logic/transform-keyword
+        (logic/filter-dogs (logic/datom->dog-full (datomic/find-all-dogs conn))))))

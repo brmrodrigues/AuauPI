@@ -19,11 +19,11 @@
                              :db-name "dogs"
                              :system "dev"}}})
 
-(defn get-dogs-handler [_req]
-  (-> config-map
-      datomic/open-connection
-      datomic/find-dogs
-      logic/datom->dog
+(defn get-dogs-handler [req]
+  (-> req
+      :params
+      (not-logic/check-params! 
+       (datomic/open-connection config-map))
       http/json-response))
 
 (defn post-dogs-handler [req]

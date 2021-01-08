@@ -5,8 +5,31 @@
    [clojure.edn :as edn]
    [auaupi.datomic :as datomic]))
 
+(defn transform-keyword [coll]
+  (let [k (keys coll)
+        v (vals coll)
+        new-k (map (fn [k] (-> k
+                               str
+                               (clojure.string/replace #":" "dog/")
+                               keyword)) k)]
+    (->> (map (fn [old new]
+                {old new}) k new-k)
+         (into {})
+         (clojure.set/rename-keys coll))))
+
+
+
+(comment
+  (transform-keyword {:port "m" :breed "mix"})
+  (def coll {:port "m" :breed "mix"})
+  
+  (clojure.set/rename-keys {:port "m" :breed "mix"} {:port :dog/port :breed :dog/breed}))
+
+
 (defn filter-dogs [params coll]
   (filter (fn [dog] (= params (select-keys dog (keys params)))) coll))
+
+
 
 (defn response-all [coll]
   (map #(into {}
