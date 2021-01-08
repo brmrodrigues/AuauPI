@@ -18,38 +18,31 @@
          (clojure.set/rename-keys coll))))
 
 
-
-(comment
-  (transform-keyword {:port "m" :breed "mix"})
-  (def coll {:port "m" :breed "mix"})
-  
-  (clojure.set/rename-keys {:port "m" :breed "mix"} {:port :dog/port :breed :dog/breed}))
-
-
 (defn filter-dogs [params coll]
   (filter (fn [dog] (= params (select-keys dog (keys params)))) coll))
 
 
 
-(defn response-all [coll]
-  (map #(into {}
-              {:id (:id %)
-               :breed (:breed %)
-               :name (:name %)
-               :img  (:img  %)}) coll))
+(defn response-treated [coll]
+  (prn coll)
+  (map (fn [dog]
+         {:dog/id (:dog/id dog)
+          :dog/name (:dog/name dog)
+          :dog/breed (:dog/breed dog)
+          :dog/img (:dog/img dog)}) coll))
 
 (defn req->treated [req]
- (into {}
-       (map (fn [[k s]]
-              [k (try (let [v (edn/read-string s)]
-                        (if (or (number? v)
-                                (boolean? v))
-                          v
-                          s))
-                      (catch Throwable ex
-                        (println ex)
-                        s))]))
-       req))
+  (into {}
+        (map (fn [[k s]]
+               [k (try (let [v (edn/read-string s)]
+                         (if (or (number? v)
+                                 (boolean? v))
+                           v
+                           s))
+                       (catch Throwable ex
+                         (println ex)
+                         s))]))
+        req))
 
 (defn add-fields
   [config-map map]

@@ -142,14 +142,3 @@
 (defn transact-dog! [dog config-map]
   (d/transact (d/connect (d/client (:client-config (:datomic config-map))) {:db-name "dogs"})
               {:tx-data [dog]}))
-
-
-(comment 
-  (def client (d/client {:server-type :dev-local
-                         :storage-dir (str (System/getenv "PWD") "/datomic-data")
-                         :db-name "dogs"
-                         :system "dev"}))
-  
-  (def conn (d/connect client {:db-name "dogs"}))
-  
-  (find-all-dogs conn))

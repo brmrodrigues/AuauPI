@@ -78,4 +78,5 @@
         logic/datom->dog)
     (-> params
         logic/transform-keyword
-        (logic/filter-dogs (logic/datom->dog-full (datomic/find-all-dogs conn))))))
+        (logic/filter-dogs (logic/datom->dog-full (datomic/find-all-dogs conn)))
+        logic/response-treated)))
