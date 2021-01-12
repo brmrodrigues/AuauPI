@@ -6,7 +6,8 @@
    [io.pedestal.http.body-params :as body-params]
    [auaupi.logic :as logic]
    [auaupi.not-logic :as not-logic]
-   [auaupi.datomic :as datomic]))
+   [auaupi.datomic :as datomic]
+   [swagger.service :as service]))
 
 (def config-map
   {:dog-ceo {:img ["https://dog.ceo/api/breed/", "/images/random"]
@@ -47,7 +48,6 @@
        (datomic/open-connection config-map))
       logic/datom->dog-full
       logic/data->response))
-
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
 
@@ -57,7 +57,9 @@
      ["/dogs" :get get-dogs-handler :route-name :get-dogs]
      ["/dogs" :post post-dogs-handler :route-name :post-dogs]
      ["/dogs/:id" :post post-adoption-handler :route-name :adopt-dogs]
-     ["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]}))
+     ["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]
+     ["/swagger0" :get service/gen-swagger-auaupi :route-name :get-swagger]
+     ["/swagger1" :get service/gen-swagger-exemplo :route-name :get-swagger-teste]}))
 
 (def pedestal-config 
   (-> {::http/routes routes

@@ -6,7 +6,6 @@
             [auaupi.datomic :as datomic]
             [helpers :as h]))
 
-
 (defonce server (atom nil))
 
 (def dev-pedestal-config
@@ -26,7 +25,6 @@
                       http/create-server
                       http/start))))
 
-
 (defn stop-dev []
   (when @server
     (http/stop @server)
@@ -41,4 +39,4 @@
 
 #_(start-dev)
 #_(stop-dev)
-#_(delete-db)   
+#_(delete-db) 
