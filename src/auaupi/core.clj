@@ -6,7 +6,11 @@
    [io.pedestal.http.body-params :as body-params]
    [auaupi.logic :as logic]
    [auaupi.not-logic :as not-logic]
-   [auaupi.datomic :as datomic]))
+   [auaupi.datomic :as datomic]
+    [pedestal-api
+     [core :as api]
+     [routes :as api.routes]]
+   [swagger.service :as service]))
 
 (def config-map
   {:dog-ceo {:img ["https://dog.ceo/api/breed/", "/images/random"]
@@ -56,7 +60,8 @@
      ["/dogs" :get get-dogs-handler :route-name :get-dogs]
      ["/dogs" :post post-dogs-handler :route-name :post-dogs]
      ["/dogs/:id" :post post-adoption-handler :route-name :adopt-dogs]
-     ["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]}))
+     ["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]
+     ["/swagger" :get api/swagger-json :route-name :swagger]}))
 
 (def pedestal-config 
   (-> {::http/routes routes

@@ -8,7 +8,6 @@
    [auaupi.core :as core]
    [schema.core :as s]))
 
-
 (s/defschema Dog
   {:id s/Int
    :name s/Str
