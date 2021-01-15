@@ -4,15 +4,23 @@
             [io.pedestal.http.body-params :as body-params]
             [datomic.client.api :as d]
             [auaupi.datomic :as datomic]
+            [swagger.service :as service]
             [helpers :as h]))
 
 (defonce server (atom nil))
 
 (def dev-pedestal-config
-  (-> {::http/routes (fn [] core/routes)
+  (-> {:env :dev
+       ::http/routes #_#(deref #'service/routes) (fn [] core/routes)
+       ::http/router :linear-search
+       ::http/resource-path     "/public"
        ::http/type :jetty
        ::http/join? false
-       ::http/port 3000}
+       ::http/port 3000
+       ::http/allowed-origins   (constantly true)
+       ::http/container-options {:h2c? true
+                                 :h2?  false
+                                 :ssl? false}}
       http/default-interceptors
       (update ::http/interceptors conj (body-params/body-params))))
 
@@ -39,4 +47,4 @@
 
 #_(start-dev)
 #_(stop-dev)
-#_(delete-db) 
+#_(delete-db)

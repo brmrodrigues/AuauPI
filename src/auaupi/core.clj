@@ -27,11 +27,12 @@
       logic/datom->dog
       http/json-response))
 
-(defn post-dogs-handler [req]
+(defn post-dogs-handler [ctx]
+  (let [req (get ctx :request)]
   (-> req
       (not-logic/check-breed! config-map)
       (not-logic/valid-dog! config-map)
-      (datomic/transact-dog! config-map))
+      (datomic/transact-dog! config-map)))
   (http/json-response {:status 200 :body "Registered Dog"}))
 
 (defn post-adoption-handler [req]
@@ -51,6 +52,7 @@
        (datomic/open-connection config-map))
       logic/datom->dog-full
       logic/data->response))
+
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
 
@@ -61,7 +63,8 @@
      ["/dogs" :post post-dogs-handler :route-name :post-dogs]
      ["/dogs/:id" :post post-adoption-handler :route-name :adopt-dogs]
      ["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]
-     ["/swagger" :get api/swagger-json :route-name :swagger]}))
+     ["/swagger.json" :get [(api/negotiate-response) (api/body-params) api/common-body (api/coerce-request) (api/validate-response) api/swagger-json]]
+     ["/*resource" :get [(api/negotiate-response) (api/body-params) api/common-body (api/coerce-request) (api/validate-response) service/no-csp api/swagger-ui]]}))
 
 (def pedestal-config 
   (-> {::http/routes routes

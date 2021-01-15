@@ -7,7 +7,8 @@
     [core :as api]
     [routes :as api.routes]]
    [route-swagger.doc :as sw.doc]
-   [schema.core :as s]))
+   [schema.core :as s]
+   [auaupi.core :as core]))
 
 (def no-csp
  {:name  ::no-csp
@@ -16,16 +17,51 @@
 
 (defn build-routes [doc routes]
   (-> routes
-      route/expand-routes
+      #_route/expand-routes
       api.routes/replace-splat-parameters
       (api.routes/update-handler-swagger
        (api.routes/comp->> api.routes/default-operation-ids
                            api.routes/default-empty-parameters))
       (sw.doc/with-swagger (merge {:basePath ""} doc))))
 
-(defn init-routes [routes]
+(def api-routes
+  '[[["/dogs"
+
+      
+      ^:interceptors [api/error-responses
+                      (api/negotiate-response)
+                      (api/body-params)
+                      api/common-body
+                      (api/coerce-request)
+                      (api/validate-response)]
+      {:get api-routes/list-dogs-route
+       :post api-routes/post-dog-route}
+
+      ["/:id"
+       {:get api-routes/get-dog-route
+        :post api-routes/adopt-dog-route}]]
+
+    ["/swagger.json" ^:interceptors [(api/negotiate-response)
+                                     (api/body-params)
+                                     api/common-body
+                                     (api/coerce-request)
+                                     (api/validate-response)]
+     {:get api/swagger-json}]
+
+    ["/*resource"
+     ^:interceptors [(api/negotiate-response)
+                     (api/body-params)
+                     api/common-body
+                     (api/coerce-request) 
+                     (api/validate-response) 
+                     no-csp 
+                     api/swagger-ui]
+     {:get api/swagger-ui}
+     ]]])
+
+(def routes
   (s/with-fn-validation
-    (build-routes
+    (api/defroutes swagger-routes
      {:info {:title       "AuauPI"
              :description "The clojure API for dogs adoption"
              :version     "2.0"}
@@ -35,40 +71,10 @@
                              :url         "https://github.com/paygoc6/AuauPI"}}
              {:name        "client"
               :description "Operations about orders"}]}
-     routes)))
+    'core/routes)))
 
-
-(def service {:env                     :prod
-              ::http/routes        (init-routes '[[["/dogs"
-                                                    ["/"
-                                                     ^:interceptors [api/error-responses
-                                                                     (api/negotiate-response)
-                                                                     (api/body-params)
-                                                                     api/common-body
-                                                                     (api/coerce-request)
-                                                                     (api/validate-response)]
-                                                     {:get api-routes/list-dogs-route
-                                                      :post api-routes/post-dog-route}]
-
-                                                    ["/:id"
-                                                     {:get api-routes/get-dog-route
-                                                      :put api-routes/adopt-dog-route}]]
-
-                                                   ["/swagger.json" ^:interceptors [(api/negotiate-response)
-                                                                                    (api/body-params)
-                                                                                    api/common-body
-                                                                                    (api/coerce-request)
-                                                                                    (api/validate-response)]
-                                                    {:get api/swagger-json}]
-
-                                                   ["/*resource"
-                                                    ^:interceptors [(api/negotiate-response)
-                                                                    (api/body-params)
-                                                                    api/common-body
-                                                                    (api/coerce-request)
-                                                                    (api/validate-response)
-                                                                    no-csp]
-                                                    {:get api/swagger-ui}]]])
+#_(def service {:env                     :prod
+              ::http/routes        #(deref #'routes)
               ::http/router        :linear-search
               ::http/type          :jetty
               ::http/port          (Integer. (or (System/getenv "PORT") 8080))})
