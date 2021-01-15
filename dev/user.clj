@@ -9,7 +9,7 @@
 (defonce server (atom nil))
 
 (def dev-pedestal-config
-  (-> {::http/routes (fn [] core/routes)
+  (-> {::http/routes #(deref #'core/routes) #_(fn [] core/routes)
        ::http/type :jetty
        ::http/join? false
        ::http/port 3000}
@@ -39,4 +39,4 @@
 
 #_(start-dev)
 #_(stop-dev)
-#_(delete-db) 
+#_(delete-db)

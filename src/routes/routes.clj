@@ -19,18 +19,17 @@
    :castrated? s/Bool
    :adopted? s/Bool})
 
-(defn list-dogs-route []
+(def list-dogs-interceptor
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
-    :parameters {:query-params (s/enum :breed :name :port :gender :castrated?)}
     :responses  {200 {:body Dog}
                  400 {:body "Not Found/Empty List"}}
     :operationId ::list-dogs}
    (io/interceptor
-    {:name  :response-dogs
-     :enter core/get-dogs-handler})))
+    {:name  :list-dogs
+     :enter core/get-dogs})))
 
-(defn get-dog-route []
+(def get-dog-route
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
     :parameters {:path-params {:id s/Int}}

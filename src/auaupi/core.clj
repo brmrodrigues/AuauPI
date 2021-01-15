@@ -7,10 +7,12 @@
    [auaupi.logic :as logic]
    [auaupi.not-logic :as not-logic]
    [auaupi.datomic :as datomic]
-    [pedestal-api
-     [core :as api]
-     [routes :as api.routes]]
-   [swagger.service :as service]))
+   [pedestal-api
+    [core :as api]
+    [routes :as api.routes]]
+   [schema.core :as s]
+   [route-swagger.doc :as sw.doc]
+   [io.pedestal.interceptor :as io]))
 
 (def config-map
   {:dog-ceo {:img ["https://dog.ceo/api/breed/", "/images/random"]
@@ -20,12 +22,13 @@
                              :db-name "dogs"
                              :system "dev"}}})
 
-(defn get-dogs-handler [_req]
-  (-> config-map
-      datomic/open-connection
-      datomic/find-dogs
-      logic/datom->dog
-      http/json-response))
+(defn get-dogs [ctx]
+  #_(let [result (-> config-map
+                   datomic/open-connection
+                   datomic/find-dogs
+                   logic/datom->dog
+                   http/json-response)]
+    (assoc ctx :response result)))
 
 (defn post-dogs-handler [req]
   (-> req
@@ -51,17 +54,39 @@
        (datomic/open-connection config-map))
       logic/datom->dog-full
       logic/data->response))
+
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
 
+(s/defschema Dog
+  {:id s/Int
+   :name s/Str
+   :breed s/Str
+   :image s/Str
+   :birth s/Str
+   :gender (s/enum "m" "f")
+   :port (s/enum "p" "m" "g")
+   :castrated? s/Bool
+   :adopted? s/Bool})
+
+(def list-dogs-interceptor
+  (sw.doc/annotate
+   {:summary    "List all dogs available for adoption"
+    :responses  {200 {:body Dog}
+                     400 {:body "Not Found/Empty List"}}
+    :operationId ::list-dogs}
+   (io/interceptor
+    {:name  :get-dogs
+     :enter get-dogs})))
+
 (def routes
-  (route/expand-routes
-   #{["/" :get respond-hello :route-name :greet]
-     ["/dogs" :get get-dogs-handler :route-name :get-dogs]
-     ["/dogs" :post post-dogs-handler :route-name :post-dogs]
-     ["/dogs/:id" :post post-adoption-handler :route-name :adopt-dogs]
-     ["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]
-     ["/swagger" :get api/swagger-json :route-name :swagger]}))
+  #{#_["/" :get respond-hello :route-name :greet]
+    #_["/dogs" :get get-dogs-interceptor :route-name :get-dogs]
+    ["/dogs" :get [list-dogs-interceptor]]
+    #_["/dogs" :post post-dogs-handler :route-name :post-dogs]
+    #_["/dogs/:id" :post post-adoption-handler :route-name :adopt-dogs]
+    #_["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]
+    ["/swagger" :get [api/swagger-json]]})
 
 (def pedestal-config 
   (-> {::http/routes routes
