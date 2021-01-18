@@ -96,6 +96,20 @@
            [?d :dog/image ?img]
            [?d :dog/adopted? ?f]] (d/db conn) f)))
 
+(defn find-all-dogs [conn]
+  (->> (d/q '[:find ?id ?n ?b ?i ?p ?g ?birth ?c ?a
+              :where
+              [?e :dog/id ?id]
+              [?e :dog/name ?n]
+              [?e :dog/breed ?b]
+              [?e :dog/image ?i]
+              [?e :dog/port ?p]
+              [?e :dog/gender ?g]
+              [?e :dog/birth ?birth]
+              [?e :dog/castrated? ?c]
+              [?e :dog/adopted? ?a]]
+            (d/db conn))))
+
 (defn get-adoption [id conn]
   (d/q '[:find ?adopted
          :in $ ?id
