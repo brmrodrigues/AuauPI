@@ -1,9 +1,9 @@
 (ns user
-  (:require [auaupi.core :as core]
+  (:require [auaupi.datomic :as datomic]
+            [auaupi.config :as config]
             [io.pedestal.http :as http]
             [io.pedestal.http.body-params :as body-params]
             [datomic.client.api :as d]
-            [auaupi.datomic :as datomic]
             [swagger.service :as service]
             [helpers :as h]))
 
@@ -11,7 +11,7 @@
 
 (def dev-pedestal-config
   (-> {:env :dev
-       ::http/routes #_#(deref #'service/routes) (fn [] core/routes)
+       ::http/routes (fn [] service/routes)
        ::http/router :linear-search
        ::http/resource-path     "/public"
        ::http/type :jetty
@@ -26,7 +26,7 @@
 
 
 (defn start-dev []
-  (datomic/prepare-datomic! core/config-map)
+  (datomic/prepare-datomic! config/config-map)
   (h/initial-dogs!)
  (when (nil? @server) 
    (reset! server (-> dev-pedestal-config

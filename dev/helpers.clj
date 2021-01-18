@@ -1,7 +1,7 @@
 (ns helpers
   (:require
-   [auaupi.core :as core]
    [auaupi.datomic :as datomic]
+   [auaupi.config :as config]
    [datomic.client.api :as d]))
 
 (defn initial-dogs! []
@@ -55,5 +55,5 @@
                      :dog/port "g"
                      :dog/adopted? false}]]
     (d/transact
-     (datomic/open-connection core/config-map)
+     (datomic/open-connection config/config-map)
      {:tx-data first-dogs})))

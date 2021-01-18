@@ -1,83 +1,62 @@
 (ns swagger.service
   (:require
    [io.pedestal.http :as http]
-   [routes.routes :as api-routes]
-   [io.pedestal.http.route :as route]
+   [routes.routes :refer :all]
+   [io.pedestal.http.body-params :as body-params]
    [pedestal-api
-    [core :as api]
-    [routes :as api.routes]]
-   [route-swagger.doc :as sw.doc]
-   [schema.core :as s]
-   [auaupi.core :as core]))
+    [core :as api]]
+   [schema.core :as s]))
 
 (def no-csp
- {:name  ::no-csp
-  :leave (fn [ctx]
-          (assoc-in ctx [:response :headers "Content-Security-Policy"] ""))})
+  {:name  ::no-csp
+   :leave (fn [ctx]
+            (assoc-in ctx [:response :headers "Content-Security-Policy"] ""))})
 
-(defn build-routes [doc routes]
-  (-> routes
-      #_route/expand-routes
-      api.routes/replace-splat-parameters
-      (api.routes/update-handler-swagger
-       (api.routes/comp->> api.routes/default-operation-ids
-                           api.routes/default-empty-parameters))
-      (sw.doc/with-swagger (merge {:basePath ""} doc))))
+(def doc 
+  {:info {:title       "AuauPI"
+          :description "The clojure API for dogs adoption"
+          :version     "2.0"}
+   :tags [{:name         "auaupi"
+           :description  ""
+           :externalDocs {:description "Find out more"
+                          :url         "https://github.com/paygoc6/AuauPI"}}
+          {:name        "client"
+           :description "Operations about orders"}]})
 
 (def api-routes
-  '[[["/dogs"
+  #{#_["/" :get respond-hello :route-name :greet]
+      ["/dogs" :get list-dogs-route :route-name :get-dogs]
+      #_["/dogs" :post post-dogs-handler :route-name :post-dogs]
+      #_["/dogs/:id" :post post-adoption-handler :route-name :adopt-dogs]
+      #_["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]
+      ["/swagger.json" :get [(api/negotiate-response) 
+                             (api/body-params) 
+                             api/common-body 
+                             (api/coerce-request) 
+                             (api/validate-response) 
+                             api/swagger-json]]
+      ["/*resource" :get [(api/negotiate-response) 
+                          (api/body-params) 
+                          api/common-body 
+                          (api/coerce-request) 
+                          (api/validate-response) 
+                          no-csp 
+                          api/swagger-ui]]})
 
-      
-      ^:interceptors [api/error-responses
-                      (api/negotiate-response)
-                      (api/body-params)
-                      api/common-body
-                      (api/coerce-request)
-                      (api/validate-response)]
-      {:get api-routes/list-dogs-route
-       :post api-routes/post-dog-route}
+(s/with-fn-validation
+  (api/defroutes routes doc api-routes))
 
-      ["/:id"
-       {:get api-routes/get-dog-route
-        :post api-routes/adopt-dog-route}]]
-
-    ["/swagger.json" ^:interceptors [(api/negotiate-response)
-                                     (api/body-params)
-                                     api/common-body
-                                     (api/coerce-request)
-                                     (api/validate-response)]
-     {:get api/swagger-json}]
-
-    ["/*resource"
-     ^:interceptors [(api/negotiate-response)
-                     (api/body-params)
-                     api/common-body
-                     (api/coerce-request) 
-                     (api/validate-response) 
-                     no-csp 
-                     api/swagger-ui]
-     {:get api/swagger-ui}
-     ]]])
-
-(def routes
-  (s/with-fn-validation
-    (api/defroutes swagger-routes
-     {:info {:title       "AuauPI"
-             :description "The clojure API for dogs adoption"
-             :version     "2.0"}
-      :tags [{:name         "auaupi"
-              :description  ""
-              :externalDocs {:description "Find out more"
-                             :url         "https://github.com/paygoc6/AuauPI"}}
-             {:name        "client"
-              :description "Operations about orders"}]}
-    'core/routes)))
-
-#_(def service {:env                     :prod
-              ::http/routes        #(deref #'routes)
-              ::http/router        :linear-search
-              ::http/type          :jetty
-              ::http/port          (Integer. (or (System/getenv "PORT") 8080))})
-
-#_(http/start (http/create-server service))
-#_(http/stop (http/create-server service))
+(def pedestal-config
+  (-> {:env :dev
+       ::http/routes #(deref #'routes)
+       ::http/router :linear-search
+       ::http/resource-path     "/public"
+       ::http/type :jetty
+       ::http/join? false
+       ::http/port 3000
+       ::http/allowed-origins   (constantly true)
+       ::http/container-options {:h2c? true
+                                 :h2?  false
+                                 :ssl? false}}
+      http/default-interceptors
+      (update ::http/interceptors conj (body-params/body-params))))
