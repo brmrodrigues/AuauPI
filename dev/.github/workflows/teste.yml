@@ -1,0 +1,27 @@
+name: Teste gerando slate
+
+on:
+  push:
+    branches: [ 7700-criacao-slate ]
+  pull_request:
+    branches: [ 7700-criacao-slate ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Instalando node e swagger-to-slate ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+    - run: npm install -g swagger-to-slate
+    - run: swagger-to-slate -i teste.json
