@@ -26,12 +26,13 @@
 (defn respond-hello [_req]
   {:status 200 :body "Servidor funcionando"})
 
-(defn get-dogs [_req]
-  (-> config/config-map
-      datomic/open-connection
-      datomic/find-dogs
-      logic/datom->dog
-      http/json-response))
+(defn get-dogs [ctx]
+  (let [result (-> config/config-map
+                   datomic/open-connection
+                   datomic/find-dogs
+                   logic/datom->dog
+                   http/json-response)]
+    (assoc ctx :response result)))
 
 (defn post-dogs [ctx]
   (let [req (get ctx :request)]
@@ -63,9 +64,9 @@
 (def list-dogs-route
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
-    :parameters {:query-params (s/enum :breed :name :port :gender :castrated?)}
-    :responses  {200 {:body Dog}
-                 400 {:body "Not Found/Empty List"}}
+    :parameters {}
+    :responses  {200 {:body s/Str}
+                 400 {:body s/Str}}
     :operationId ::list-dogs}
    (io/interceptor
     {:name  :response-dogs 

@@ -24,24 +24,23 @@
            :description "Operations about orders"}]})
 
 (def api-routes
-  #{#_["/" :get respond-hello :route-name :greet]
-      ["/dogs" :get list-dogs-route :route-name :get-dogs]
-      #_["/dogs" :post post-dogs-handler :route-name :post-dogs]
-      #_["/dogs/:id" :post post-adoption-handler :route-name :adopt-dogs]
-      #_["/dogs/:id" :get get-dog-by-id-handler :route-name :get-by-id]
-      ["/swagger.json" :get [(api/negotiate-response) 
-                             (api/body-params) 
-                             api/common-body 
-                             (api/coerce-request) 
-                             (api/validate-response) 
-                             api/swagger-json]]
-      ["/*resource" :get [(api/negotiate-response) 
-                          (api/body-params) 
-                          api/common-body 
-                          (api/coerce-request) 
-                          (api/validate-response) 
-                          no-csp 
-                          api/swagger-ui]]})
+  #{["/dogs" :get list-dogs-route]
+    #_["/dogs" :post post-dog-route :route-name :post-dogs]
+    #_["/dogs/:id" :post get-dog-route :route-name :adopt-dogs]
+    #_["/dogs/:id" :get adopt-dog-route :route-name :get-by-id]
+    ["/swagger.json" :get [(api/negotiate-response)
+                           (api/body-params)
+                           api/common-body
+                           (api/coerce-request)
+                           (api/validate-response)
+                           api/swagger-json]]
+    ["/*resource" :get [(api/negotiate-response)
+                        (api/body-params)
+                        api/common-body
+                        (api/coerce-request)
+                        (api/validate-response)
+                        no-csp
+                        api/swagger-ui]]})
 
 (s/with-fn-validation
   (api/defroutes routes doc api-routes))

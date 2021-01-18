@@ -4,7 +4,7 @@
             [io.pedestal.http :as http]
             [io.pedestal.http.body-params :as body-params]
             [datomic.client.api :as d]
-            [swagger.service :as service]
+            [auaupi.service :as service]
             [helpers :as h]))
 
 (defonce server (atom nil))
