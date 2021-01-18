@@ -28,3 +28,4 @@ jobs:
     - run: cp  .github/workflows/teste-swagger-slate.json /home/runner/work/AuauPI/AuauPI
     - run: pwd
     - run: ls 
+    - run: swagger-to-slate -i /home/runner/work/AuauPI/AuauPI/teste-swagger-slate.json
