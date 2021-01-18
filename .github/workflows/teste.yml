@@ -4,7 +4,7 @@ on:
   push:
     branches: [ 7700-criacao-slate ]
   pull_request:
-    branches: [ 7700-criacao-slate ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -32,3 +32,4 @@ jobs:
     - run: pwd
     - run: ls 
     - run: cat teste-swagger-slate.md
+    - run: cp /home/runner/work/AuauPI/AuauPI/teste-swagger-slate.md /doc
