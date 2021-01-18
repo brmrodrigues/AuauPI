@@ -32,4 +32,4 @@ jobs:
     - run: pwd
     - run: ls 
     - run: cat teste-swagger-slate.md
-    - run: cp /home/runner/work/AuauPI/AuauPI/teste-swagger-slate.md /doc
+    - run: mv teste-swagger-slate.md ../doc
