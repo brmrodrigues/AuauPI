@@ -5,28 +5,44 @@
    [clojure.edn :as edn]
    [auaupi.datomic :as datomic]))
 
+(defn transform-keyword [coll]
+  (let [k (keys coll)
+        v (vals coll)
+        new-k (map (fn [k] (-> k
+                               str
+                               (clojure.string/replace #":" "dog/")
+                               keyword)) k)]
+    (->> (map (fn [old new]
+                {old new}) k new-k)
+         (into {})
+         (clojure.set/rename-keys coll))))
+
+
 (defn filter-dogs [params coll]
   (filter (fn [dog] (= params (select-keys dog (keys params)))) coll))
 
-(defn response-all [coll]
-  (map #(into {}
-              {:id (:id %)
-               :breed (:breed %)
-               :name (:name %)
-               :img  (:img  %)}) coll))
+
+
+(defn response-treated [coll]
+  (prn coll)
+  (map (fn [dog]
+         {:dog/id (:dog/id dog)
+          :dog/name (:dog/name dog)
+          :dog/breed (:dog/breed dog)
+          :dog/img (:dog/img dog)}) coll))
 
 (defn req->treated [req]
- (into {}
-       (map (fn [[k s]]
-              [k (try (let [v (edn/read-string s)]
-                        (if (or (number? v)
-                                (boolean? v))
-                          v
-                          s))
-                      (catch Throwable ex
-                        (println ex)
-                        s))]))
-       req))
+  (into {}
+        (map (fn [[k s]]
+               [k (try (let [v (edn/read-string s)]
+                         (if (or (number? v)
+                                 (boolean? v))
+                           v
+                           s))
+                       (catch Throwable ex
+                         (println ex)
+                         s))]))
+        req))
 
 (defn add-fields
   [config-map map]

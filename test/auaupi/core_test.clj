@@ -80,25 +80,29 @@
     (is (match? {:body "Parabéns, você acabou de dar um novo lar para o Caramelo!"}
                 (make-request! :post "/dogs/6"
                                :headers {"Content-Type" "application/json"}))))
-  #_(testing "listing a dog by name" ;;CRIAR FIND NO DATOMIC PELO NAME
-      (is (match? {:body [{:id "4"
-                           :breed "stbernard"
-                           :name "caramelo"
-                           :img (fn [dog] (:img dog) (first @db/dogs))}] :status 200}
-                  (make-request! :get "/dogs?name=Caramelo"))))
+  (testing "listing a dog by name" ;;CRIAR FIND NO DATOMIC PELO NAME
+      (is (match? {:body [{:dog/id 1,
+                           :dog/name "Bardock",
+                           :dog/breed "Mix",
+                          :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
+                  (make-request! :get "/dogs?name=Bardock"))))
 
-  #_(testing "listing a dog by breed" ;;CRIAR FIND NO DATOMIC PELA BREED
-      (is (match? {:body [{:id "4"
-                           :breed "stbernard"
-                           :name "caramelo"
-                           :img (fn [dog] (:img dog) (first @db/dogs))}] :status 200}
-                  (make-request! :get "/dogs?breed=stbernard"))))
+  (testing "listing a dog by breed" ;;CRIAR FIND NO DATOMIC PELA BREED
+      (is (match? {:body [{:dog/id 5
+                           :dog/name "Melinda"
+                           :dog/breed "Pitbull"
+                           :dog/img
+                           "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
+                           {:dog/id 4
+                            :dog/name "Thor"
+                            :dog/breed "Pitbull"
+                            :dog/img
+                            "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
+                          ] :status 200}
+                  (make-request! :get "/dogs?breed=Pitbull"))))
 
-  #_(testing "testing castrated filter" ;;CRIAR FIND NO DATOMIC PELO CASTRATED
-      (is (match? {:body [{:id "4"
-                           :breed "stbernard"
-                           :name "caramelo"
-                           :img (fn [dog] (:img dog) (first @db/dogs))}] :status 200}
+  (testing "testing castrated filter" ;;CRIAR FIND NO DATOMIC PELO CASTRATED
+      (is (match? {:body [] :status 200}
                   (make-request! :get "/dogs?castrated?=false"))))
 
   #_(testing "testing age filter"
@@ -108,16 +112,22 @@
                            :img (fn [dog] (:img dog) (first @db/dogs))}] :status 200}
                   (make-request! :get "/dogs?age=2"))))
 
-  #_(testing "testing port filter"
-      (is (match? {:body [{:id "4"
-                           :breed "stbernard"
-                           :name "caramelo"
-                           :img (fn [dog] (:img dog) (first @db/dogs))}] :status 200}
-                  (make-request! :get "/dogs?port=p"))))
+  (testing "testing port filter"
+      (is (match? {:body [{:dog/id 1
+                           :dog/name "Bardock"
+                           :dog/breed "Mix"
+                           :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
+                  (make-request! :get "/dogs?port=m"))))
 
-  #_(testing "testing gender filter"
-      (is (match? {:body [{:id "4"
-                           :breed "stbernard"
-                           :name "caramelo"
-                           :img (fn [dog] (:img dog) (first @db/dogs))}] :status 200}
-                  (make-request! :get "/dogs?gender=m")))))
+  (testing "testing gender filter"
+      (is (match? {:body [#:dog{:id 2
+                                :name "Leka"
+                                :breed "Maltese"
+                                :img
+                                "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"}
+                          #:dog{:id 5
+                                :name "Melinda"
+                                :breed "Pitbull"
+                                :img
+                                "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
+                  (make-request! :get "/dogs?gender=f")))))

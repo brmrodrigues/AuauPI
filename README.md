@@ -35,3 +35,7 @@ java -jar target/auaupi.jar
 Para criar o pom:
 clj -Spom
 ```
+```shell
+Rodar os testes
+clj -A:test
+```
