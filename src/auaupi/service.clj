@@ -1,7 +1,7 @@
-(ns swagger.service
+(ns auaupi.service
   (:require
    [io.pedestal.http :as http]
-   [routes.routes :refer :all]
+   [auaupi.routes :refer :all]
    [io.pedestal.http.body-params :as body-params]
    [pedestal-api
     [core :as api]]

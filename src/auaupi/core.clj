@@ -5,7 +5,7 @@
    [auaupi.datomic :as datomic]
    [auaupi.config :as config]
    [auaupi.not-logic :as not-logic]
-   [swagger.service :as service]))
+   [auaupi.service :as service]))
 
 (defn start []
   (http/start (http/create-server service/pedestal-config)))

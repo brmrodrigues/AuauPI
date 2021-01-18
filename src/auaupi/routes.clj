@@ -1,4 +1,4 @@
-(ns routes.routes
+(ns auaupi.routes
   (:require
    [io.pedestal.http :as http]
    [io.pedestal.interceptor :as io]
