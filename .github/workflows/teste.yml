@@ -24,4 +24,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
     - run: npm install -g swagger-to-slate
-    - run: swagger-to-slate -i .github/workflows/teste.json
+    - run: swagger-to-slate -i .github/workflows/teste-swagger-slate.json
