@@ -22,9 +22,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: npm install
+    - run: npm install -g swagger-to-slate
     - run: |
-        npm install
-        npm install -g swagger-to-slate
         git config user.name Squad Alpha
         git config user.email github-actions@github.com
         cp  .github/workflows/swagger.json /home/runner/work/AuauPI/AuauPI
