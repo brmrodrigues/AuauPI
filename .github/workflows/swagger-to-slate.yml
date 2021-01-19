@@ -3,7 +3,7 @@ name: Gerando Slate a partir de um Swagger fixo
 on:
   push:
     branches: [ 7700-criacao-slate ]
-    # paths: doc/**
+    paths: doc/**
   pull_request:
     branches: [ main ]
 
