@@ -28,8 +28,8 @@ jobs:
     - run: mv swagger.md slate.md
     - run: cat slate.md
     - run: mv slate.md doc/
-    - run: git config --global user.email "gabriel.reis1945@gmail.com"
-    - run: git config --global user.name "gabriel-reis-silva"
+    - run: git config user.name github-actions
+    - run: git config user.email github-actions@github.com
     - run: git add doc/slate.md
     - run: git commit -m "Adicionando arquivo slate gerado a partir do swagger"
     - run: git push origin 7700-criacao-slate
