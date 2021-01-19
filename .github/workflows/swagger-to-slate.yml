@@ -22,21 +22,17 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm install -g swagger-to-slate
-    - run: git config user.name Squad Alpha
-    - run: git config user.email github-actions@github.com
-    - run: cp  .github/workflows/swagger.json /home/runner/work/AuauPI/AuauPI
-    - run: swagger-to-slate -i /home/runner/work/AuauPI/AuauPI/swagger.json
-    - run: mv swagger.md slate.md
-    - run: cat slate.md
-    - run: mv slate.md doc/
-        if [[ -z `git status --porcelain` ]]; then
-              echo "Nothing to commit"
-            else
-              echo "Commit"
-        fi
-    - run: git status
-    - run: git add -u
-    - run: git commit -m "Adicionando arquivo slate gerado a partir do swagger"
-    - run: git push origin 7700-criacao-slate
+    - run: |
+        npm install
+        npm install -g swagger-to-slate
+        git config user.name Squad Alpha
+        git config user.email github-actions@github.com
+        cp  .github/workflows/swagger.json /home/runner/work/AuauPI/AuauPI
+        swagger-to-slate -i /home/runner/work/AuauPI/AuauPI/swagger.json
+        mv swagger.md slate.md
+        cat slate.md
+        mv slate.md doc/
+        git status
+        git add -u
+        git commit -m "Adicionando arquivo slate gerado a partir do swagger"
+        git push origin 7700-criacao-slate 
