@@ -67,10 +67,25 @@
                     (datomic/open-connection config/config-map)))]
     (assoc ctx :response result)))
 
-(def list-dogs-route
+(comment
+ (map 
+       (fn [k v] (assoc {} k v))
+            (mapcat
+             vector
+             (remove #{:id} (keys Dog))
+             [s/Str s/Str s/Str s/Str s/Str s/Str s/Str s/Str])))
+
+(def list-dogs-route 
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
-    :parameters {:query-params {:breed s/Str}}
+    :parameters {:query-params {:breed s/Str, 
+                                :castrated? s/Bool, 
+                                :name s/Str, 
+                                :port (s/enum "p" "g" "m"), 
+                                :image s/Str, 
+                                :gender (s/enum "f" "m"), 
+                                :adopted? s/Bool, 
+                                :birth s/Str}}
     :responses  {200 {:body s/Str}
                  400 {:body s/Str}}
     :operationId ::list-dogs}
