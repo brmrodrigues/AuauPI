@@ -13,8 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [10.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,17 +23,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
     - run: npm install -g swagger-to-slate
-    # - run: swagger-to-slate -i .github/workflows/teste-swagger-slate.json
-    - run: cp  .github/workflows/teste-swagger-slate.json /home/runner/work/AuauPI/AuauPI
-    - run: pwd
-    - run: ls 
-    - run: swagger-to-slate -i /home/runner/work/AuauPI/AuauPI/teste-swagger-slate.json
-    - run: pwd
-    - run: ls 
-    - run: cat teste-swagger-slate.md
-    - run: mv teste-swagger-slate.md doc/
+    - run: cp  .github/workflows/swagger.json /home/runner/work/AuauPI/AuauPI
+    - run: swagger-to-slate -i /home/runner/work/AuauPI/AuauPI/swagger.json
+    - run: mv swagger.json slate.md
+    - run: cat slate.md
+    - run: mv slate.md doc/
     - run: git config --global user.email "gabriel.reis1945@gmail.com"
     - run: git config --global user.name "gabriel-reis-silva"
-    - run: git add doc/teste-swagger-slate.md
+    - run: git add doc/slate.md
     - run: git commit -m "Adicionando arquivo slate gerado a partir do swagger"
     - run: git push origin 7700-criacao-slate
