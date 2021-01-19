@@ -36,8 +36,8 @@ jobs:
             echo "Nothing to commit"
         else
             echo "Commit"
+            git status
+            git add -u
+            git commit -m "Adicionando arquivo slate gerado a partir do swagger"
+            git push origin 7700-criacao-slate 
         fi
-        git status
-        git add -u
-        git commit -m "Adicionando arquivo slate gerado a partir do swagger"
-        git push origin 7700-criacao-slate 
