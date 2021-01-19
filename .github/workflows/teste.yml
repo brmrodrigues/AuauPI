@@ -27,10 +27,12 @@ jobs:
     - run: swagger-to-slate -i /home/runner/work/AuauPI/AuauPI/swagger.json
     - run: mv swagger.md slate.md
     - run: cat slate.md
+    - run: ls
     - run: mv slate.md doc/
     - run: git config user.name github-actions
     - run: git config user.email Squad Alpha
     - run: cd doc
+    - run: ls
     - run: git add slate.md
     - run: git commit -m "Adicionando arquivo slate gerado a partir do swagger"
     - run: git push origin 7700-criacao-slate
