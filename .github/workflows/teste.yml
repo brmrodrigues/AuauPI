@@ -36,6 +36,6 @@ jobs:
     - run: ls
     - run: echo agr no doc
     - run: ls doc
-    - run: git add doc/slate.md
+    - run: git add .
     - run: git commit -m "Adicionando arquivo slate gerado a partir do swagger"
     - run: git push origin 7700-criacao-slate
