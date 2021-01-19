@@ -31,11 +31,11 @@ jobs:
     - run: mv swagger.md slate.md
     - run: cat slate.md
     - run: mv slate.md doc/
-      if [[ -z `git status --porcelain` ]]; then
-            echo "Nothing to commit"
-          else
-            echo "Commit"
-      fi
+        if [[ -z `git status --porcelain` ]]; then
+              echo "Nothing to commit"
+            else
+              echo "Commit"
+        fi
     - run: git status
     - run: git add -u
     - run: git commit -m "Adicionando arquivo slate gerado a partir do swagger"
