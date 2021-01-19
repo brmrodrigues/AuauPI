@@ -34,7 +34,7 @@ jobs:
         mv slate.md doc/
         if [[ -z `git status --porcelain` ]]; then
             echo "Nothing to commit"
-          else
+        else
             echo "Commit"
         fi
         git status
