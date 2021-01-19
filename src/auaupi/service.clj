@@ -24,10 +24,10 @@
            :description "Operations about orders"}]})
 
 (def api-routes
-  #{["/dogs" :get list-dogs-route]
-    #_["/dogs" :post post-dog-route :route-name :post-dogs]
-    #_["/dogs/:id" :post get-dog-route :route-name :adopt-dogs]
-    #_["/dogs/:id" :get adopt-dog-route :route-name :get-by-id]
+  #{["/dogs" :get list-dogs-route] 
+    ["/dogs" :post post-dog-route]
+    ["/dogs/:id" :get get-dog-route]
+    ["/dogs/:id" :post adopt-dog-route]
     ["/swagger.json" :get [(api/negotiate-response)
                            (api/body-params)
                            api/common-body

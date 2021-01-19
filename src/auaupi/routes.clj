@@ -10,6 +10,7 @@
    [auaupi.datomic :as datomic]
    [auaupi.logic :as logic]
    [auaupi.config :as config]
+   [auaupi.specs :as specs]
    [schema.core :as s]))
 
 (s/defschema Dog
@@ -27,44 +28,49 @@
   {:status 200 :body "Servidor funcionando"})
 
 (defn get-dogs [ctx]
-  (let [result (-> config/config-map
-                   datomic/open-connection
-                   datomic/find-dogs
-                   logic/datom->dog
+  (let [req (get ctx :request)
+        result (-> req
+                   :params
+                   (not-logic/check-params!
+                    (datomic/open-connection config/config-map))
                    http/json-response)]
     (assoc ctx :response result)))
 
+(defn get-dog-by-id [ctx]
+  (let [req (get ctx :request)
+        result (-> req
+                   :path-params
+                   :id
+                   Long/valueOf
+                   (datomic/find-dog-by-id
+                    (datomic/open-connection config/config-map))
+                   logic/datom->dog-full
+                   logic/data->response)]
+    (assoc ctx :response result)))
+
 (defn post-dogs [ctx]
-  (let [req (get ctx :request)]
+  (let [req (get ctx :request)
+        result (http/json-response {:status 200 :body "Registered Dog"})]
     (-> req
         (not-logic/check-breed! config/config-map)
         (not-logic/valid-dog! config/config-map)
-        (datomic/transact-dog! config/config-map)))
-  (http/json-response {:status 200 :body "Registered Dog"}))
+        (datomic/transact-dog! config/config-map))
+    (assoc ctx :response result)))
 
-(defn post-adoption [req]
-  (-> req
-      :path-params
-      :id
-      Long/valueOf
-      (not-logic/check-adopted!
-       (datomic/open-connection config/config-map))))
-
-(defn get-dog-by-id [req]
-  (-> req
-      :path-params
-      :id
-      Long/valueOf
-      (datomic/find-dog-by-id
-       (datomic/open-connection config/config-map))
-      logic/datom->dog-full
-      logic/data->response))
-
+(defn post-adoption [ctx]
+  (let [req (get ctx :request)
+        result (-> req
+                   :path-params
+                   :id
+                   Long/valueOf
+                   (not-logic/check-adopted!
+                    (datomic/open-connection config/config-map)))]
+    (assoc ctx :response result)))
 
 (def list-dogs-route
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
-    :parameters {}
+    :parameters {:query-params {:breed s/Str}}
     :responses  {200 {:body s/Str}
                  400 {:body s/Str}}
     :operationId ::list-dogs}
@@ -77,7 +83,7 @@
    {:summary    "List all dogs available for adoption"
     :parameters {:path-params {:id s/Int}}
     :responses  {200 {:body Dog}
-                 400 {:body "Not Found/Empty List"}}
+                 400 {:body s/Str}}
     :operationId ::specific-dog}
    (io/interceptor
     {:name  ::response-specific-dog
@@ -88,16 +94,15 @@
    ::create-pet
    {:summary     "Add a dog to our adoption list"
     :parameters  {:body-params Dog}
-    :responses   {201 {:body Dog}}
+    :responses   {201 {:body s/Str}}
     :operationId ::create-dog}
    post-dogs))
 
 (def adopt-dog-route
   (before
    ::update-pet
-   {:summary     "Update a pet"
-    :parameters  {:path-params {:id s/Int}
-                  :body-params Dog}
+   {:summary     "Adopt a dog"
+    :parameters  {:path-params {:id s/Int}}
     :responses   {200 {:body s/Str}}
     :operationId ::adopt-dog}
    post-adoption))
