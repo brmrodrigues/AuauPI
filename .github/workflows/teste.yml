@@ -32,7 +32,10 @@ jobs:
     - run: git config user.name github-actions
     - run: git config user.email Squad Alpha
     - run: cd doc
+    - run: pwd
     - run: ls
-    - run: git add slate.md
+    - run: echo agr no doc
+    - run: ls doc
+    - run: git add doc/slate.md
     - run: git commit -m "Adicionando arquivo slate gerado a partir do swagger"
     - run: git push origin 7700-criacao-slate
