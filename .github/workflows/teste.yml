@@ -1,4 +1,4 @@
-name: Teste gerando slate
+name: Gerando Slate a partir de um Swagger fixo
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
     - run: npm install -g swagger-to-slate
     - run: cp  .github/workflows/swagger.json /home/runner/work/AuauPI/AuauPI
     - run: swagger-to-slate -i /home/runner/work/AuauPI/AuauPI/swagger.json
-    - run: mv swagger.json slate.md
+    - run: mv swagger.md slate.md
     - run: cat slate.md
     - run: mv slate.md doc/
     - run: git config --global user.email "gabriel.reis1945@gmail.com"
