@@ -3,10 +3,8 @@ name: Gerando Slate a partir de um Swagger fixo
 on:
   push:
     branches: [ 7700-criacao-slate ]
-    paths: doc/
   pull_request:
     branches: [ main ]
-    paths: doc/
 
 jobs:
   build:
@@ -33,6 +31,6 @@ jobs:
     - run: cat slate.md
     - run: mv slate.md doc/
     - run: git status
-    - run: git add .
+    - run: git add -u
     - run: git commit -m "Adicionando arquivo slate gerado a partir do swagger"
     - run: git push origin 7700-criacao-slate
