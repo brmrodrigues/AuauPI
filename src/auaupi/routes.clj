@@ -10,7 +10,6 @@
    [auaupi.datomic :as datomic]
    [auaupi.logic :as logic]
    [auaupi.config :as config]
-   [auaupi.specs :as specs]
    [schema.core :as s]))
 
 (s/defschema Dog
@@ -23,9 +22,6 @@
    :port (s/enum "p" "m" "g")
    :castrated? s/Bool
    :adopted? s/Bool})
-
-(defn respond-hello [_req]
-  {:status 200 :body "Servidor funcionando"})
 
 (defn get-dogs [ctx]
   (let [req (get ctx :request)

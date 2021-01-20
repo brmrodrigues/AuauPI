@@ -28,12 +28,12 @@
     ["/dogs" :post post-dog-route]
     ["/dogs/:id" :get get-dog-route]
     ["/dogs/:id" :post adopt-dog-route]
-    ["/swagger.json" :get [(api/negotiate-response)
-                           (api/body-params)
-                           api/common-body
-                           (api/coerce-request)
-                           (api/validate-response)
-                           api/swagger-json]]
+    ["/auaupi/swagger.json" :get [(api/negotiate-response)
+                                  (api/body-params)
+                                  api/common-body
+                                  (api/coerce-request)
+                                  (api/validate-response)
+                                  api/swagger-json]]
     ["/*resource" :get [(api/negotiate-response)
                         (api/body-params)
                         api/common-body
@@ -43,19 +43,15 @@
                         api/swagger-ui]]})
 
 (s/with-fn-validation
- (api/defroutes routes doc api-routes))
+  (api/defroutes routes doc api-routes))
 
 (def pedestal-config
-  (-> {:env :dev
-       ::http/routes #(deref #'routes)
+  (-> {::http/routes routes
        ::http/router :linear-search
-       ::http/resource-path     "/public"
        ::http/type :jetty
        ::http/join? false
        ::http/port 3000
-       ::http/allowed-origins   (constantly true)
-       ::http/container-options {:h2c? true
-                                 :h2?  false
-                                 :ssl? false}}
+       ::http/host "0.0.0.0"
+       ::http/allowed-origins   (constantly true)}
       http/default-interceptors
       (update ::http/interceptors conj (body-params/body-params))))
