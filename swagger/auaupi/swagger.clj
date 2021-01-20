@@ -10,10 +10,5 @@
     (assert (= 200 status))
     (io/make-parents "doc/swagger/swagger.json")
     (spit "doc/swagger/swagger.json" body))
-  #_(shutdown-agents)
-  #_(System/exit 0))
-
-#_(response-for 
-   (::http/service-fn 
-    (http/create-server service/pedestal-config))
-   :get "/swagger.json")
+  (shutdown-agents)
+  (System/exit 0))
