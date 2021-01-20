@@ -14,7 +14,7 @@
                      :dog/castrated? true
                      :dog/port "m"
                      :dog/adopted? false}
-                    
+
                     {:dog/id 2
                      :dog/name "Leka"
                      :dog/breed "Maltese"

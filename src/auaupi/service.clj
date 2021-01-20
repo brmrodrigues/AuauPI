@@ -12,7 +12,7 @@
    :leave (fn [ctx]
             (assoc-in ctx [:response :headers "Content-Security-Policy"] ""))})
 
-(def doc 
+(def doc
   {:info {:title       "AuauPI"
           :description "The clojure API for dogs adoption"
           :version     "2.0"}
@@ -24,7 +24,7 @@
            :description "Operations about orders"}]})
 
 (def api-routes
-  #{["/dogs" :get list-dogs-route] 
+  #{["/dogs" :get list-dogs-route]
     ["/dogs" :post post-dog-route]
     ["/dogs/:id" :get get-dog-route]
     ["/dogs/:id" :post adopt-dog-route]
@@ -43,7 +43,7 @@
                         api/swagger-ui]]})
 
 (s/with-fn-validation
-  (api/defroutes routes doc api-routes))
+ (api/defroutes routes doc api-routes))
 
 (def pedestal-config
   (-> {:env :dev

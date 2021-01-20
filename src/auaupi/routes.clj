@@ -75,21 +75,19 @@
              (remove #{:id} (keys Dog))
              [s/Str s/Str s/Str s/Str s/Str s/Str s/Str s/Str])))
 
-(def list-dogs-route 
+(def list-dogs-route
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
-    :parameters {:query-params {:breed s/Str, 
-                                :castrated? s/Bool, 
-                                :name s/Str, 
-                                :port (s/enum "p" "g" "m"), 
-                                :image s/Str, 
-                                :gender (s/enum "f" "m"), 
-                                :adopted? s/Bool, 
-                                :birth s/Str}}
+    :parameters {:query-params {(s/optional-key :breed) s/Str
+                                :castrated? s/Bool
+                                (s/optional-key :name) s/Str
+                                :port (s/enum "p" "g" "m")
+                                :gender (s/enum "f" "m")
+                                (s/optional-key :birth) s/Str}}
     :responses  {200 {:body s/Str}
                  400 {:body s/Str}}
     :operationId ::list-dogs}
-   (io/interceptor
+   (io/interceptor 
     {:name  :response-dogs 
      :enter get-dogs})))
 
