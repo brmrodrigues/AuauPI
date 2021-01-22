@@ -34,4 +34,4 @@
                    :main-opts ["-m" "hf.depstar.uberjar"
                                "target/auaupi.jar"
                                "-C" "-m" "auaupi.core"]}}
-  :paths ["src" "test" "swagger"]}
+  :paths ["src" "dev" "test" "swagger"]}
