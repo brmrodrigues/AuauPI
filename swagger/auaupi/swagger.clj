@@ -11,12 +11,9 @@
       response))
 
 (defn -main []
-  (loop []
-    (if (not (= (:status (response-swagger)) 404))
-      (do
-        (println "deu certo")
-        (io/make-parents "doc/swagger/swagger.json")
-        (spit "doc/swagger/swagger.json" (:body (response-swagger))))
-      (recur)))
+  (loop [response (response-swagger)]
+    (println (:body response))
+    (io/make-parents "doc/swagger/swagger.json")
+    (spit "doc/swagger/swagger.json" (:body response)))
   (shutdown-agents)
   (System/exit 0))
