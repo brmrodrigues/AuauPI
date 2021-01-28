@@ -74,8 +74,8 @@
     :responses  {200 {:body s/Str}
                  400 {:body s/Str}}
     :operationId ::list-dogs}
-   (io/interceptor 
-    {:name  :response-dogs 
+   (io/interceptor
+    {:name  :response-dogs
      :enter get-dogs})))
 
 (def get-dog-route
@@ -93,12 +93,20 @@
   (sw.doc/annotate
    {:summary     "Add a dog to our adoption list"
     :parameters  {:body-params schema/Dog}
-    :responses   {201 {:body s/Str}
+    ;:responses   {201 {:body s/Str}
+    :responses   {201 {:body {:ccc s/Str
+                              :ddd s/Str}}
                   400 {:body s/Str}}
     :operationId ::create-dog}
    (io/interceptor
     {:name ::post-dogs
-     :enter post-dogs})))
+     :enter (fn [ctx]
+              (let [body (get-in ctx [:request :body-params])]
+                (prn "body")
+                (prn body))
+              (assoc ctx :response {:status 201
+                                    :body {:ccc "SALVE TRICOLOR PAULISTA"
+                                           :ddd "UNICO TRI MUNDIAL DO BR"}}))})))
 
 (def adopt-dog-route
   (before

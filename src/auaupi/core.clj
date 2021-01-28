@@ -17,3 +17,5 @@
   (datomic/prepare-datomic! config/config-map)
   (not-logic/get-breeds! config/config-map)
   (start))
+
+#_ (-main)

@@ -23,24 +23,20 @@
           {:name        "client"
            :description "Operations about orders"}]})
 
+(def common-interceptors
+  [(api/negotiate-response)
+   (api/body-params)
+   api/common-body
+   (api/coerce-request)
+   (api/validate-response)])
+
 (def api-routes
   #{["/dogs" :get list-dogs-route]
-    ["/dogs" :post post-dog-route]
+    ["/dogs" :post (conj common-interceptors 'post-dog-route)]
     ["/dogs/:id" :get get-dog-route]
     ["/dogs/:id" :post adopt-dog-route]
-    ["/auaupi/swagger.json" :get [(api/negotiate-response)
-                                  (api/body-params)
-                                  api/common-body
-                                  (api/coerce-request)
-                                  (api/validate-response)
-                                  api/swagger-json]]
-    ["/*resource" :get [(api/negotiate-response)
-                        (api/body-params)
-                        api/common-body
-                        (api/coerce-request)
-                        (api/validate-response)
-                        no-csp
-                        api/swagger-ui]]})
+    ["/auaupi/swagger.json" :get api/swagger-json]
+    ["/*resource" :get [no-csp api/swagger-ui]]})
 
 (s/with-fn-validation
   (api/defroutes routes doc api-routes))
@@ -52,6 +48,7 @@
        ::http/join? false
        ::http/port 3000
        ::http/host "0.0.0.0"
-       ::http/allowed-origins   (constantly true)}
-      http/default-interceptors
-      (update ::http/interceptors conj (body-params/body-params))))
+       ::http/allowed-origins (constantly true)}))
+
+;;;;TESTE DA ROTA POST /dogs
+;curl --request post localhost:3000/dogs -H 'Content-Type: application/json' -d '{"name": "dog-nome", "breed": "breed-type", "birth": "123456", "gender": "m", "port": "m", "castrated?": true}'
