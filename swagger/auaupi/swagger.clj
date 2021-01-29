@@ -6,9 +6,15 @@
 
 (defn -main []
   (let [service (::http/service-fn (http/create-server service/pedestal-config))
-        {:keys [status body]} (response-for service :get "/auaupi/swagger.json")]
+        {:keys [status body]} (response-for service :get "/auaupi/v1/swagger.json")]
     (assert (= 200 status))
     (io/make-parents "doc/swagger/swagger.json")
     (spit "doc/swagger/swagger.json" body))
   (shutdown-agents)
   (System/exit 0))
+
+#_ (-main)
+
+#_(let [service (::http/service-fn (http/create-server service/pedestal-config))
+        {:keys [status body]} (response-for service :get "/auaupi/v1/swagger.json")]
+    (prn status))

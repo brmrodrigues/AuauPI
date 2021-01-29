@@ -23,20 +23,34 @@
           {:name        "client"
            :description "Operations about orders"}]})
 
-(def common-interceptors
-  [(api/negotiate-response)
-   (api/body-params)
-   api/common-body
-   (api/coerce-request)
-   (api/validate-response)])
+;(def api-routes
+;  #{["/dogs" :get list-dogs-route]
+;    ["/dogs" :post (conj common-interceptors 'post-dog-route)]
+;    ["/dogs/:id" :get get-dog-route]
+;    ["/dogs/:id" :post adopt-dog-route]
+;    ["/auaupi/swagger.json" :get (conj common-interceptors 'api/swagger-json)]
+;    ["/*resource" :get [no-csp api/swagger-ui]]})
 
 (def api-routes
-  #{["/dogs" :get list-dogs-route]
-    ["/dogs" :post (conj common-interceptors 'post-dog-route)]
-    ["/dogs/:id" :get get-dog-route]
-    ["/dogs/:id" :post adopt-dog-route]
-    ["/auaupi/swagger.json" :get api/swagger-json]
-    ["/*resource" :get [no-csp api/swagger-ui]]})
+  [[["/auaupi/v1"
+     ^:interceptors [(api/negotiate-response)
+                     (api/body-params)
+                     api/common-body
+                     (api/coerce-request)
+                     (api/validate-response)]
+
+     ["/dogs"
+      ^:interceptors []
+      {:get list-dogs-route
+       :post post-dog-route}]
+
+     ["/swagger.json"
+      ^:interceptors []
+      {:get api/swagger-json}]
+
+     ["/*resource"
+      ^:interceptors [no-csp]
+      {:get api/swagger-ui}]]]])
 
 (s/with-fn-validation
   (api/defroutes routes doc api-routes))
