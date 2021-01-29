@@ -10,21 +10,14 @@
   (let [service (::http/service-fn (http/create-server service/pedestal-config))
         response (-> service
                      (p.test/response-for :get "/auaupi/swagger.json"))]
-    (io/make-parents "doc/swagger/swagger.json")
-    (prn (:body response))
-    (->> response
-        :body
-        (spit "doc/swagger/swagger.json"))))
+    response-swagger))
 
 (defn -main []
   #_(s/with-fn-validation service/routes)
-  (let [service (::http/service-fn (http/create-server service/pedestal-config))
-        response (-> service
-                     (p.test/response-for :get "/auaupi/swagger.json"))]
+  (let [swagger (-> (response-swagger)
+                    :body)]
     (io/make-parents "doc/swagger/swagger.json")
-    (prn (:body response))
-    (->> response
-         :body
-         (spit "doc/swagger/swagger.json")))
+    (prn swagger)
+    (spit "doc/swagger/swagger.json" swagger))
   (shutdown-agents)
   (System/exit 0))

@@ -44,7 +44,7 @@
   (api/defroutes routes doc api-routes))
 
 (def pedestal-config
-  (-> {::http/routes (s/with-fn-validation routes)
+  (-> {::http/routes routes
        ::http/router :linear-search
        ::http/type :jetty
        ::http/join? false
