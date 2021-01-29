@@ -29,13 +29,11 @@
     ["/dogs/:id" :get get-dog-route]
     ["/dogs/:id" :post adopt-dog-route]
     ["/auaupi/swagger.json" :get [(api/negotiate-response)
-                                  (api/body-params)
                                   api/common-body
                                   (api/coerce-request)
                                   (api/validate-response)
                                   api/swagger-json]]
     ["/*resource" :get [(api/negotiate-response)
-                        (api/body-params)
                         api/common-body
                         (api/coerce-request)
                         (api/validate-response)
@@ -46,7 +44,7 @@
   (api/defroutes routes doc api-routes))
 
 (def pedestal-config
-  (-> {::http/routes routes
+  (-> {::http/routes (s/with-fn-validation routes)
        ::http/router :linear-search
        ::http/type :jetty
        ::http/join? false
