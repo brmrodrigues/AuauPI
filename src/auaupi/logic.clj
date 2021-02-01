@@ -48,12 +48,12 @@
   [config-map map]
   (hash-map
    :dog/id (datomic/inc-last-id (datomic/open-connection config-map))
-   :dog/name (:auaupi.specs/name map)
-   :dog/breed (:auaupi.specs/breed map)
-   :dog/birth (:auaupi.specs/birth map)
-   :dog/gender (:auaupi.specs/gender map)
-   :dog/port (:auaupi.specs/port map)
-   :dog/castrated? (:auaupi.specs/castrated? map)
+   :dog/name (:name map)
+   :dog/breed (:breed map)
+   :dog/birth (:birth map)
+   :dog/gender (:gender map)
+   :dog/port (:port map)
+   :dog/castrated? (:castrated? map)
    :dog/image (:img map)
    :dog/adopted? false))
 

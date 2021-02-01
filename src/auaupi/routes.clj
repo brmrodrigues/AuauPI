@@ -10,7 +10,8 @@
    [auaupi.datomic :as datomic]
    [auaupi.logic :as logic]
    [auaupi.config :as config]
-   [schema.core :as s]))
+   [schema.core :as s]
+   [auaupi.schema :as schema]))
 
 (s/defschema Dog
   {:id s/Int
@@ -45,13 +46,11 @@
     (assoc ctx :response result)))
 
 (defn post-dogs [ctx]
-  (let [req (get ctx :request)
-        result (http/json-response {:status 200 :body "Registered Dog"})]
-    (-> req
-        (not-logic/check-breed! config/config-map)
-        (not-logic/valid-dog! config/config-map)
-        (datomic/transact-dog! config/config-map))
-    (assoc ctx :response result)))
+  (let [req (get ctx :request)]
+    (->> req
+         (not-logic/check-breed! config/config-map)
+         (assoc ctx :response))))
+
 
 (defn post-adoption [ctx]
   (let [req (get ctx :request)
@@ -66,13 +65,8 @@
 (def list-dogs-route
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
-    :parameters {:query-params {(s/optional-key :breed) s/Str
-                                :castrated? s/Bool
-                                (s/optional-key :name) s/Str
-                                :port (s/enum "p" "g" "m")
-                                :gender (s/enum "f" "m")
-                                (s/optional-key :birth) s/Str}}
-    :responses  {200 {:body s/Str}
+    :parameters {:query-params schema/Dog}
+    :responses  {200 {:body schema/Dog}
                  400 {:body s/Str}}
     :operationId ::list-dogs}
    (io/interceptor 
@@ -93,8 +87,9 @@
 (def post-dog-route
   (sw.doc/annotate
    {:summary     "Add a dog to our adoption list"
-    :parameters  {:body-params Dog}
-    :responses   {201 {:body s/Str}}
+    :parameters  {:body-params schema/Dog}
+    :responses   {201 {:body {:message s/Str}}
+                  400 {:body {:message s/Str}}}
     :operationId ::create-dog}
    (io/interceptor
     {:name ::post-dogs

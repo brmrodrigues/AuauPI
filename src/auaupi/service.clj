@@ -7,6 +7,13 @@
     [core :as api]]
    [schema.core :as s]))
 
+(def common-interceptors
+  [(api/negotiate-response)
+   #_(api/body-params)
+   api/common-body
+   (api/coerce-request)
+   (api/validate-response)])
+
 (def no-csp
   {:name  ::no-csp
    :leave (fn [ctx]
@@ -25,17 +32,13 @@
 
 (def api-routes
   [[["/auaupi/v1"
-     ^:interceptors [(api/negotiate-response)
-                     (api/body-params)
-                     api/common-body
-                     (api/coerce-request)
-                     (api/validate-response)]
+     ^:interceptors common-interceptors
 
      ["/dogs"
       ^:interceptors []
-      {:get list-dogs-route
+      {:get  list-dogs-route
        :post post-dog-route}]
-     
+
      ["/dogs/:id"
       ^:interceptors []
       {:get get-dog-route
