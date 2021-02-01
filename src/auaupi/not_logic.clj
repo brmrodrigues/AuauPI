@@ -4,7 +4,6 @@
    [clojure.data.json :as json]
    [io.pedestal.http :as http]
    [auaupi.logic :as logic]
-   [auaupi.specs :as specs]
    [auaupi.datomic :as datomic]
    [auaupi.schema :as schema]))
 
@@ -28,8 +27,7 @@
                  (assoc coll :img)
                  (logic/add-fields config-map))]
     (datomic/transact-dog! dog config-map)
-    {:status 201 :body dog
-     :headers {"Content-Type" "application/json"}}))
+    {:status 201 :body dog}))
 
 (defn valid-dog!
   [dog config-map]
@@ -52,8 +50,8 @@
 
 
 (defn check-breed! [config-map req]
-  (let [breed (:breed (:json-params req))
-        dog (:json-params req)
+  (let [breed (:breed (:body-params req))
+        dog (:body-params req)
         breeds (get-breeds! config-map)]
     (cond
       (not
