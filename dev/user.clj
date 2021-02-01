@@ -28,10 +28,10 @@
 (defn start-dev []
   (datomic/prepare-datomic! config/config-map)
   (h/initial-dogs!)
- (when (nil? @server) 
-   (reset! server (-> dev-pedestal-config
-                      http/create-server
-                      http/start))))
+  (when (nil? @server)
+    (reset! server (-> dev-pedestal-config
+                       http/create-server
+                       http/start))))
 
 (defn stop-dev []
   (when @server
@@ -43,7 +43,7 @@
                           :storage-dir (str (System/getenv "PWD") "/datomic-data")
                           :db-name "dogs"
                           :system "dev"})]
-   (d/delete-database client {:db-name "dogs"} )))
+    (d/delete-database client {:db-name "dogs"})))
 
 #_(start-dev)
 #_(stop-dev)

@@ -1,12 +1,14 @@
 (ns auaupi.swagger
+  (:gen-class)
   (:require [io.pedestal.http :as http]
-            [io.pedestal.test :refer [response-for]]
+            [io.pedestal.test :as p.test]
             [clojure.java.io :as io]
-            [auaupi.service :as service]))
+            [auaupi.service :as service]
+            [schema.core :as s]))
 
 (defn -main []
   (let [service (::http/service-fn (http/create-server service/pedestal-config))
-        {:keys [status body]} (response-for service :get "/auaupi/swagger.json")]
+        {:keys [status body]} (p.test/response-for service :get "/auaupi/v1/swagger.json")]
     (assert (= 200 status))
     (io/make-parents "doc/swagger/swagger.json")
     (spit "doc/swagger/swagger.json" body))

@@ -101,10 +101,11 @@
      :enter post-dogs})))
 
 (def adopt-dog-route
-  (before
-   ::update-pet
+  (sw.doc/annotate
    {:summary     "Adopt a dog"
     :parameters  {:path-params {:id s/Int}}
     :responses   {200 {:body s/Str}}
     :operationId ::adopt-dog}
-   post-adoption))
+   (io/interceptor
+    {:name ::adopt-dog
+     :enter post-adoption})))
