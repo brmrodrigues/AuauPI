@@ -91,19 +91,21 @@
      :enter get-dog-by-id})))
 
 (def post-dog-route
-  (handler
-   ::create-pet
+  (sw.doc/annotate
    {:summary     "Add a dog to our adoption list"
     :parameters  {:body-params Dog}
     :responses   {201 {:body s/Str}}
     :operationId ::create-dog}
-   post-dogs))
+   (io/interceptor
+    {:name ::post-dogs
+     :enter post-dogs})))
 
 (def adopt-dog-route
-  (before
-   ::update-pet
+  (sw.doc/annotate
    {:summary     "Adopt a dog"
     :parameters  {:path-params {:id s/Int}}
     :responses   {200 {:body s/Str}}
     :operationId ::adopt-dog}
-   post-adoption))
+   (io/interceptor
+    {:name ::adopt-dog
+     :enter post-adoption})))
