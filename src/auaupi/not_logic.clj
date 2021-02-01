@@ -44,7 +44,6 @@
                    (json/read-str :key-fn keyword)
                    :message
                    keys)]
-    #_(db/conj-breeds! breeds)
     (map #(name %) breeds)))
 
 
