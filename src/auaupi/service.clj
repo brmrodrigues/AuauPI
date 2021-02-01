@@ -32,15 +32,15 @@
 
 (def api-routes
   [[["/auaupi/v1"
-     ^:interceptors [(api/negotiate-response)
-                     (api/body-params)
+     ^:interceptors common-interceptors #_[(api/negotiate-response)
+                     #_(api/body-params)
                      api/common-body
                      (api/coerce-request)
                      (api/validate-response)]
 
      ["/dogs"
       ^:interceptors []
-      {:get list-dogs-route
+      {:get  list-dogs-route
        :post post-dog-route}]
      
      ["/dogs/:id"
