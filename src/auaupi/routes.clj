@@ -65,13 +65,13 @@
 (def list-dogs-route
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
-    :parameters {:query-params schema/Dog #_{(s/optional-key :breed) s/Str
+    #_:parameters #_{:query-params schema/Dog #_{(s/optional-key :breed) s/Str
                                 :castrated? s/Bool
                                 (s/optional-key :name) s/Str
                                 :port (s/enum "p" "g" "m")
                                 :gender (s/enum "f" "m")
                                 (s/optional-key :birth) s/Str}}
-    :responses  {200 {:body s/Str}
+    :responses  {200 {:body schema/Dog}
                  400 {:body s/Str}}
     :operationId ::list-dogs}
    (io/interceptor 
