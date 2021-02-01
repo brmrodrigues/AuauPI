@@ -6,18 +6,11 @@
             [auaupi.service :as service]
             [schema.core :as s]))
 
-(defn response-swagger []
-  (let [service (::http/service-fn (http/create-server service/pedestal-config))
-        response (-> service
-                     (p.test/response-for :get "/auaupi/swagger.json"))]
-    response-swagger))
-
 (defn -main []
-  #_(s/with-fn-validation service/routes)
-  (let [swagger (-> (response-swagger)
-                    :body)]
+  (let [service (::http/service-fn (http/create-server service/pedestal-config))
+        {:keys [status body]} (p.test/response-for service :get "/auaupi/v1/swagger.json")]
+    (assert (= 200 status))
     (io/make-parents "doc/swagger/swagger.json")
-    (prn swagger)
-    (spit "doc/swagger/swagger.json" swagger))
+    (spit "doc/swagger/swagger.json" body))
   (shutdown-agents)
   (System/exit 0))
