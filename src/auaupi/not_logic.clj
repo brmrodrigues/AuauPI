@@ -27,7 +27,7 @@
                  (assoc coll :img)
                  (logic/add-fields config-map))]
     (datomic/transact-dog! dog config-map)
-    {:status 201 :body dog}))
+    {:status 201 :body {:message "registered dog"}}))
 
 (defn valid-dog!
   [dog config-map]

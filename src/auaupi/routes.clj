@@ -93,12 +93,7 @@
   (sw.doc/annotate
    {:summary     "Add a dog to our adoption list"
     :parameters  {:body-params schema/Dog}
-    :responses   {201 {:body {:dog/name s/Str
-                              :dog/breed s/Str
-                              :dog/birth s/Str
-                              :dog/gender (s/enum "m" "f")
-                              :dog/port (s/enum "p" "m" "g")
-                              :dog/castrated? s/Bool}}
+    :responses   {201 {:body {:message s/Str}}
                   400 {:body {:message s/Str}}}
     :operationId ::create-dog}
    (io/interceptor
