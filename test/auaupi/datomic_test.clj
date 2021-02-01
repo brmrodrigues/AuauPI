@@ -4,7 +4,6 @@
    [matcher-combinators.test :refer [match?]]
    [user]
    [auaupi.datomic :as datomic]
-   [auaupi.core :as core]
    [auaupi.config :as config]
    [helpers]))
 
