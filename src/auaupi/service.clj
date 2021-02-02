@@ -31,26 +31,26 @@
            :description "Operations about orders"}]})
 
 (def api-routes
-  [[["/auaupi/v1"
-     ^:interceptors common-interceptors
+  '[[["/auaupi/v1"
+      ^:interceptors common-interceptors
 
-     ["/dogs"
-      ^:interceptors []
-      {:get  list-dogs-route
-       :post post-dog-route}]
+      ["/dogs"
+       ^:interceptors []
+       {:get  list-dogs-route
+        :post post-dog-route}]
 
-     ["/dogs/:id"
-      ^:interceptors []
-      {:get get-dog-route
-       :post adopt-dog-route}]
+      ["/dogs/:id"
+       ^:interceptors []
+       {:get get-dog-route
+        :post adopt-dog-route}]
 
-     ["/swagger.json"
-      ^:interceptors []
-      {:get api/swagger-json}]
+      ["/swagger.json"
+       ^:interceptors []
+       {:get api/swagger-json}]
 
-     ["/*resource"
-      ^:interceptors [no-csp]
-      {:get api/swagger-ui}]]]])
+      ["/*resource"
+       ^:interceptors [no-csp]
+       {:get api/swagger-ui}]]]])
 
 (s/with-fn-validation
   (api/defroutes routes doc api-routes))
