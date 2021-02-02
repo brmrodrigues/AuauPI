@@ -3,11 +3,9 @@
    [clj-http.client :as client]
    [clojure.data.json :as json]
    [io.pedestal.http :as http]
-   [auaupi.db :as db]
    [auaupi.logic :as logic]
-   [clojure.spec.alpha :as s]
-   [auaupi.specs :as specs]
-   [auaupi.datomic :as datomic]))
+   [auaupi.datomic :as datomic]
+   [auaupi.schema :as schema]))
 
 (defn get-breed-image! [raca {:keys [dog-ceo]}]
   (-> (str (-> dog-ceo
@@ -23,19 +21,20 @@
       :message))
 
 (defn create-dog!
-  [{:keys [breed] :as dog} config-map]
-  (let [image (get-breed-image! (::specs/breed dog) config-map)
+  [coll config-map]
+  (let [image (get-breed-image! (:breed coll) config-map)
         dog (->> image
-                 (assoc dog :img)
+                 (assoc coll :img)
                  (logic/add-fields config-map))]
-    #_(db/conj-dogs! dog)
-    dog))
+    (datomic/transact-dog! dog config-map)
+    {:status 201 :body {:message "registered dog"}}))
 
 (defn valid-dog!
   [dog config-map]
-  (cond
-    (s/valid? ::specs/dog dog) (create-dog! dog config-map)
-    :else {:status 400 :body (json/write-str {:message "Invalid Format"})}))
+  (if (= (schema/validate-schema dog) dog)
+    (create-dog! dog config-map)
+    {:status 400 :body {:message "invalid format"}}))
+
 
 (defn get-breeds! [{:keys [dog-ceo]}]
   (let [breeds (-> dog-ceo
@@ -45,15 +44,19 @@
                    (json/read-str :key-fn keyword)
                    :message
                    keys)]
-    (db/conj-breeds! breeds)))
+    (map #(name %) breeds)))
 
-(defn check-breed! [req config-map]
-  (get-breeds! config-map)
-  (let [breed (:breed (:json-params req))]
+
+
+(defn check-breed! [config-map req]
+  (let [breed (:breed (:body-params req))
+        dog (:body-params req)
+        breeds (get-breeds! config-map)]
     (cond
-      (not (empty?
-            (filter #(= (keyword breed) %) @db/breeds))) (specs/req->dog req)
-      :else {:status 400 :body (json/write-str {:message "Invalid Format"})})))
+      (not
+       (empty? (filter #(= breed %) breeds)))
+       (valid-dog! dog config-map)
+      :else {:status 400 :body {:message "Invalid Format"}})))
 
 (defn response-adopted! [id conn]
   (let [dog (datomic/get-infos-adopted id conn)]
