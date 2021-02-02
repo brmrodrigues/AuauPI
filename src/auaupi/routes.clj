@@ -13,7 +13,7 @@
    [schema.core :as s]
    [auaupi.schema :as schema]))
 
-(s/defschema Dog
+#_(s/defschema Dog
   {:id s/Int
    :name s/Str
    :breed s/Str
@@ -75,9 +75,9 @@
 
 (def get-dog-route
   (sw.doc/annotate
-   {:summary    "List all dogs available for adoption"
+   {:summary    "Shows a specific dog"
     :parameters {:path-params {:id s/Int}}
-    :responses  {200 {:body Dog}
+    :responses  {200 {:body s/Str}
                  400 {:body s/Str}}
     :operationId ::specific-dog}
    (io/interceptor
