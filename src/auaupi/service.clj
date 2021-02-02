@@ -24,30 +24,30 @@
            :description "Operations about orders"}]})
 
 (def api-routes
-  [[["/auaupi/v1"
-     ^:interceptors [(api/negotiate-response)
-                     (api/body-params)
-                     api/common-body
-                     (api/coerce-request)
-                     (api/validate-response)]
+  '[[["/auaupi/v1"
+      ^:interceptors [(api/negotiate-response)
+                      (api/body-params)
+                      api/common-body
+                      (api/coerce-request)
+                      (api/validate-response)]
 
-     ["/dogs"
-      ^:interceptors []
-      {:get list-dogs-route
-       :post post-dog-route}]
-     
-     ["/dogs/:id"
-      ^:interceptors []
-      {:get get-dog-route
-       :post adopt-dog-route}]
+      ["/dogs"
+       ^:interceptors []
+       {:get list-dogs-route
+        :post post-dog-route}]
 
-     ["/swagger.json"
-      ^:interceptors []
-      {:get api/swagger-json}]
+      ["/dogs/:id"
+       ^:interceptors []
+       {:get get-dog-route
+        :post adopt-dog-route}]
 
-     ["/*resource"
-      ^:interceptors [no-csp]
-      {:get api/swagger-ui}]]]])
+      ["/swagger.json"
+       ^:interceptors []
+       {:get api/swagger-json}]
+
+      ["/*resource"
+       ^:interceptors [no-csp]
+       {:get api/swagger-ui}]]]])
 
 (s/with-fn-validation
   (api/defroutes routes doc api-routes))
