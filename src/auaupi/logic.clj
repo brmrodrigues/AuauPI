@@ -68,7 +68,8 @@
 (defn data->response
   [data]
   (cond
-    (empty? data) {:status 404 :body (json/write-str "Not Found")}
+    (empty? data)
+    {:status 404 :body (json/write-str "Not Found")}
     :else {:status 200 :body (json/write-str data)}))
 
 (defn datom->dog [coll]
