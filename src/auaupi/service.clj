@@ -31,20 +31,7 @@
            :description "Operations about orders"}]})
 
 (def api-routes
-<<<<<<< HEAD
   '[[["/auaupi/v1"
-      ^:interceptors [(api/negotiate-response)
-                      (api/body-params)
-                      api/common-body
-                      (api/coerce-request)
-                      (api/validate-response)]
-
-      ["/dogs"
-       ^:interceptors []
-       {:get list-dogs-route
-        :post post-dog-route}]
-=======
-  [[["/auaupi/v1"
      ^:interceptors common-interceptors
 
      ["/dogs"
@@ -56,7 +43,6 @@
       ^:interceptors []
       {:get get-dog-route
        :post adopt-dog-route}]
->>>>>>> edbb78b5aa0771c32915efc1b28315ef22cf716b
 
       ["/dogs/:id"
        ^:interceptors []
