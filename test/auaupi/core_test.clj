@@ -1,5 +1,6 @@
 (ns auaupi.core-test
   (:require [auaupi.core :as core]
+            [auaupi.config :as config]
             [clojure.test :refer [testing deftest is]]
             [matcher-combinators.test :refer [match?]]
             [io.pedestal.http :as http]
@@ -18,7 +19,7 @@
 
 (deftest testing-routes
   (user/delete-db)
-  (datomic/prepare-datomic! core/config-map)
+  (datomic/prepare-datomic! config/config-map)
   (helpers/initial-dogs!)
   (testing "listing dogs"
     (is (match? {:body [{:dog/id 3
