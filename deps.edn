@@ -13,9 +13,7 @@
 
         com.datomic/dev-local {:mvn/version "0.9.229"}
 
-        clj-http {:mvn/version "3.10.3"}
-        
-        cider/cider-nrepl {:mvn/version "0.25.8"}}
+        clj-http {:mvn/version "3.10.3"}}
 
  :aliases {:dev {:extra-paths ["dev" "test"]
                  :extra-deps {nubank/matcher-combinators {:mvn/version "1.5.2"}
