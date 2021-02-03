@@ -39,10 +39,10 @@
       {:get  list-dogs-route
        :post post-dog-route}]
 
-     ["/dogs/:id"
-      ^:interceptors []
-      {:get get-dog-route
-       :post adopt-dog-route}]
+      ["/dogs/:id"
+       ^:interceptors []
+       {:get get-dog-route
+        :post adopt-dog-route}]
 
       ["/swagger.json"
        ^:interceptors []

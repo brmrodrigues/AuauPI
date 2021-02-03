@@ -11,7 +11,8 @@
 
         nubank/matcher-combinators {:mvn/version "3.1.4"}
 
-        com.datomic/dev-local {:mvn/version "0.9.229"}
+        com.datomic/dev-local    {:local/root
+                                  "resources/dev-local/dev-local-0.9.229.jar"}
 
         clj-http {:mvn/version "3.10.3"}}
 
