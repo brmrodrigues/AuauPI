@@ -42,7 +42,7 @@
                          :dog/breed "Pitbull"
                          :dog/img
                          "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
-                (make-request! :get "/dogs"))))
+                (make-request! :get "/auaupi/v1/dogs"))))
   (testing "listing dog by id"
     (is (match? {:body [{:img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"
                          :breed "Weimaraner"
@@ -53,11 +53,11 @@
                          :birth "2018-08-14"
                          :gender "m"
                          :adopted? false}] :status 200}
-                (make-request! :get "/dogs/3"))))
+                (make-request! :get "/auaupi/v1/dogs/3"))))
   (testing "testing post route"
     (is (match? {:body {:status 200
                         :body "Registered Dog"}}
-                (make-request! :post "/dogs"
+                (make-request! :post "/auaupi/v1/dogs"
                                :headers {"Content-Type" "application/json"}
                                :body (json/write-str {:name "Caramelo"
                                                       :breed "stbernard"
@@ -76,7 +76,7 @@
                          :adopted? false
                          :img (fn [dog] (:img dog) (first @db/dogs))
                          :birth ""}] :status 200}
-                (make-request! :get "/dogs/6"))))
+                (make-request! :get "/auaupi/v1/dogs/6"))))
   (testing "testing adopt a dog"
     (is (match? {:body "Parabéns, você acabou de dar um novo lar para o Caramelo!"}
                 (make-request! :post "/dogs/6"
@@ -86,7 +86,7 @@
                            :dog/name "Bardock",
                            :dog/breed "Mix",
                           :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
-                  (make-request! :get "/dogs?name=Bardock"))))
+                  (make-request! :get "/auaupi/v1/dogs?name=Bardock"))))
 
   (testing "listing a dog by breed" ;;CRIAR FIND NO DATOMIC PELA BREED
       (is (match? {:body [{:dog/id 5
@@ -100,11 +100,11 @@
                             :dog/img
                             "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
                           ] :status 200}
-                  (make-request! :get "/dogs?breed=Pitbull"))))
+                  (make-request! :get "/auaupi/v1/dogs?breed=Pitbull"))))
 
   (testing "testing castrated filter" ;;CRIAR FIND NO DATOMIC PELO CASTRATED
       (is (match? {:body [] :status 200}
-                  (make-request! :get "/dogs?castrated?=false"))))
+                  (make-request! :get "/auaupi/v1/dogs?castrated?=false"))))
 
   #_(testing "testing age filter"
       (is (match? {:body [{:id "4"
@@ -114,11 +114,11 @@
                   (make-request! :get "/dogs?age=2"))))
 
   (testing "testing port filter"
-      (is (match? {:body [{:dog/id 1
+      (is (match? (json/write-str {:body [{:dog/id 1
                            :dog/name "Bardock"
                            :dog/breed "Mix"
-                           :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
-                  (make-request! :get "/dogs?port=m"))))
+                           :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200})
+                  (make-request! :get "/auaupi/v1/dogs?port=m"))))
 
   (testing "testing gender filter"
       (is (match? {:body [#:dog{:id 2
@@ -131,4 +131,4 @@
                                 :breed "Pitbull"
                                 :img
                                 "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
-                  (make-request! :get "/dogs?gender=f")))))
+                  (make-request! :get "/auaupi/v1/dogs?gender=f")))))
