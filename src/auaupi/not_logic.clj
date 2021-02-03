@@ -49,8 +49,8 @@
 
 
 (defn check-breed! [config-map req]
-  (let [breed (:breed (:body-params req))
-        dog (:body-params req)
+  (let [breed (:breed (:json-params req))
+        dog (:json-params req)
         breeds (get-breeds! config-map)]
     (cond
       (not

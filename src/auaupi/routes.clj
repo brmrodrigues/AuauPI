@@ -36,10 +36,9 @@
 
 (defn post-dogs [ctx]
   (let [req (get ctx :request)]
-    (->> req
+    (->> ctx
          (not-logic/check-breed! config/config-map)
          (assoc ctx :response))))
-
 
 (defn post-adoption [ctx]
   (let [req (get ctx :request)
@@ -76,7 +75,7 @@
 (def post-dog-route
   (sw.doc/annotate
    {:summary     "Add a dog to our adoption list"
-    :parameters  {:body-params schema/Dog}
+    :parameters  {:json-params schema/Dog}
     :responses   {201 {:body {:message s/Str}}
                   400 {:body {:message s/Str}}}
     :operationId ::create-dog}
