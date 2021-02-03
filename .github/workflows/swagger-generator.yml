@@ -28,9 +28,8 @@ jobs:
       - name: Gerando Swagger
         run: clojure -A:swagger
 
-      - name: Gerando Swagger
-        run: git config user.name Squad Alpha
-        run: git config user.email github-actions@github.com
-        run: git status      
-
+      - run: |
+          git config user.name Squad Alpha
+          git config user.email github-actions@github.com
+          git status
          
