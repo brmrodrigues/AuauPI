@@ -57,15 +57,14 @@
   (testing "testing post route"
     (is (match? {:body {:status 200
                         :body "Registered Dog"}}
-                (make-request! :post "/dogs"
+                (make-request! :post "/auaupi/v1/dogs"
                                :headers {"Content-Type" "application/json"}
-                               :body (json/write-str {:name "Caramelo"
-                                                      :breed "stbernard"
-                                                      :age 2
+                               :body (json/write-str {:name "Thor"
+                                                      :breed "Pitbull"
+                                                      :birth "2019-07-29"
                                                       :gender "m"
                                                       :castrated? false
-                                                      :port "p"
-                                                      :adopted? false})))))
+                                                      :dog/port "g"})))))
   (testing "listing dog after post"
     (is (match? {:body [{:breed "stbernard"
                          :castrated? false

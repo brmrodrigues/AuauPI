@@ -46,8 +46,6 @@
                    keys)]
     (map #(name %) breeds)))
 
-
-
 (defn check-breed! [config-map req]
   (let [breed (:breed (:json-params req))
         dog (:json-params req)
