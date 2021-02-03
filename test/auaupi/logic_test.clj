@@ -2,8 +2,7 @@
   (:require
    [auaupi.logic :as logic]
    [clojure.test :refer [testing deftest is]]
-   [matcher-combinators.test :refer [match?]]
-   [auaupi.db :as db]))
+   [matcher-combinators.test :refer [match?]]))
 
 (deftest logic-functions
   (let [dog-test [{:id "0"
