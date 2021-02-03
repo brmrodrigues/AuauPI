@@ -123,4 +123,4 @@ jobs:
           cli: 1.10.1.561
 
       - name: Gerando Swagger
-        run: clojure -X:swagger
+        run: clojure -A:swagger
