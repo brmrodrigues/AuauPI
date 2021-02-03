@@ -3,103 +3,6 @@ name: Smoke tests
 on: [push]
 
 jobs:
-
-  # Deprecated version identifier
-  # Please use `cli: version` as in job `clojure-cli`
-  # test-tools-deps:
-
-  #   strategy:
-  #     matrix:
-  #       operating-system: [ubuntu-latest]
-
-  #   runs-on: ${{ matrix.operating-system }}
-
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-
-  #     - name: Prepare java
-  #       uses: actions/setup-java@v1
-  #       with:
-  #         java-version: 1.8
-
-  #     - name: Install clojure tools-deps
-  #       uses: DeLaGuardo/setup-clojure@master
-  #       with:
-  #         tools-deps: 1.10.1.693
-
-  # clojure-cli:
-
-  #   strategy:
-  #     matrix:
-  #       operating-system: [ubuntu-latest]
-
-  #   runs-on: ${{ matrix.operating-system }}
-
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-
-  #     - name: Prepare java
-  #       uses: actions/setup-java@v1
-  #       with:
-  #         java-version: 1.8
-
-  #     - name: Install clojure tools-deps
-  #       uses: DeLaGuardo/setup-clojure@master
-  #       with:
-  #         cli: 1.10.1.561
-
-  # test-leiningen:
-
-  #   strategy:
-  #     matrix:
-  #       operating-system: [ubuntu-latest]
-
-  #   runs-on: ${{ matrix.operating-system }}
-
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-
-  #     - name: Prepare java
-  #       uses: actions/setup-java@v1
-  #       with:
-  #         java-version: 1.8
-
-  #     - name: Install leiningen
-  #       uses: DeLaGuardo/setup-clojure@master
-  #       with:
-  #         lein: 2.9.1
-
-  #     - name: Check leiningen version
-  #       run: lein version
-
-  # test-boot:
-
-  #   strategy:
-  #     matrix:
-  #       operating-system: [ubuntu-latest]
-
-  #   runs-on: ${{ matrix.operating-system }}
-
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-
-  #     - name: Prepare java
-  #       uses: actions/setup-java@v1
-  #       with:
-  #         java-version: 1.8
-
-  #     - name: Install boot
-  #       uses: DeLaGuardo/setup-clojure@master
-  #       with:
-  #         boot: 2.8.3
-
-  #     - name: Check boot version
-  #       run: boot -V
-
   gerar-swagger:
 
     strategy:
@@ -124,3 +27,9 @@ jobs:
 
       - name: Gerando Swagger
         run: clojure -A:swagger
+
+      - name: Colocando no repositório do github
+        run: |
+        git config user.name Squad Alpha
+        git config user.email github-actions@github.com
+        git status 
