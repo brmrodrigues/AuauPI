@@ -31,6 +31,13 @@ jobs:
       - run: |
           git config user.name Squad Alpha
           git config user.email github-actions@github.com
-          git add . 
-          git push origin 7700-criacao-slate       
+          if [[ -z `git status --porcelain` ]]; then
+            echo "Sem alteração"
+          else
+            echo "Commit"
+            git status
+            git add -u
+            git commit -m "Adicionando arquivo Swagger gerado"
+            git push origin 9081-swagger-generator/refactor
+          fi 
          
