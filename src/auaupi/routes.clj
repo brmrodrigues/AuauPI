@@ -36,7 +36,7 @@
 
 (defn post-dogs [ctx]
   (let [req (get ctx :request)]
-    (->> ctx
+    (->> req
          (not-logic/check-breed! config/config-map)
          (assoc ctx :response))))
 

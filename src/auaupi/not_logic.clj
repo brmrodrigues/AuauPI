@@ -54,7 +54,7 @@
         breeds (get-breeds! config-map)]
     (cond
       (not
-       (empty? (filter #(= breed %) breeds)))
+       (empty? (filter #(= (clojure.string/lower-case breed) %) breeds)))
        (valid-dog! dog config-map)
       :else {:status 400 :body {:message "Invalid Format"}})))
 
