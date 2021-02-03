@@ -28,8 +28,10 @@ jobs:
       - name: Gerando Swagger
         run: clojure -A:swagger
 
-      - name: Colocando no repositório do github
+      - name: Gerando Swagger
         run: |
         git config user.name Squad Alpha
         git config user.email github-actions@github.com
-        git status 
+        git status      
+
+         
