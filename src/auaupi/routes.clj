@@ -75,7 +75,7 @@
 (def post-dog-route
   (sw.doc/annotate
    {:summary     "Add a dog to our adoption list"
-    :parameters  {:json-params schema/Dog}
+    :parameters  {:body-params schema/Dog}
     :responses   {201 {:body {:message s/Str}}
                   400 {:body {:message s/Str}}}
     :operationId ::create-dog}
