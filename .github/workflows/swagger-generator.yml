@@ -1,4 +1,4 @@
-name: Smoke tests
+name: Swagger Generator
 
 on: [push]
 
@@ -31,5 +31,6 @@ jobs:
       - run: |
           git config user.name Squad Alpha
           git config user.email github-actions@github.com
-          git status
+          git add . 
+          git push origin 7700-criacao-slate       
          
