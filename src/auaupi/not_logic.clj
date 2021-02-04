@@ -27,13 +27,13 @@
                  (assoc coll :img)
                  (logic/add-fields config-map))]
     (datomic/transact-dog! dog config-map)
-    {:status 201 :body {:message "registered dog"}}))
+    {:status 201 :body (json/write-str {:message "Registered dog"})}))
 
 (defn valid-dog!
   [dog config-map]
   (if (= (schema/validate-schema dog) dog)
     (create-dog! dog config-map)
-    {:status 400 :body {:message "invalid format"}}))
+    {:status 400 :body (json/write-str {:message "Invalid dog"})}))
 
 
 (defn get-breeds! [{:keys [dog-ceo]}]
@@ -54,7 +54,7 @@
       (not
        (empty? (filter #(= (clojure.string/lower-case breed) %) breeds)))
        (valid-dog! dog config-map)
-      :else {:status 400 :body {:message "Invalid Format"}})))
+      :else {:status 400 :body (json/write-str {:message "Invalid breed"})})))
 
 (defn response-adopted! [id conn]
   (let [dog (datomic/get-infos-adopted id conn)]
