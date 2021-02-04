@@ -1,12 +1,11 @@
 (ns auaupi.service
   (:require
-    [io.pedestal.http :as http]
-    [auaupi.routes :refer :all]
-    [io.pedestal.http.body-params :as body-params]
-    [pedestal-api
-     [core :as api]]
-    [schema.core :as s]
-    [auaupi.config :as config]))
+   [io.pedestal.http :as http]
+   [auaupi.routes :refer :all]
+   [io.pedestal.http.body-params :as body-params]
+   [pedestal-api
+    [core :as api]]
+   [schema.core :as s]))
 
 (def common-interceptors
   [(api/negotiate-response)
@@ -32,7 +31,7 @@
            :description "Operations about orders"}]})
 
 (def api-routes
-  '[[[(get config/config-map :base-uri)
+  '[[["/auaupi/v1"
      ^:interceptors common-interceptors
 
      ["/dogs"
