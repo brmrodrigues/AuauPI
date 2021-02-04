@@ -17,6 +17,11 @@
     (update response :body json/read-str
             :key-fn keyword)))
 
+(defn path-concat [path]
+  (-> config/config-map
+      :base-uri
+      (str path)))
+
 (deftest testing-routes
   (user/delete-db)
   (datomic/prepare-datomic! config/config-map)
@@ -42,7 +47,7 @@
                          :dog/breed "Pitbull"
                          :dog/img
                          "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
-                (make-request! :get "/auaupi/v1/dogs"))))
+                (make-request! :get (path-concat "/dogs") ))))
   (testing "listing dog by id"
     (is (match? {:body [{:img "https://images.dog.ceo/breeds/weimaraner/n02092339_747.jpg"
                          :breed "Weimaraner"
@@ -53,7 +58,7 @@
                          :birth "2018-08-14"
                          :gender "m"
                          :adopted? false}] :status 200}
-                (make-request! :get "/auaupi/v1/dogs/3"))))
+                (make-request! :get (path-concat "/dogs/3")))))
   #_(testing "testing post route"
       (is (match? {:body {:status 200
                           :body "Registered Dog"}}
@@ -86,7 +91,7 @@
                          :dog/name "Bardock"
                          :dog/breed "Mix"
                          :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
-                (make-request! :get "/auaupi/v1/dogs?name=Bardock"))))
+                (make-request! :get (path-concat "/dogs?name=Bardock")))))
 
   (testing "listing a dog by breed" ;;CRIAR FIND NO DATOMIC PELA BREED
     (is (match? {:body [{:dog/id 5
@@ -99,7 +104,7 @@
                          :dog/breed "Pitbull"
                          :dog/img
                          "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
-                (make-request! :get "/auaupi/v1/dogs?breed=Pitbull"))))
+                (make-request! :get (path-concat "/dogs?breed=Pitbull")))))
 
   (testing "testing castrated filter" ;;CRIAR FIND NO DATOMIC PELO CASTRATED
     (is (match? {:body [] :status 200}
@@ -110,7 +115,7 @@
                          :dog/name "Bardock"
                          :dog/breed "Mix"
                          :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
-                (make-request! :get "/auaupi/v1/dogs?port=m"))))
+                (make-request! :get (path-concat "/dogs?port=m")))))
 
   (testing "testing gender filter"
     (is (match? {:body [#:dog{:id 2
@@ -123,4 +128,4 @@
                               :breed "Pitbull"
                               :img
                               "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
-                (make-request! :get "/auaupi/v1/dogs?gender=f")))))
+                (make-request! :get (path-concat "/dogs?gender=f"))))))
