@@ -60,17 +60,17 @@
                 (make-request!
                   :post "/auaupi/v1/dogs"
                   :headers {"Content-Type" "application/json"}
-                  :body (json/write-str {:name "Thor"
-                                         :breed "Pitbull"
+                  :body (json/write-str {:name "Thora"
+                                         :breed "African"
                                          :birth "2019-07-29"
                                          :gender "m"
                                          :castrated? false
                                          :port "g"})))))
   (testing "listing dog after post"
     (let [response (make-request! :get "/auaupi/v1/dogs/6")]
-      (is (match? {:body [{:breed "Pitbull",
+      (is (match? {:body [{:breed "African",
                          :castrated? false,
-                         :name "Thor",
+                         :name "Thora",
                          :port "g",
                          :id 6,
                          :gender "m",
@@ -82,7 +82,7 @@
                             (dissoc :img))]
                  :status (:status response)}))))
   (testing "testing adopt a dog"
-    (is (match? {:body "Parabéns, você acabou de dar um novo lar para o Thor!"}
+    (is (match? {:body "Parabéns, você acabou de dar um novo lar para o Thora!"}
                 (make-request! :post "/auaupi/v1/dogs/6"
                                :headers {"Content-Type" "application/json"}))))
 
@@ -94,17 +94,15 @@
                   (make-request! :get "/auaupi/v1/dogs?name=Bardock"))))
 
   (testing "listing a dog by breed" ;;CRIAR FIND NO DATOMIC PELA BREED
-      (is (match? {:body [{:dog/id 5
-                           :dog/name "Melinda"
-                           :dog/breed "Pitbull"
-                           :dog/img
-                           "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
-                           {:dog/id 4
-                            :dog/name "Thor"
-                            :dog/breed "Pitbull"
-                            :dog/img
-                            "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
-                          ] :status 200}
+      (is (match? {:body [{:dog/id 5,
+                           :dog/name "Melinda",
+                           :dog/breed "Pitbull",
+                           :dog/img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
+                          {:dog/id 4,
+                           :dog/name "Thor",
+                           :dog/breed "Pitbull",
+                           :dog/img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}]
+                   :status 200}
                   (make-request! :get "/auaupi/v1/dogs?breed=Pitbull"))))
 
   (testing "testing castrated filter" ;;CRIAR FIND NO DATOMIC PELO CASTRATED
