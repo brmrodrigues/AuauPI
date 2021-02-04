@@ -35,9 +35,8 @@ jobs:
             echo "Sem alteração"
         else
             echo "Commit"
-            git checkout teste-swagger
             git status
             git add -u
             git commit -m "Adicionando arquivo slate gerado a partir do swagger"
-            git push origin teste-swagger
+            git push origin main
         fi
