@@ -6,4 +6,5 @@
    :datomic {:client-config {:server-type :dev-local
                              :storage-dir (str (System/getenv "PWD") "/datomic-data")
                              :db-name "dogs"
-                             :system "dev"}}})
+                             :system "dev"}}
+   :base-uri "/auaupi/v1"})
