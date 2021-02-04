@@ -1,6 +1,9 @@
 name: Swagger Generator
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
+    
 
 jobs:
   gerar-swagger:
@@ -25,19 +28,28 @@ jobs:
         with:
           cli: 1.10.1.561
 
+      - name: Checkout para a main
+        run: |
+          git config user.name Squad Alpha
+          git config user.email github-actions@github.com
+          git checkout main
+
       - name: Gerando Swagger
         run: clojure -A:swagger
 
       - run: |
+          cat doc/swagger/swagger.json
           git config user.name Squad Alpha
           git config user.email github-actions@github.com
+          cd doc/swagger
+          git status
+          ls
           if [[ -z `git status --porcelain` ]]; then
             echo "Sem alteração"
           else
-            echo "Commit"
-            git status
-            git add -u
-            git commit -m "Adicionando arquivo Swagger gerado"
-            git push origin 9081-swagger-generator/refactor
+            echo "Commit a ser feito"
+            git add swagger.json
+            git commit -m "Adicionando arquivo Swagger gerado automaticamente"
+            git push origin main
           fi 
          

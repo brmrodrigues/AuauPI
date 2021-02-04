@@ -1,9 +1,6 @@
-name: Gerando Slate a partir de um Swagger fixo
+name: Gerando Slate a partir do Swagger 
 
 on:
-  push:
-    branches: [ 7700-criacao-slate ]
-    #paths: doc/**
   pull_request:
     branches: [ main ]
 
@@ -27,7 +24,9 @@ jobs:
     - run: |
         git config user.name Squad Alpha
         git config user.email github-actions@github.com
-        cp  .github/workflows/swagger.json /home/runner/work/AuauPI/AuauPI
+        git checkout main
+        ls
+        cp  doc/swagger/swagger.json /home/runner/work/AuauPI/AuauPI
         swagger-to-slate -i /home/runner/work/AuauPI/AuauPI/swagger.json
         mv swagger.md slate.md
         cat slate.md
@@ -36,8 +35,9 @@ jobs:
             echo "Sem alteração"
         else
             echo "Commit"
+            git checkout teste-swagger
             git status
             git add -u
             git commit -m "Adicionando arquivo slate gerado a partir do swagger"
-            git push origin 7700-criacao-slate 
+            git push origin teste-swagger
         fi
