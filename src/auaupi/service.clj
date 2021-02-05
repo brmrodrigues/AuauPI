@@ -7,13 +7,6 @@
     [core :as api]]
    [schema.core :as s]))
 
-(def common-interceptors
-  [(api/negotiate-response)
-   (api/body-params)
-   api/common-body
-   (api/coerce-request)
-   (api/validate-response)])
-
 (def no-csp
   {:name  ::no-csp
    :leave (fn [ctx]
