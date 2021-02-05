@@ -53,7 +53,7 @@
 (def list-dogs-route
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
-    :parameters {:query-params schema/Dog}
+    :parameters {:query-params schema/Dog-filters}
     :responses  {200 {:body schema/Dog}
                  400 {:body s/Str}}
     :operationId ::list-dogs}

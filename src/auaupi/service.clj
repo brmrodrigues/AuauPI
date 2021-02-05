@@ -25,11 +25,7 @@
 
 (def api-routes
   [[["/auaupi/v1"
-     ^:interceptors [(api/negotiate-response)
-                     (api/body-params)
-                     api/common-body
-                     (api/coerce-request)
-                     (api/validate-response)]
+     ^:interceptors []
 
      ["/dogs"
       ^:interceptors []
@@ -42,7 +38,11 @@
         :post adopt-dog-route}]
 
       ["/swagger.json"
-       ^:interceptors []
+       ^:interceptors [(api/negotiate-response)
+                       (api/body-params)
+                       api/common-body
+                       (api/coerce-request)
+                       (api/validate-response)]
        {:get api/swagger-json}]
 
       ["/*resource"
