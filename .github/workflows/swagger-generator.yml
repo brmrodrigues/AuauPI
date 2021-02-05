@@ -2,7 +2,7 @@ name: Swagger Generator
 
 on:
   push:
-    branches: [ main ]
+    # branches: [ main ]
     
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
         run: |
           git config user.name Squad Alpha
           git config user.email github-actions@github.com
-          git checkout main
+          git checkout 7700-criacao-slate
 
       - name: Gerando Swagger
         run: clojure -A:swagger
@@ -50,6 +50,6 @@ jobs:
             echo "Commit a ser feito"
             git add swagger.json
             git commit -m "Adicionando arquivo Swagger gerado automaticamente"
-            git push origin main
+            git push origin 7700-criacao-slate
           fi 
          
