@@ -31,8 +31,8 @@
            :description "Operations about orders"}]})
 
 (def api-routes
-  '[[["/auaupi/v1"
-     ^:interceptors common-interceptors
+  [[["/auaupi/v1"
+     ^:interceptors 'common-interceptors
 
      ["/dogs"
       ^:interceptors []
