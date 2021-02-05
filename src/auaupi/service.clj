@@ -32,7 +32,11 @@
 
 (def api-routes
   [[["/auaupi/v1"
-     ^:interceptors 'common-interceptors
+     ^:interceptors [(api/negotiate-response)
+                     (api/body-params)
+                     api/common-body
+                     (api/coerce-request)
+                     (api/validate-response)]
 
      ["/dogs"
       ^:interceptors []
