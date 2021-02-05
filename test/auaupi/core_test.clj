@@ -1,13 +1,13 @@
 (ns auaupi.core-test
   (:require [auaupi.core :as core]
             [auaupi.config :as config]
+            [auaupi.datomic :as datomic]
+            [auaupi.service :as service]
             [clojure.test :refer [testing deftest is]]
             [matcher-combinators.test :refer [match?]]
             [io.pedestal.http :as http]
             [io.pedestal.test :as http-test]
             [clojure.data.json :as json]
-            [auaupi.db :as db]
-            [auaupi.datomic :as datomic]
             [helpers]
             [user]))
 
@@ -59,73 +59,77 @@
                          :gender "m"
                          :adopted? false}] :status 200}
                 (make-request! :get (path-concat "/dogs/3")))))
-  #_(testing "testing post route"
-      (is (match? {:body {:status 200
-                          :body "Registered Dog"}}
-                  (make-request! :post "/auaupi/v1/dogs"
-                                 :headers {"Content-Type" "application/json"}
-                                 :body (json/write-str {:name "Caramelo"
-                                                        :breed "stbernard"
-                                                        :age 2
-                                                        :gender "m"
-                                                        :castrated? false
-                                                        :port "p"
-                                                        :adopted? false})))))
-  #_(testing "listing dog after post"
-      (is (match? {:body [{:breed "stbernard"
-                           :castrated? false
-                           :name "Caramelo"
-                           :port "p"
-                           :id 6
-                           :gender "m"
-                           :adopted? false
-                           :img (fn [dog] (:img dog) (first @db/dogs))
-                           :birth ""}] :status 200}
-                  (make-request! :get "/auaupi/v1/dogs/6"))))
-  #_(testing "testing adopt a dog"
-      (is (match? {:body "Parabéns, você acabou de dar um novo lar para o Caramelo!"}
-                  (make-request! :post "/auaupi/v1/dogs/5"
-                                 :headers {"Content-Type" "application/json"}))))
+  (testing "testing post route"
+    (is (match? {:status 201
+                 :body   {:message "Registered dog"}}
+                (make-request!
+                  :post (path-concat "/dogs")
+                  :headers {"Content-Type" "application/json"}
+                  :body (json/write-str {:name "Thora"
+                                         :breed "African"
+                                         :birth "2019-07-29"
+                                         :gender "m"
+                                         :castrated? false
+                                         :port "g"})))))
+  (testing "listing dog after post"
+    (let [response (make-request! :get (path-concat "/dogs/6"))]
+      (is (match? {:body [{:breed "African",
+                         :castrated? false,
+                         :name "Thora",
+                         :port "g",
+                         :id 6,
+                         :gender "m",
+                         :adopted? false,
+                         :birth "2019-07-29"}]
+                 :status 200}
+                {:body [(-> response
+                            (get-in [:body 0])
+                            (dissoc :img))]
+                 :status (:status response)}))))
+  (testing "testing adopt a dog"
+    (is (match? {:body "Parabéns, você acabou de dar um novo lar para o Thora!"}
+                (make-request! :post (path-concat "/dogs/6")
+                               :headers {"Content-Type" "application/json"}))))
+
   (testing "listing a dog by name" ;;CRIAR FIND NO DATOMIC PELO NAME
-    (is (match? {:body [{:dog/id 1
-                         :dog/name "Bardock"
-                         :dog/breed "Mix"
-                         :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
-                (make-request! :get (path-concat "/dogs?name=Bardock")))))
+      (is (match? {:body [{:dog/id 1,
+                           :dog/name "Bardock",
+                           :dog/breed "Mix",
+                          :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
+                  (make-request! :get (path-concat "/dogs?name=Bardock")))))
 
   (testing "listing a dog by breed" ;;CRIAR FIND NO DATOMIC PELA BREED
-    (is (match? {:body [{:dog/id 5
-                         :dog/name "Melinda"
-                         :dog/breed "Pitbull"
-                         :dog/img
-                         "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
-                        {:dog/id 4
-                         :dog/name "Thor"
-                         :dog/breed "Pitbull"
-                         :dog/img
-                         "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
-                (make-request! :get (path-concat "/dogs?breed=Pitbull")))))
+      (is (match? {:body [{:dog/id 5,
+                           :dog/name "Melinda",
+                           :dog/breed "Pitbull",
+                           :dog/img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}
+                          {:dog/id 4,
+                           :dog/name "Thor",
+                           :dog/breed "Pitbull",
+                           :dog/img "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}]
+                   :status 200}
+                  (make-request! :get (path-concat "/dogs?breed=Pitbull")))))
 
   (testing "testing castrated filter" ;;CRIAR FIND NO DATOMIC PELO CASTRATED
-    (is (match? {:body [] :status 200}
-                (make-request! :get "/auaupi/v1/dogs?castrated?=false"))))
+      (is (match? {:body [] :status 200}
+                  (make-request! :get (path-concat "/dogs?castrated?=false")))))
 
-  (testing "testingport filter"
-    (is (match? {:body [{:dog/id 1
-                         :dog/name "Bardock"
-                         :dog/breed "Mix"
-                         :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
-                (make-request! :get (path-concat "/dogs?port=m")))))
+  (testing "testing port filter"
+      (is (match? {:body [{:dog/id 1
+                           :dog/name "Bardock"
+                           :dog/breed "Mix"
+                           :dog/img "https://images.dog.ceo/breeds/mix/piper.jpg"}] :status 200}
+                  (make-request! :get (path-concat "/dogs?port=m")))))
 
   (testing "testing gender filter"
-    (is (match? {:body [#:dog{:id 2
-                              :name "Leka"
-                              :breed "Maltese"
-                              :img
-                              "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"}
-                        #:dog{:id 5
-                              :name "Melinda"
-                              :breed "Pitbull"
-                              :img
-                              "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
-                (make-request! :get (path-concat "/dogs?gender=f"))))))
+      (is (match? {:body [#:dog{:id 2
+                                :name "Leka"
+                                :breed "Maltese"
+                                :img
+                                "https://images.dog.ceo/breeds/maltese/n02085936_4781.jpg"}
+                          #:dog{:id 5
+                                :name "Melinda"
+                                :breed "Pitbull"
+                                :img
+                                "https://images.dog.ceo/breeds/pitbull/IMG_20190826_121528_876.jpg"}] :status 200}
+                  (make-request! :get (path-concat "/dogs?gender=f"))))))

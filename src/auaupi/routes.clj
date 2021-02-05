@@ -13,17 +13,6 @@
    [schema.core :as s]
    [auaupi.schema :as schema]))
 
-(s/defschema Dog
-  {:id s/Int
-   :name s/Str
-   :breed s/Str
-   :image s/Str
-   :birth s/Str
-   :gender (s/enum "m" "f")
-   :port (s/enum "p" "m" "g")
-   :castrated? s/Bool
-   :adopted? s/Bool})
-
 (defn get-dogs [ctx]
   (let [req (get ctx :request)
         result (-> req
@@ -51,7 +40,6 @@
          (not-logic/check-breed! config/config-map)
          (assoc ctx :response))))
 
-
 (defn post-adoption [ctx]
   (let [req (get ctx :request)
         result (-> req
@@ -77,7 +65,7 @@
   (sw.doc/annotate
    {:summary    "List all dogs available for adoption"
     :parameters {:path-params {:id s/Int}}
-    :responses  {200 {:body Dog}
+    :responses  {200 {:body schema/Dog}
                  400 {:body s/Str}}
     :operationId ::specific-dog}
    (io/interceptor

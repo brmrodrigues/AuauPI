@@ -9,7 +9,7 @@
 
 (def common-interceptors
   [(api/negotiate-response)
-   #_(api/body-params)
+   (api/body-params)
    api/common-body
    (api/coerce-request)
    (api/validate-response)])
