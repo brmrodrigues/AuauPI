@@ -33,7 +33,7 @@ jobs:
           git config user.name Squad Alpha
           git config user.email github-actions@github.com
           git pull
-          git checkout 7700-criacao-slate
+          git branch
 
       - name: Gerando Swagger
         run: clojure -A:swagger
