@@ -25,17 +25,17 @@
   [coll config-map]
   (let [image (get-breed-image! (:breed coll) config-map)
         dog (->> image
+                 prn
                  (assoc coll :img)
                  (logic/add-fields config-map))]
     (datomic/transact-dog! dog config-map)
-    {:status 201 :body (json/write-str {:message "Registered dog"})}))
+    (created "Registered dog")))
 
 (defn valid-dog!
   [dog config-map]
   (if (= (schema/validate-schema dog) dog)
     (create-dog! dog config-map)
-    {:status 400 :body (json/write-str {:message "Invalid dog"})}))
-
+    (bad-request "Invalid dog")))
 
 (defn get-breeds! [{:keys [dog-ceo]}]
   (let [breeds (-> dog-ceo
@@ -55,22 +55,20 @@
       (not
        (empty? (filter #(= (clojure.string/lower-case breed) %) breeds)))
        (valid-dog! dog config-map)
-      :else (bad-request "Invalid breed")#_{:status 400 :body (json/write-str {:message "Invalid breed"})})))
+      :else (bad-request "Invalid breed"))))
 
 (defn response-adopted! [id conn]
   (let [dog (datomic/get-infos-adopted id conn)]
     (if (not (empty? (ffirst dog)))
       (cond (= (last (first dog)) "m")
-            {:status 200
-             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para o " (ffirst dog) "!"))}
+            (ok (str "Parabéns, você acabou de dar um novo lar para o " (ffirst dog) "!"))
             (= (last (first dog)) "f")
-            {:status 200
-             :body (json/write-str (str "Parabéns, você acabou de dar um novo lar para a " (ffirst dog) "!"))})
-      {:status 200 :body (json/write-str "Parabéns! Adoção realizada com sucesso")})))
+            (ok (str "Parabéns, você acabou de dar um novo lar para a " (ffirst dog) "!")))
+      (ok "Parabéns! Adoção realizada com sucesso!"))))
 
 (defn check-adopted! [id conn]
   (if (ffirst (datomic/get-adoption id conn))
-    {:status 400 :body "Cachorro não está disponível para adoção"}
+    (bad-request "Cachorro não está disponível para adoção!")#_{:status 400 :body "Cachorro não está disponível para adoção"}
     (do (datomic/adopt-dog id conn)
         (response-adopted! id conn))))
 
