@@ -18,9 +18,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Mudando para a main
-        uses: actions/javascript-action@10245-workflows-slate-swagger/refactor
-
       - name: Prepare java
         uses: actions/setup-java@v1
         with:
@@ -52,9 +49,21 @@ jobs:
           if [[ -z `git status --porcelain` ]]; then
             echo "Sem alteração"
           else
-            echo "Commit a ser feito"
-            git add swagger.json
-            git commit -m "Adicionando arquivo Swagger gerado automaticamente"
-            git push origin main
+      - name: Create pull request
+        uses: paygoc6/action-pull-request-another-repo@v1.0.2
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source_folder: ${{ steps.file.outputs.file-name }}
+          destination_repo: 'paygoc6/AuauPI
+          destination_folder: ${{ steps.file.outputs.folder-name }}
+          destination_base_branch: 'main'
+          destination_head_branch: ${{ steps.file.outputs.branch-name }}
+          # Inform squad email
+          user_email: 'github-actions@github.com'
+          # Inform squad name
+          user_name: 'Squad Alpha'
+          pull_request_reviewers: 'paygoc6/bank-as-a-service'      
           fi 
+          
          
