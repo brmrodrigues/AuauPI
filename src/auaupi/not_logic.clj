@@ -25,7 +25,6 @@
   [coll config-map]
   (let [image (get-breed-image! (:breed coll) config-map)
         dog (->> image
-                 prn
                  (assoc coll :img)
                  (logic/add-fields config-map))]
     (datomic/transact-dog! dog config-map)
