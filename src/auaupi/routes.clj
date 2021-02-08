@@ -11,7 +11,9 @@
    [auaupi.logic :as logic]
    [auaupi.config :as config]
    [schema.core :as s]
-   [auaupi.schema :as schema]))
+   [auaupi.schema :as schema]
+   [auaupi.responses :refer :all]
+   [clojure.data.json :as json]))
 
 (defn get-dogs [ctx]
   (let [req (get ctx :request)
@@ -19,7 +21,8 @@
                    :params
                    (not-logic/check-params!
                     (datomic/open-connection config/config-map))
-                   http/json-response)]
+                   json/write-str
+                   ok)]
     (assoc ctx :response result)))
 
 (defn get-dog-by-id [ctx]

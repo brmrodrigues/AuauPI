@@ -3,7 +3,8 @@
    [clojure.data.json :as json]
    [auaupi.db :as db]
    [clojure.edn :as edn]
-   [auaupi.datomic :as datomic]))
+   [auaupi.datomic :as datomic]
+   [auaupi.responses :refer :all]))
 
 (defn transform-keyword [coll]
   (let [k (keys coll)
@@ -24,7 +25,6 @@
 
 
 (defn response-treated [coll]
-  (prn coll)
   (map (fn [dog]
          {:dog/id (:dog/id dog)
           :dog/name (:dog/name dog)
@@ -68,8 +68,8 @@
 (defn data->response
   [data]
   (cond
-    (empty? data) {:status 404 :body (json/write-str "Not Found")}
-    :else {:status 200 :body (json/write-str data)}))
+    (empty? data) (not-found "Not found")
+    :else (ok (json/write-str data))))
 
 (defn datom->dog [coll]
   (->> coll (mapv (fn [[id name breed img]]

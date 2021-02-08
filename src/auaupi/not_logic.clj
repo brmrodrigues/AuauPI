@@ -5,7 +5,8 @@
    [io.pedestal.http :as http]
    [auaupi.logic :as logic]
    [auaupi.datomic :as datomic]
-   [auaupi.schema :as schema]))
+   [auaupi.schema :as schema]
+   [auaupi.responses :refer :all]))
 
 (defn get-breed-image! [raca {:keys [dog-ceo]}]
   (-> (str (-> dog-ceo
@@ -54,7 +55,7 @@
       (not
        (empty? (filter #(= (clojure.string/lower-case breed) %) breeds)))
        (valid-dog! dog config-map)
-      :else {:status 400 :body (json/write-str {:message "Invalid breed"})})))
+      :else (bad-request "Invalid breed")#_{:status 400 :body (json/write-str {:message "Invalid breed"})})))
 
 (defn response-adopted! [id conn]
   (let [dog (datomic/get-infos-adopted id conn)]
