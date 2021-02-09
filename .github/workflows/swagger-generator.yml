@@ -28,6 +28,14 @@ jobs:
         with:
           cli: 1.10.1.561
 
+      - name: Checkout para a main
+        run: |
+          git config user.name Squad Alpha
+          git config user.email github-actions@github.com
+          git pull
+          git checkout main
+          git branch
+
       - name: Gerando Swagger
         run: clojure -A:swagger
 
@@ -38,15 +46,29 @@ jobs:
         with:
           source_folder: ${{ steps.file.outputs.file-name }}
           destination_repo: 'paygoc6/AuauPI'
-          destination_folder: ${{ steps.file.outputs.folder-name }}
+          destination_folder: 'doc/swagger'
           destination_base_branch: 'main'
-          destination_head_branch: ${{ steps.file.outputs.branch-name }}
+          destination_head_branch: 'main'
           # Inform squad email
           user_email: 'github-actions@github.com'
           # Inform squad name
           user_name: 'Squad Alpha'
-          pull_request_reviewers: 'paygoc6/alpha'  
+          pull_request_reviewers: 'paygoc6/alpha'        
 
-      
+      # - run: |
+      #     cat doc/swagger/auaupi-v1.json
+      #     git config user.name Squad Alpha
+      #     git config user.email github-actions@github.com
+      #     cd doc/swagger
+      #     git status
+      #     ls
+      #     if [[ -z `git status --porcelain` ]]; then
+      #       echo "Sem alteração"
+      #     else
+      #       echo "Commit a ser feito"
+      #       git add swagger.json
+      #       git commit -m "Adicionando arquivo Swagger gerado automaticamente"
+      #       git push origin main
+      #     fi 
           
          
