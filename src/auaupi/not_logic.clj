@@ -67,7 +67,7 @@
 
 (defn check-adopted! [id conn]
   (if (ffirst (datomic/get-adoption id conn))
-    (bad-request "Cachorro não está disponível para adoção!")#_{:status 400 :body "Cachorro não está disponível para adoção"}
+    (bad-request "Cachorro não está disponível para adoção!")
     (do (datomic/adopt-dog id conn)
         (response-adopted! id conn))))
 
