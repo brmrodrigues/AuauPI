@@ -44,7 +44,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source_folder: ${{ steps.file.outputs.file-name }}
+          source_folder: 'doc/swagger'
           destination_repo: 'paygoc6/AuauPI'
           destination_folder: 'doc/swagger'
           destination_base_branch: 'main'
