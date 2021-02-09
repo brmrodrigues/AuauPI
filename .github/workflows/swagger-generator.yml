@@ -39,23 +39,13 @@ jobs:
       - name: Gerando Swagger
         run: clojure -A:swagger
 
-      - run: |
-          cat doc/swagger/auaupi-v1.json
-          git config user.name Squad Alpha
-          git config user.email github-actions@github.com
-          cd doc/swagger
-          git status
-          ls
-          if [[ -z `git status --porcelain` ]]; then
-            echo "Sem alteração"
-          else
       - name: Create pull request
         uses: paygoc6/action-pull-request-another-repo@v1.0.2
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source_folder: ${{ steps.file.outputs.file-name }}
-          destination_repo: 'paygoc6/AuauPI
+          destination_repo: 'paygoc6/AuauPI'
           destination_folder: ${{ steps.file.outputs.folder-name }}
           destination_base_branch: 'main'
           destination_head_branch: ${{ steps.file.outputs.branch-name }}
@@ -63,7 +53,22 @@ jobs:
           user_email: 'github-actions@github.com'
           # Inform squad name
           user_name: 'Squad Alpha'
-          pull_request_reviewers: 'paygoc6/bank-as-a-service'      
-          fi 
+          pull_request_reviewers: 'paygoc6/alpha'  
+
+      # - run: |
+      #     cat doc/swagger/auaupi-v1.json
+      #     git config user.name Squad Alpha
+      #     git config user.email github-actions@github.com
+      #     cd doc/swagger
+      #     git status
+      #     ls
+      #     if [[ -z `git status --porcelain` ]]; then
+      #       echo "Sem alteração"
+      #     else
+      #       echo "Commit a ser feito"
+      #       git add swagger.json
+      #       git commit -m "Adicionando arquivo Swagger gerado automaticamente"
+      #       git push origin main
+      #     fi 
           
          
