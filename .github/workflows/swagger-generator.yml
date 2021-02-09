@@ -55,20 +55,6 @@ jobs:
           user_name: 'Squad Alpha'
           pull_request_reviewers: 'paygoc6/alpha'  
 
-      # - run: |
-      #     cat doc/swagger/auaupi-v1.json
-      #     git config user.name Squad Alpha
-      #     git config user.email github-actions@github.com
-      #     cd doc/swagger
-      #     git status
-      #     ls
-      #     if [[ -z `git status --porcelain` ]]; then
-      #       echo "Sem alteração"
-      #     else
-      #       echo "Commit a ser feito"
-      #       git add swagger.json
-      #       git commit -m "Adicionando arquivo Swagger gerado automaticamente"
-      #       git push origin main
-      #     fi 
+      
           
          
