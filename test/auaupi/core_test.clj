@@ -88,7 +88,7 @@
                  :status (:status response)}))))
   (testing "testing adopt a dog"
     (is (match? {:body "Parabéns, você acabou de dar um novo lar para o Thora!"}
-                (make-request! :post (path-concat "/dogs/6")
+                (make-request! :patch (path-concat "/dogs/6")
                                :headers {"Content-Type" "application/json"}))))
 
   (testing "listing a dog by name" ;;CRIAR FIND NO DATOMIC PELO NAME
