@@ -35,7 +35,7 @@
       ["/dogs/:id"
        ^:interceptors []
        {:get get-dog-route
-        :post adopt-dog-route}]
+        :patch adopt-dog-route}]
 
       ["/swagger.json"
        ^:interceptors [(api/negotiate-response)
