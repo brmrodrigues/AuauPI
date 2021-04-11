@@ -4,7 +4,7 @@
    [io.pedestal.http :as http]
    [auaupi.datomic :as datomic]
    [auaupi.config :as config]
-   [auaupi.not-logic :as not-logic]
+   [auaupi.handler :as not-logic]
    [auaupi.service :as service]))
 
 (defn start []

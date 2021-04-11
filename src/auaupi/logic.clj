@@ -3,7 +3,8 @@
    [clojure.data.json :as json]
    [auaupi.db :as db]
    [clojure.edn :as edn]
-   [auaupi.datomic :as datomic]))
+   [auaupi.datomic :as datomic]
+   [auaupi.schema :as schema]))
 
 (defn transform-keyword [coll]
   (let [k (keys coll)
@@ -89,3 +90,13 @@
                      :dog/birth birth
                      :dog/castrated? castrated?
                      :dog/adopted? adopted?}))))
+
+(defn invalid-breed? [breed breeds]
+  (empty? (filter #(= (clojure.string/lower-case breed) %) breeds)))
+
+(defn invalid-dog? [dog]
+  (not= (schema/validate-schema dog) dog))
+
+(defn invalid-body-response [message]
+  (-> {:status 400}
+      (assoc :body (json/write-str {:message message}))))

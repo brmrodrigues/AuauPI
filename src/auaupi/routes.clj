@@ -6,7 +6,7 @@
     [core :as api]
     [helpers :refer [before defbefore defhandler handler]]]
    [route-swagger.doc :as sw.doc]
-   [auaupi.not-logic :as not-logic]
+   [auaupi.handler :as not-logic]
    [auaupi.datomic :as datomic]
    [auaupi.logic :as logic]
    [auaupi.config :as config]
@@ -37,7 +37,7 @@
 (defn post-dogs [ctx]
   (let [req (get ctx :request)]
     (->> req
-         (not-logic/check-breed! config/config-map)
+         (not-logic/create-dog! config/config-map)
          (assoc ctx :response))))
 
 (defn post-adoption [ctx]

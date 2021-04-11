@@ -1,11 +1,9 @@
-(ns auaupi.not-logic
+(ns auaupi.handler
   (:require
    [clj-http.client :as client]
    [clojure.data.json :as json]
-   [io.pedestal.http :as http]
    [auaupi.logic :as logic]
-   [auaupi.datomic :as datomic]
-   [auaupi.schema :as schema]))
+   [auaupi.datomic :as datomic]))
 
 (defn get-breed-image! [raca {:keys [dog-ceo]}]
   (-> (str (-> dog-ceo
@@ -20,7 +18,7 @@
       (json/read-str :key-fn keyword)
       :message))
 
-(defn create-dog!
+(defn persist-dog!
   [coll config-map]
   (let [image (get-breed-image! (:breed coll) config-map)
         dog (->> image
@@ -28,13 +26,6 @@
                  (logic/add-fields config-map))]
     (datomic/transact-dog! dog config-map)
     {:status 201 :body (json/write-str {:message "Registered dog"})}))
-
-(defn valid-dog!
-  [dog config-map]
-  (if (= (schema/validate-schema dog) dog)
-    (create-dog! dog config-map)
-    {:status 400 :body (json/write-str {:message "Invalid dog"})}))
-
 
 (defn get-breeds! [{:keys [dog-ceo]}]
   (let [breeds (-> dog-ceo
@@ -46,15 +37,14 @@
                    keys)]
     (map #(name %) breeds)))
 
-(defn check-breed! [config-map req]
+(defn create-dog! [config-map req]
   (let [breed (:breed (:json-params req))
         dog (:json-params req)
         breeds (get-breeds! config-map)]
     (cond
-      (not
-       (empty? (filter #(= (clojure.string/lower-case breed) %) breeds)))
-       (valid-dog! dog config-map)
-      :else {:status 400 :body (json/write-str {:message "Invalid breed"})})))
+      (logic/invalid-breed? breed breeds) (logic/invalid-body-response "Invalid breed")
+      (logic/invalid-dog? dog) (logic/invalid-body-response "Invalid dog")
+      :else (persist-dog! dog config-map))))
 
 (defn response-adopted! [id conn]
   (let [dog (datomic/get-infos-adopted id conn)]
