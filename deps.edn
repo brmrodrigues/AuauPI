@@ -4,7 +4,7 @@
         io.pedestal/pedestal.route   {:mvn/version "0.5.7"}
         io.pedestal/pedestal.jetty   {:mvn/version "0.5.7"}
         io.pedestal/pedestal.interceptor {:mvn/version "0.5.7"}
-        pedestal-api {:mvn/version "0.3.4"}
+        pedestal-api/pedestal-api {:mvn/version "0.3.4"}
 
         org.slf4j/slf4j-simple       {:mvn/version "1.7.28"}
         org.clojure/data.json {:mvn/version "1.0.0"}
@@ -14,7 +14,7 @@
         com.datomic/dev-local    {:local/root
                                   "resources/dev-local/dev-local-0.9.229.jar"}
 
-        clj-http {:mvn/version "3.10.3"}}
+        clj-http/clj-http {:mvn/version "3.10.3"}}
 
  :aliases {:dev {:extra-paths ["dev" "test"]
                  :extra-deps {nubank/matcher-combinators {:mvn/version "1.5.2"}
